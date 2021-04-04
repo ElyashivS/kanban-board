@@ -39,9 +39,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         public Task AddTask(int id, DateTime dueDate, string title, string description)
         {
-            Task c = new Task(id, dueDate, title, description);
-            tasks.Add(id, c);
-            return c;
+            if (!taskMaxVerifier || (taskMaxVerifier && Tasks.Count() < taskMax))
+            {
+                Task c = new Task(id, dueDate, title, description);
+                tasks.Add(id, c);
+                return c;
+            }
+            else
+                throw new Exception("Column has reached to its maximum tasks");
         }
         public Task RemoveTask(int id)
         {

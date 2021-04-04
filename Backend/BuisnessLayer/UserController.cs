@@ -37,10 +37,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         public void Logout(string email)
         {
+            if (!Users.ContainsKey(email))
+            {
+                throw new Exception("email does not exsist");
+            }
             Users[email].Logout();
         }
         public bool isLoggedin(string email)
         {
+            if (!Users.ContainsKey(email))
+            {
+                throw new Exception("email does not exsist");
+            }
             return Users[email].IsLoggedIn;
         }
     }
