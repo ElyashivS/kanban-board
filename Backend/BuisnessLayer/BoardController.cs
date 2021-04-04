@@ -21,8 +21,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             if (boardController.ContainsKey(email))
             {
-                boardController[email].Add(name, new Board(boardIdCounter, name));
-                boardIdCounter = boardIdCounter + 1;
+                if (!boardController[email].ContainsKey(name))
+                {
+                    boardController[email].Add(name, new Board(boardIdCounter, name));
+                    boardIdCounter = boardIdCounter + 1;
+                }
+                else
+                    throw new Exception($"Board with the name {name} already exist");
+
 
             }
 
