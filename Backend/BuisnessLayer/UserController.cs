@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     {
         Dictionary<string, User> Users;
 
-        internal UserController()
+        public UserController()
         {
             Users = new Dictionary<string, User>();
         }
@@ -50,6 +50,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 throw new Exception("email does not exsist");
             }
             return Users[email].IsLoggedIn;
+        }
+
+        internal void Logout()
+        {
+            throw new NotImplementedException();
         }
     }
 }
