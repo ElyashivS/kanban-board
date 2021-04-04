@@ -7,12 +7,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
     {
-        public UserController userController;
-        public BoardController boardController;
-        public Service(UserController userController, BoardController boardController)
+        internal UserController userController;
+        internal BoardController boardController;
+        internal Service(UserController userController, BoardController boardController)
         {
-            userController = new Dictionary<string, User>();
-            boardController = new Dictionary<string, Dictionary<string, Board>>();
+            userController = new UserController();
+            boardController = new BoardController();
         }
         ///<summary>This method loads the data from the persistance.
         ///         You should call this function when the program starts. </summary>

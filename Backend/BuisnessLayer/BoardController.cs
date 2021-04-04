@@ -108,7 +108,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     c.Add(i);
                 }
             }
-
             return c;
         }
 
@@ -123,16 +122,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             else
                 throw new Exception("email couldnt be found");
-
-
-
-
         }
 
         private List<Board> BoardsToList(string email)
         {
             return boardController[email].Values.ToList();
-
         }
     }
 }
