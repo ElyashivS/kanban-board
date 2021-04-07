@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
-    class Board
+    public class Board
     {
         public int id { get; }
         public string name;

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
-    class Colunm
+    public class Colunm
     {
         public string name { get; }
         private Dictionary<int, Task> tasks;

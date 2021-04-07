@@ -7,9 +7,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
     {
-        internal UserController userController;
-        internal BoardController boardController;
-        internal Service(UserController userController, BoardController boardController)
+        UserController userController;
+        BoardController boardController;
+
+        public Service() { }
+
+        public Service(UserController userController, BoardController boardController)
         {
             userController = new UserController();
             boardController = new BoardController();

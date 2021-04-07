@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
-    class User
+    public class User
     {
         private string email;
         private string password;

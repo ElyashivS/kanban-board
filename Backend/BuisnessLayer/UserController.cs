@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
-    class UserController
+    public class UserController
     {
         Dictionary<string, User> Users;
 

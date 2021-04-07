@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
-    class BoardController
+    public class BoardController
     {
         Dictionary<string, Dictionary<string, Board>> boardController = new Dictionary<string, Dictionary<string, Board>>();
         int boardIdCounter = 1;
