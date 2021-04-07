@@ -111,11 +111,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>The limit of the column.</returns>
         public Response<int> GetColumnLimit(string email, string boardName, int columnOrdinal)
         {
-            // ##### NOT  SURE #####
+            
             try
             {
-                boardController.GetcolumnLimit(email, boardName, columnOrdinal);
-                return Response<int>.FromValue(new int());
+                int c=boardController.GetcolumnLimit(email, boardName, columnOrdinal);
+                return Response<int>.FromValue(c);
             }
             catch (Exception e)
             {
