@@ -136,7 +136,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
 
                 string c = boardController.GetColumnName(email, boardName, columnOrdinal);
-                return Response<string>.FromValue(new string(c));
+                return Response<string>.FromValue(c);
             }
             catch (Exception e)
             {
@@ -258,11 +258,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the Column, The response should contain a error message in case of an error</returns>
         public Response<IList<Task>> GetColumn(string email, string boardName, int columnOrdinal)
         {
-            // ##### NOT DONE YET #####
+            
             try
             {
-                boardController.GetColunm(email, boardName, columnOrdinal);
-                return Response<IList<Task>>.FromValue();
+                List<BuisnessLayer.Task> c = boardController.GetColunm(email, boardName, columnOrdinal);
+                List<Task> d = new List<Task>();
+                foreach (BuisnessLayer.Task a in c)
+                {
+                    d.Add(new Task(a.id, DateTime.Now, a.Title, a.Description, a.DueDate));
+
+                }
+                return Response<IList<Task>>.FromValue(d);
             }
             catch (Exception e)
             {
@@ -312,11 +318,17 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object with a value set to the list of tasks, The response should contain a error message in case of an error</returns>
         public Response<IList<Task>> InProgressTasks(string email)
         {
-            // ##### NOT DONE YET #####
+            
+            
             try
             {
-                boardController.InProgressTasks(email);
-                return Response<IList<Task>>.FromValue();
+                List<BuisnessLayer.Task> c=boardController.InProgressTasks(email);
+                List<Task> d = new List<Task>();
+                foreach (BuisnessLayer.Task a in c)
+                {
+                    d.Add(new Task(a.id,DateTime.Now,a.Title,a.Description,a.DueDate));
+                }
+                return Response<IList<Task>>.FromValue(d);
             }
             catch (Exception e)
             {
