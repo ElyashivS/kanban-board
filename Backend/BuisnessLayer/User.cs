@@ -10,16 +10,21 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class User
     {
-        private string email;
+        public string email;
         private string password;
         private bool isLoggedIn;
 
         public User(string email, string password)
         {
+            
             if (!IsValidEmail(email))
                 throw new Exception("email is not valid");
+            
             this.email = email;
+
+            
             Password = password;
+            isLoggedIn = false;
         }
 
         public void Login(string email, string password)
@@ -30,7 +35,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
             }
             else
-                throw new Exception("email and password does not match");
+                throw new Exception("email or password does not match");
         }
 
         public void Logout()
@@ -82,11 +87,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 return false;
             }
         }
+        
 
-
-        public bool IsLoggedIn
+        public bool ValidateUserLoggin()
         {
-            get => isLoggedIn;
+            return isLoggedIn;
 
         }
 
@@ -109,9 +114,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                         isUpper = true;
                     if (char.IsDigit(c))
                         isDigit = true;
+                    if (c==' ')
+                        throw new Exception("space is not valid in password");
+
+
+
                 }
                 if (!isUpper || !isLower || !isDigit)
-                    throw new Exception("d must include at least one uppercase letter, one small character and a number.");
+                    throw new Exception(" must include at least one uppercase letter, one small character and a number.");
 
                 password = value;
 

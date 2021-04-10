@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class BoardController
     {
-        Dictionary<string, Dictionary<string, Board>> boardController = new Dictionary<string, Dictionary<string, Board>>();
+        Dictionary<string, Dictionary<string, Board>> boardController ;
         int boardIdCounter = 1;
 
 
@@ -16,6 +16,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             this.boardController = new Dictionary<string, Dictionary<string, Board>>();
 
+        }
+        public void Register(string email)
+        {
+            boardController[email] =  new Dictionary<string, Board>();
         }
         public void AddBoard(string email, string name)
         {
@@ -48,7 +52,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         public Task AddTask(string email, string boardName, string title, string description, DateTime dueDate)
         {
-            Board c = FindBoard(email, boardName);
+            Board c;
+            try
+            {
+                c = boardController[email][boardName];
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentException("Board does not exist");
+            }
             Task b = c.AddTask(dueDate, title, description);
             return b;
         }
@@ -113,15 +125,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         private Board FindBoard(string email, string boardName)
         {
-            if (boardController.ContainsKey(email))
-            {
+            
                 if (boardController[email].ContainsKey(boardName))
                     return boardController[email][boardName];
                 else
                     throw new Exception($"Board with name { boardName } does not exist");
-            }
-            else
-                throw new Exception("email couldnt be found");
+           
         }
 
         private List<Board> BoardsToList(string email)

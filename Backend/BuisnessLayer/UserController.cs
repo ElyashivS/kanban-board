@@ -15,46 +15,48 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Users = new Dictionary<string, User>();
         }
 
-        public User Register(string email, string password)
+        public void Register(string email, string password)
         {
-            if (!Users.ContainsKey(email))
-            {
-                Users.Add(email, new User(email, password));
-                return Users[email];
-            }
-            else
-                throw new Exception("email is already in the system");
+            email = email.Trim().ToLower();
+            if (Users.ContainsKey(email))
+                throw new ArgumentException("email is already in the system");
+            
+            Users.Add(email, new User(email, password));
+            
+                
         }
         public User Login(string email, string password)
         {
+            email = email.Trim().ToLower();
             if (!Users.ContainsKey(email))
                 throw new Exception("email does not exsist");
-            else
-                Users[email].Login(email, password);
+            Users[email].Login(email, password);
 
             return Users[email];
-
         }
         public void Logout(string email)
         {
+            email = email.Trim().ToLower();
             if (!Users.ContainsKey(email))
             {
                 throw new Exception("email does not exsist");
             }
             Users[email].Logout();
+            
         }
-        public bool isLoggedin(string email)
+        public void ValidateUserLoggin(string email)
         {
+            email = email.Trim().ToLower();
             if (!Users.ContainsKey(email))
             {
                 throw new Exception("email does not exsist");
             }
-            return Users[email].IsLoggedIn;
+            else if (!Users[email].ValidateUserLoggin())
+                throw new Exception("user is logged off");
+
+            
         }
 
-        internal void Logout()
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

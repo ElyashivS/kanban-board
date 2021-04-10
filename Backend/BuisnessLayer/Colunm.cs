@@ -23,9 +23,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         public void LimitTasks(int maxtasks)
         {
-            if (maxtasks == 0)
+            if (maxtasks <=0)
             {
-                throw new Exception("The maximum of tasks cant be 0");
+                throw new Exception("The maximum of tasks cant be 0 or below");
+            }
+            if (tasks.Count > maxtasks)
+            {
+                throw new Exception("Tasks are already exceeding the maxtasks input");
             }
             taskMaxVerifier = true;
             taskMax = maxtasks;

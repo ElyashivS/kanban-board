@@ -10,9 +10,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         UserController userController;
         BoardController boardController;
 
-        public Service() { }
 
-        public Service(UserController userController, BoardController boardController)
+        public Service()
         {
             userController = new UserController();
             boardController = new BoardController();
@@ -37,12 +36,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 userController.Register(email, password);
+                boardController.Register(email);
+                return new Response();
             }
             catch (Exception e)
             {
                 return new Response(e.Message);
             }
-            return new Response();
+            
         }
         /// <summary>
         /// Log in an existing user
@@ -54,8 +55,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                userController.Login(email, password);
-                return Response<User>.FromValue(new User(email));
+                BuisnessLayer.User user = userController.Login(email, password);
+                return Response<User>.FromValue(new User(user.email));
             }
             catch (Exception e)
             {
@@ -69,9 +70,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response Logout(string email)
         {
+            
             try
             {
-                userController.Logout();
+                ValidateUserLoggin(email);
+                userController.Logout(email);
                 return new Response();
             }
             catch (Exception e)
@@ -81,7 +84,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         }
         private void ValidateUserLoggin(string email)
         {
-            throw new NotImplementedException();
+             userController.ValidateUserLoggin(email);
         }
         /// <summary>
         /// Limit the number of tasks in a specific column
@@ -96,6 +99,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 boardController.LimitColumn(email, boardName, columnOrdinal, limit);
                 return new Response();
             }
@@ -117,6 +121,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             
             try
             {
+                ValidateUserLoggin(email);
                 int c=boardController.GetcolumnLimit(email, boardName, columnOrdinal);
                 return Response<int>.FromValue(c);
             }
@@ -137,6 +142,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
 
                 string c = boardController.GetColumnName(email, boardName, columnOrdinal);
                 return Response<string>.FromValue(c);
@@ -160,9 +166,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 BuisnessLayer.Task c = boardController.AddTask(email, boardName, title, description, dueDate);
-                int taskId = c.id;
-                return Response<Task>.FromValue(new Task(taskId, DateTime.Now, title, description, dueDate));
+                
+                return Response<Task>.FromValue(new Task(c.id, c.creationTime, c.Title, c.Description, c.DueDate));
             }
             catch (Exception e)
             {
@@ -182,6 +189,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 boardController.ChangeDueDate(email, boardName, columnOrdinal, taskId, dueDate);
                 return new Response();
             }
@@ -203,6 +211,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 boardController.ChangeTitle(email, boardName, columnOrdinal, taskId, title);
                 return new Response();
             }
@@ -224,6 +233,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 boardController.ChangeDescription(email, boardName, columnOrdinal, taskId, description);
                 return new Response();
             }
@@ -244,6 +254,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 boardController.MoveTask(email, boardName, columnOrdinal, taskId);
                 return new Response();
             }
@@ -264,6 +275,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             
             try
             {
+                ValidateUserLoggin(email);
                 List<BuisnessLayer.Task> c = boardController.GetColunm(email, boardName, columnOrdinal);
                 List<Task> d = new List<Task>();
                 foreach (BuisnessLayer.Task a in c)
@@ -288,6 +300,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 boardController.AddBoard(email, name);
                 return new Response();
             }
@@ -306,6 +319,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
+                ValidateUserLoggin(email);
                 boardController.RemoveBoard(email, name);
                 return new Response();
             }
@@ -325,6 +339,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             
             try
             {
+                ValidateUserLoggin(email);
                 List<BuisnessLayer.Task> c=boardController.InProgressTasks(email);
                 List<Task> d = new List<Task>();
                 foreach (BuisnessLayer.Task a in c)
