@@ -66,7 +66,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public void ChangeDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
         {
             Board c = FindBoard(email, boardName);
-            c.ChangeTitle(taskId, columnOrdinal, description);
+            c.ChangeDescription(taskId, columnOrdinal, description);
         }
         public string GetColumnName(string email, string boardName, int columnOrdinal)
         {
