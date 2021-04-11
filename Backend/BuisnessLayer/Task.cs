@@ -8,8 +8,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class Task
     {
-        public int id { get; }
-        public DateTime creationTime { get; }
+        public int id;
+        public DateTime creationTime;
         private DateTime duedate;
         private string title;
         private string description;
@@ -45,6 +45,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             CheckDescription(NewDescription);
             this.description = NewDescription;
         }
+        
 
 
 
@@ -59,6 +60,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public string GetTitle()
         {
             return this.title;
+        }
+        public int GetId()
+        {
+            return this.id;
+        }
+        public DateTime GetCreationTime()
+        {
+            return this.creationTime;
         }
 
         //

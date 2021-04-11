@@ -169,7 +169,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 ValidateUserLoggin(email);
                 BuisnessLayer.Task c = boardController.AddTask(email, boardName, title, description, dueDate);
                 
-                return Response<Task>.FromValue(new Task(c.id, c.creationTime, c.GetTitle(), c.GetDescription(), c.GetDueDate()));
+                return Response<Task>.FromValue(new Task(c.GetId(), c.GetCreationTime(), c.GetTitle(), c.GetDescription(), c.GetDueDate()));
             }
             catch (Exception e)
             {
@@ -344,7 +344,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 List<Task> d = new List<Task>();
                 foreach (BuisnessLayer.Task a in c)
                 {
-                    d.Add(new Task(a.id,DateTime.Now,a.GetTitle(),a.GetDescription(),a.GetDueDate()));
+                    d.Add(new Task(a.GetId(),a.GetCreationTime(),a.GetTitle(),a.GetDescription(),a.GetDueDate()));
                 }
                 return Response<IList<Task>>.FromValue(d);
             }

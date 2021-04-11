@@ -15,15 +15,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private bool isLoggedIn;
 
         public User(string email, string password)
-        {
-            
+        { 
             if (!IsValidEmail(email))
                 throw new Exception("email is not valid");
-            
             this.email = email;
 
-            
-            Password = password;
+            PasswordVerifier(password);
+            this.password = password;
+
+
             isLoggedIn = false;
         }
 
@@ -79,7 +79,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             try
             {
                 return Regex.IsMatch(email,
-                    @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
+                   @"^[\w!#$%&'*+\-/=?\^_`{|}~]+(\.[\w!#$%&'*+\-/=?\^_`{|}~]+)*"
+                   + "@"
+                   + @"((([\-\w]+\.)+[a-zA-Z]{2,4})|(([0-9]{1,3}\.){3}[0-9]{1,3}))$",
                     RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
             }
             catch (RegexMatchTimeoutException)
@@ -95,18 +97,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         }
 
-        public string Password
+        private void PasswordVerifier(string password)
         {
-            set
-            {
-                if (value == null)
+           
+            
+                if (password == null)
                     throw new NullReferenceException();
-                if (value.Length > 20 || value.Length < 4)
+                if (password.Length > 20 ||password.Length < 4)
                     throw new Exception("password must be in length of 4 to 20 characters");
                 bool isUpper = false;
                 bool isLower = false;
                 bool isDigit = false;
-                foreach (char c in value)
+                foreach (char c in password)
                 {
                     if (char.IsLower(c))
                         isLower = true;
@@ -123,9 +125,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 if (!isUpper || !isLower || !isDigit)
                     throw new Exception(" must include at least one uppercase letter, one small character and a number.");
 
-                password = value;
+                this.password = password;
 
-            }
+            
         }
+        
+        
     }
 }

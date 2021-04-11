@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class Colunm
     {
-        public string name { get; }
+        public string name;
         private Dictionary<int, Task> tasks;
         private bool taskMaxVerifier = false;
         private int taskMax;
@@ -85,6 +85,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 tasks[id].ChangeDescription(newDescription);
             else
                 throw new Exception("Task could not not found");
+        }
+        public string GetColumnName()
+        {
+            return this.name;
         }
 
         public List<Task> Tasks

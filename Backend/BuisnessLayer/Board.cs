@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class Board
     {
-        public int id { get; }
+        public int id;
         public string name;
         private List<Colunm> board;
         private int idcounter = 1;
@@ -42,13 +42,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (columnOrdinal == 0)
             {
                 Task toprogress = board[0].RemoveTask(id);
-                board[1].AddTask(id, toprogress.GetDueDate(), toprogress.GetTitle(), toprogress.GetDescription());
+                board[1].AddTask(toprogress.GetId(), toprogress.GetDueDate(), toprogress.GetTitle(), toprogress.GetDescription());
 
             }
             else if (columnOrdinal == 1)
             {
                 Task todone = board[1].RemoveTask(id);
-                board[2].AddTask(id, todone.GetDueDate(), todone.GetTitle(), todone.GetDescription());
+                board[2].AddTask(todone.GetId(), todone.GetDueDate(), todone.GetTitle(), todone.GetDescription());
 
             }
             else
@@ -88,7 +88,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new Exception("column number can be 0,1 or 2");
             }
-            return board[columnOrdinal].name;
+            return board[columnOrdinal].GetColumnName();
         }
         public void LimitColunm(int columnOrdinal, int limit)
         {
@@ -111,6 +111,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 throw new Exception("column number can be 0,1 or 2");
 
             return board[columnOrdinal].Tasks;
+        }
+        private int GetBoardId()
+        {
+            return this.id;
         }
     }
 }
