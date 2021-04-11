@@ -20,7 +20,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             this.name = name;
             board = new List<Colunm>();
             board.Add(new Colunm("backlog", new Dictionary<int, Task>()));
-            board.Add(new Colunm("inprogress", new Dictionary<int, Task>()));
+            board.Add(new Colunm("in progress", new Dictionary<int, Task>()));
             board.Add(new Colunm("done", new Dictionary<int, Task>()));
 
 
