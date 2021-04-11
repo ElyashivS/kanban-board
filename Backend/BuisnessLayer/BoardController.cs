@@ -19,12 +19,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         public void Register(string email)
         {
-            boardController[email] =  new Dictionary<string, Board>();
+            boardController.Add(email, new Dictionary<string, Board>());
         }
         public void AddBoard(string email, string name)
         {
-            if (boardController.ContainsKey(email))
-            {
+            
                 if (!boardController[email].ContainsKey(name))
                 {
                     boardController[email].Add(name, new Board(boardIdCounter, name));
@@ -33,13 +32,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 else
                     throw new Exception($"Board with the name {name} already exist");
 
-
-            }
-
-            else
-            {
-                throw new Exception("email couldnt be found");
-            }
         }
         public Board RemoveBoard(string email, string name)
         {
@@ -52,15 +44,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         public Task AddTask(string email, string boardName, string title, string description, DateTime dueDate)
         {
-            Board c;
-            try
-            {
-                c = boardController[email][boardName];
-            }
-            catch (KeyNotFoundException)
-            {
-                throw new ArgumentException("Board does not exist");
-            }
+            Board c=FindBoard(email, boardName);     
             Task b = c.AddTask(dueDate, title, description);
             return b;
         }
@@ -125,12 +109,17 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         private Board FindBoard(string email, string boardName)
         {
-            
-                if (boardController[email].ContainsKey(boardName))
-                    return boardController[email][boardName];
-                else
-                    throw new Exception($"Board with name { boardName } does not exist");
-           
+            Board c;
+            try
+            {
+                c = boardController[email][boardName];
+                return c;
+            }
+            catch (KeyNotFoundException)
+            {
+                throw new ArgumentException("Board does not exist");
+            }
+
         }
 
         private List<Board> BoardsToList(string email)

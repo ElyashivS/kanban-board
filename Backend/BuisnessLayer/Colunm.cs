@@ -68,21 +68,21 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public void ChangeDueDate(int id, DateTime newDuedate)
         {
             if (tasks.ContainsKey(id))
-                tasks[id].DueDate = newDuedate;
+                tasks[id].ChangeDueDate(newDuedate);
             else
                 throw new Exception("Task is not be found");
         }
         public void ChangeTitle(int id, string newTitle)
         {
             if (tasks.ContainsKey(id))
-                tasks[id].Title = newTitle;
+                tasks[id].ChangeTitle(newTitle);
             else
                 throw new Exception("Task could not be found");
         }
         public void ChangeDescription(int id, string newDescription)
         {
             if (tasks.ContainsKey(id))
-                tasks[id].Description = newDescription;
+                tasks[id].ChangeDescription(newDescription);
             else
                 throw new Exception("Task could not not found");
         }

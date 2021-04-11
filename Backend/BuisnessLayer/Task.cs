@@ -20,73 +20,74 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             this.id = id;
             this.creationTime = DateTime.Now;
-            DueDate = dueDate;
-            Title = title;
-            Description = description;
+            
+            CheckDuedate(dueDate);
+            this.duedate = dueDate;
+            CheckTitle(title);
+            this.title = title;
+            CheckDescription(description);
+            this.description = description;
 
         }
         
         public void ChangeDueDate(DateTime NewDueDate)
         {
+            CheckDuedate(NewDueDate);
             this.duedate = NewDueDate;
         }
         public void ChangeTitle(string NewTitle)
         {
-            if (NewTitle.Length > TitleLength || NewTitle.Length < 1)
-            {
-                throw new Exception("Title is empty or over 50 characters");
-            }
+            CheckTitle(NewTitle);
             this.title = NewTitle;
         }
         public void ChangeDescription(string NewDescription)
         {
-            if (NewDescription.Length > DescriptionLength || NewDescription.Length < 1)
-            {
-                throw new Exception("Description is empty or over 300 characters");
-            }
-            this.Description = NewDescription;
+            CheckDescription(NewDescription);
+            this.description = NewDescription;
         }
-        
+
+
+
+        public DateTime GetDueDate()
+        {
+            return this.duedate;
+        }
+        public string GetDescription()
+        {
+            return this.description;
+        }
+        public string GetTitle()
+        {
+            return this.title;
+        }
 
         //
-        public DateTime DueDate
+        private void CheckDuedate(DateTime dueDate)
         {
-            get { return duedate; }
-            set
-            {
-               
-                 duedate=value;
-            }
+            if (dueDate < creationTime)
+                throw new Exception("cannot input a Duedate that has passed");
 
             }
 
-        public string Description
+        private void CheckDescription(string description)
         {
-            get { return description; }
-            set
-            {
-                if (value == null)
+
+                if (description == null)
                     throw new NullReferenceException();
-                if (value.Length > DescriptionLength || value.Length < 1)
+                if (description.Length > DescriptionLength || description.Length < 1)
                 {
                     throw new Exception("Description is empty or over 300 characters");
-                }
-                this.description = Description;
-            }
+                } 
         }
-        public string Title
+        private void CheckTitle(string title)
         {
-            get { return title; }
-            set
-            {
-                if (value == null)
+
+                if (title == null)
                     throw new NullReferenceException();
-                if (value.Length > TitleLength || value.Length < 1)
+                if (title.Length > TitleLength || title.Length < 1)
                 {
                     throw new Exception("Title is empty or over 50 characters");
                 }
-                this.title = Title;
-            }
 
         }
     }

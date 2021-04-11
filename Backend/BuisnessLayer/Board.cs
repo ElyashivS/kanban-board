@@ -42,13 +42,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (columnOrdinal == 0)
             {
                 Task toprogress = board[0].RemoveTask(id);
-                board[1].AddTask(id, toprogress.DueDate, toprogress.Title, toprogress.Description);
+                board[1].AddTask(id, toprogress.GetDueDate(), toprogress.GetTitle(), toprogress.GetDescription());
 
             }
             else if (columnOrdinal == 1)
             {
                 Task todone = board[1].RemoveTask(id);
-                board[2].AddTask(id, todone.DueDate, todone.Title, todone.Description);
+                board[2].AddTask(id, todone.GetDueDate(), todone.GetTitle(), todone.GetDescription());
 
             }
             else
