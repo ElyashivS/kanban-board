@@ -77,6 +77,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
         public void LimitColumn(string email, string boardName, int columnOrdinal, int limit)
         {
+            if (columnOrdinal == 2)
+                throw new Exception("cannot limit done column");
             Board c = FindBoard(email, boardName);
             c.LimitColunm(columnOrdinal, limit);
         }

@@ -81,11 +81,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private void CheckDescription(string description)
         {
 
-                if (description == null)
-                    throw new NullReferenceException();
-                if (description.Length > DescriptionLength || description.Length < 1)
+                
+                if (description.Length > DescriptionLength )
                 {
-                    throw new Exception("Description is empty or over 300 characters");
+                    throw new Exception("is over 300 characters");
                 } 
         }
         private void CheckTitle(string title)

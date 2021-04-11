@@ -10,8 +10,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     {
         public string name;
         private Dictionary<int, Task> tasks;
-        private bool taskMaxVerifier = false;
-        private int taskMax;
+        private bool columnLimitVerifier = false;
+        private int columnLimiter;
 
 
 
@@ -31,19 +31,19 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new Exception("Tasks are already exceeding the maxtasks input");
             }
-            taskMaxVerifier = true;
-            taskMax = maxtasks;
+            columnLimitVerifier = true;
+            columnLimiter = maxtasks;
         }
-        public int MaxTaskCheck()
+        public int GetColumnLimit()
         {
-            if (taskMaxVerifier)
-                return taskMax;
+            if (columnLimitVerifier)
+                return this.columnLimiter;
             else
                 throw new Exception("The column isnt limited to a number of Tasks");
         }
         public Task AddTask(int id, DateTime dueDate, string title, string description)
         {
-            if (!taskMaxVerifier || (taskMaxVerifier && Tasks.Count() < taskMax))
+            if (!columnLimitVerifier || (columnLimitVerifier && Tasks.Count() < columnLimiter))
             {
                 Task c = new Task(id, dueDate, title, description);
                 tasks.Add(id, c);

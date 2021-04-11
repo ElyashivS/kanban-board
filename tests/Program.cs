@@ -13,7 +13,9 @@ namespace tests
             Response b = a.Register("arioshry@gmail.com", "Abc1");
             Response<User> c = a.Login("arioshry@gmail.com", "Abc1");
             Response d=a.AddBoard("arioshry@gmail.com", "boardy");
-            Response<Task> e = a.AddTask("arioshry@gmail.com", "boardy", "nothing", "nothingness", DateTime.Today);
+            Response e = a.LimitColumn("arioshry@gmail.com", "boardy",-1,5);
+            Response<Task> f = a.AddTask("arioshry@gmail.com", "boardy","what","the",DateTime.Today);
+            
 
 
 
@@ -27,11 +29,14 @@ namespace tests
             
             if (d.ErrorOccured)
                 Console.WriteLine(d.ErrorMessage);
-           
+
             if (e.ErrorOccured)
-                Console.WriteLine(c.ErrorMessage);
+                Console.WriteLine(e.ErrorMessage);
+
+            if (f.ErrorOccured)
+                Console.WriteLine(f.ErrorMessage);
             else
-                Console.WriteLine(e.Value.Title);
+                Console.WriteLine(f.Value.Id);
 
 
             ;

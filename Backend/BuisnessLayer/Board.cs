@@ -102,7 +102,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (columnOrdinal != 0 && columnOrdinal != 1 && columnOrdinal != 2)
                 throw new Exception("column number can be 0,1 or 2");
 
-            return board[columnOrdinal].MaxTaskCheck();
+            return board[columnOrdinal].GetColumnLimit();
         }
 
         public List<Task> GetColumn(int columnOrdinal)
