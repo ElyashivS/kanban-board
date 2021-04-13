@@ -2,17 +2,27 @@
 using System;
 using System.Linq;
 using IntroSE.Kanban.Backend.BuisnessLayer;
+using log4net;
+using System.Reflection;
+using log4net.Config;
+using System.IO;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
     {
+
         UserController userController;
         BoardController boardController;
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType); // Put this in every class
 
 
         public Service()
         {
+            var logRepository = LogManager.GetRepository(Assembly.GetEntryAssembly());
+            XmlConfigurator.Configure(logRepository, new FileInfo("log4net.config"));
+            log.Debug("Service is going up");
+
             userController = new UserController();
             boardController = new BoardController();
         }
