@@ -44,7 +44,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Users[email].Logout();
             
         }
-        public void ValidateUserLoggin(string email)
+        public bool ValidateUserLoggin(string email)
         {
             email = email.Trim().ToLower();
             if (!Users.ContainsKey(email))
@@ -53,6 +53,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             else if (!Users[email].ValidateUserLoggin())
                 throw new Exception("user is logged off");
+
+            return true;
 
             
         }
