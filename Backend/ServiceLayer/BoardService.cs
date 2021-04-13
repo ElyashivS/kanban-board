@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using IntroSE.Kanban.Backend.BuisnessLayer;
+using log4net;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     internal class BoardService
     {
         BoardController boardController;
-
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public BoardService()
         {
             boardController = new BoardController();
@@ -25,7 +27,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                
                 boardController.LimitColumn(email, boardName, columnOrdinal, limit);
                 return new Response();
             }
@@ -39,7 +40,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
             try
             {
-                
                 int c = boardController.GetcolumnLimit(email, boardName, columnOrdinal);
                 return Response<int>.FromValue(c);
             }
@@ -54,7 +54,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-     
                 string c = boardController.GetColumnName(email, boardName, columnOrdinal);
                 return Response<string>.FromValue(c);
             }
@@ -69,13 +68,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                
                 BuisnessLayer.Task c = boardController.AddTask(email, boardName, title, description, dueDate);
-
+                log.Info("Task has been added");
                 return Response<Task>.FromValue(new Task(c.GetId(), c.GetCreationTime(), c.GetTitle(), c.GetDescription(), c.GetDueDate()));
             }
             catch (Exception e)
             {
+                log.Warn("Failed to add task");
                 return Response<Task>.FromError(e.Message);
             }
         }
@@ -84,7 +83,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                
                 boardController.ChangeDueDate(email, boardName, columnOrdinal, taskId, dueDate);
                 return new Response();
             }
@@ -98,7 +96,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                
                 boardController.ChangeTitle(email, boardName, columnOrdinal, taskId, title);
                 return new Response();
             }
@@ -112,7 +109,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                
                 boardController.ChangeDescription(email, boardName, columnOrdinal, taskId, description);
                 return new Response();
             }
@@ -126,7 +122,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-               
                 boardController.MoveTask(email, boardName, columnOrdinal, taskId);
                 return new Response();
             }
@@ -138,10 +133,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         
         public Response<IList<Task>> GetColumn(string email, string boardName, int columnOrdinal)
         {
-
             try
             {
-                
                 List<BuisnessLayer.Task> c = boardController.GetColunm(email, boardName, columnOrdinal);
                 List<Task> d = new List<Task>();
                 foreach (BuisnessLayer.Task a in c)
@@ -161,12 +154,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                
+                log.Info("Board has been added");
                 boardController.AddBoard(email, name);
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to add board");
                 return new Response(e.Message);
             }
         }
@@ -175,7 +169,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                
                 boardController.RemoveBoard(email, name);
                 return new Response();
             }
@@ -187,11 +180,8 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
        
         public Response<IList<Task>> InProgressTasks(string email)
         {
-
-
             try
             {
-                
                 List<BuisnessLayer.Task> c = boardController.InProgressTasks(email);
                 List<Task> d = new List<Task>();
                 foreach (BuisnessLayer.Task a in c)

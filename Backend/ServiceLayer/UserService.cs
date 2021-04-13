@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
     {
        
         UserController userController;
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);  // Put this in every class
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public UserService()
         {
@@ -33,10 +33,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 userController.Register(email, password);
+                log.Info("User with the mail " + email + " has been created");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to register");
                 return new Response(e.Message);
             }
 
@@ -47,10 +49,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 BuisnessLayer.User user = userController.Login(email, password);
+                log.Info("The user with the mail " + email + " logged in");
                 return Response<User>.FromValue(new User(user.email));
             }
             catch (Exception e)
             {
+                log.Warn("Failed to log in");
                 return Response<User>.FromError(e.Message);
             }
         }
@@ -58,15 +62,14 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
         public Response Logout(string email)
         {
-
             try
             {
-                
                 userController.Logout(email);
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to logout");
                 return new Response(e.Message);
             }
         }
@@ -77,14 +80,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 userController.ValidateUserLoggin(email);
                 return new Response();
             }
-
             catch (Exception e)
             {
                 return new Response(e.Message);
             }
-
-
-
-            }
+         }
     }
 }
