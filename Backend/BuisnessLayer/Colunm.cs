@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         public void LimitTasks(int maxtasks)
         {
-            if (maxtasks <=0)
+            if (maxtasks <= 0)
             {
                 throw new Exception("The maximum of tasks cant be 0 or below");
             }
@@ -41,11 +41,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             else
                 throw new Exception("The column isnt limited to a number of Tasks");
         }
-        public Task AddTask(int id, DateTime dueDate, string title, string description)
+        public Task AddTask(int id, DateTime dueDate, string email, string title, string description)
         {
             if (!columnLimitVerifier || (columnLimitVerifier && Tasks.Count() < columnLimiter))
             {
-                Task c = new Task(id, dueDate, title, description);
+                Task c = new Task(id, dueDate, email, title, description);
                 tasks.Add(id, c);
                 return c;
             }
@@ -90,7 +90,20 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return this.name;
         }
-
+        public void ChangeEmailAssignee(int taskId, string newEmail)
+        {
+            if (!tasks.ContainsKey(taskId))
+                throw new Exception("task was not found");
+            tasks[taskId].ChangeEmailAssignee(newEmail);
+        }
+        public Task GetTask(int id)
+        {
+            if (!tasks.ContainsKey(id))
+            {
+                throw new Exception("task not found");
+            }
+            return tasks[id];
+        }
         public List<Task> Tasks
         {
             get

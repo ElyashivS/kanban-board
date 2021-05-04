@@ -8,7 +8,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class BoardController
     {
-        Dictionary<string, Dictionary<string, Board>> boardController ;
+        Dictionary<string, Dictionary<string, Board>> boardController;
         int boardIdCounter = 1;
 
 
@@ -23,76 +23,98 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         public void AddBoard(string email, string name)
         {
-            
-                if (!boardController[email].ContainsKey(name))
-                {
-                    boardController[email].Add(name, new Board(boardIdCounter, name));
-                    boardIdCounter = boardIdCounter + 1;
-                }
-                else
-                    throw new Exception($"Board with the name {name} already exist");
+
+            if (!boardController[email].ContainsKey(name))
+            {
+                boardController[email].Add(name, new Board(boardIdCounter, name, email));
+                boardIdCounter = boardIdCounter + 1;
+            }
+            else
+                throw new Exception($"Board with the name {name} already exist");
 
         }
-        public Board RemoveBoard(string email, string name)
+        public Board RemoveBoard(string userEmail, string creatorEmail, string boardName)
         {
-            Board c = FindBoard(email, name);
-            boardController[email].Remove(name);
+            Board c = FindBoard(creatorEmail, boardName);
+            if (userEmail != c.GetCreator())
+                throw new Exception("only the creator of the board may delete it");
+
+            boardController[creatorEmail].Remove(boardName);
             return c;
 
 
         }
 
-        public Task AddTask(string email, string boardName, string title, string description, DateTime dueDate)
+        public Task AddTask(string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
         {
-            Board c=FindBoard(email, boardName);     
-            Task b = c.AddTask(dueDate, title, description);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            Task b = c.AddTask(userEmail, dueDate, title, description);
             return b;
         }
-        public void MoveTask(string email, string boardName, int columnOrdinal, int taskId)
+        public void MoveTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
         {
-            Board c = FindBoard(email, boardName);
-            c.MoveTask(taskId, columnOrdinal);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
+            c.MoveTask(userEmail, taskId, columnOrdinal);
         }
-        public void ChangeDueDate(string email, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
+        public void ChangeDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {
-            Board c = FindBoard(email, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeDueDate(taskId, columnOrdinal, dueDate);
         }
-        public void ChangeTitle(string email, string boardName, int columnOrdinal, int taskId, string title)
+        public void ChangeTitle(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string title)
         {
-            Board c = FindBoard(email, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeTitle(taskId, columnOrdinal, title);
         }
-        public void ChangeDescription(string email, string boardName, int columnOrdinal, int taskId, string description)
+        public void ChangeDescription(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string description)
         {
-            Board c = FindBoard(email, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeDescription(taskId, columnOrdinal, description);
         }
-        public string GetColumnName(string email, string boardName, int columnOrdinal)
+        public string GetColumnName(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            Board c = FindBoard(email, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
             return c.GetColumnName(columnOrdinal);
 
         }
 
-        public void LimitColumn(string email, string boardName, int columnOrdinal, int limit)
+        public void LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
             if (columnOrdinal == 2)
                 throw new Exception("cannot limit done column");
-            Board c = FindBoard(email, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
             c.LimitColunm(columnOrdinal, limit);
         }
-        public int GetcolumnLimit(string email, string boardName, int columnOrdinal)
+        public int GetcolumnLimit(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            Board c = FindBoard(email, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
             return c.GetColumnLimit(columnOrdinal);
         }
-        public List<Task> GetColunm(string email, string boardName, int columnOrdinal)
+        public List<Task> GetColunm(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
-            Board c = FindBoard(email, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
             List<Task> b = c.GetColumn(columnOrdinal);
             return b;
 
+        }
+        public void JoinBoard(string userEmail, string creatorEmail, string boardName)
+        {
+            Board c = FindBoard(creatorEmail, boardName);
+            c.AddtoBoardUsers(userEmail);
+            boardController[userEmail].Add(boardName, c);
         }
         public List<Task> InProgressTasks(string email)
         {
@@ -103,11 +125,34 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 List<Task> temp = a.GetColumn(1);
                 foreach (Task i in temp)
                 {
-                    c.Add(i);
+                    if (TaskVerForList(email, i))
+                        c.Add(i);
                 }
             }
             return c;
         }
+        public void AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            c.BoardMemberVerify(emailAssignee);
+            Task b = c.GetTask(taskId, columnOrdinal);
+            c.TaskAssigneeVerify(userEmail, b);
+            c.ChangeEmailAssignee(taskId, columnOrdinal, emailAssignee);
+
+        }
+        public List<String> GetBoardNames(string userEmail)
+        {
+            List<String> a = new List<String>();
+            List<Board> b = BoardsToList(userEmail);
+            foreach (Board i in b)
+            {
+                String k = i.name;
+                a.Add(k);
+            }
+            return a;
+        }
+
 
         private Board FindBoard(string email, string boardName)
         {
@@ -127,6 +172,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private List<Board> BoardsToList(string email)
         {
             return boardController[email].Values.ToList();
+        }
+        private bool TaskVerForList(string email, Task task)
+        {
+            if (email == task.GetAssignee())
+                return true;
+            else
+                return false;
         }
     }
 }

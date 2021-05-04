@@ -12,23 +12,28 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public string name;
         private List<Colunm> board;
         private int idcounter = 1;
+        private List<string> users;
+        private readonly string creator;
 
 
-        public Board(int id, string name)
+        public Board(int id, string name, string creator)
         {
+
             this.id = id;
             this.name = name;
+            this.creator = creator;
             board = new List<Colunm>();
             board.Add(new Colunm("backlog", new Dictionary<int, Task>()));
             board.Add(new Colunm("in progress", new Dictionary<int, Task>()));
             board.Add(new Colunm("done", new Dictionary<int, Task>()));
+            this.users = new List<string>();
 
 
         }
-        public Task AddTask(DateTime duedate, string title, string descripton)
+        public Task AddTask(string email, DateTime duedate, string title, string descripton)
         {
 
-            Task c = board[0].AddTask(idcounter, duedate, title, descripton);
+            Task c = board[0].AddTask(idcounter, duedate, email, title, descripton);
             idcounter = idcounter + 1;
             return c;
         }
@@ -37,18 +42,19 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Task c = board[columnOrdinal].RemoveTask(id);
             return c;
         }
-        public void MoveTask(int id, int columnOrdinal)
+        public void MoveTask(string email, int id, int columnOrdinal)
         {
+
             if (columnOrdinal == 0)
             {
                 Task toprogress = board[0].RemoveTask(id);
-                board[1].AddTask(toprogress.GetId(), toprogress.GetDueDate(), toprogress.GetTitle(), toprogress.GetDescription());
+                board[1].AddTask(toprogress.GetId(), toprogress.GetDueDate(), toprogress.GetAssignee(), toprogress.GetTitle(), toprogress.GetDescription());
 
             }
             else if (columnOrdinal == 1)
             {
                 Task todone = board[1].RemoveTask(id);
-                board[2].AddTask(todone.GetId(), todone.GetDueDate(), todone.GetTitle(), todone.GetDescription());
+                board[2].AddTask(todone.GetId(), todone.GetDueDate(), todone.GetAssignee(), todone.GetTitle(), todone.GetDescription());
 
             }
             else
@@ -81,6 +87,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 board[columnOrdinal].ChangeDescription(id, description);
             else
                 throw new Exception("column not found");
+        }
+        public void ChangeEmailAssignee(int id, int columnOrdinal, string newEmail)
+        {
+            if (columnOrdinal <= 2 || columnOrdinal >= 0)
+            {
+                board[columnOrdinal].ChangeEmailAssignee(id, newEmail);
+            }
+            else
+                throw new Exception("columnOrdinal should be between 0 and 2");
         }
         public string GetColumnName(int columnOrdinal)
         {
@@ -116,5 +131,39 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return this.id;
         }
+        public string GetCreator()
+        {
+            return this.creator;
+        }
+        public void BoardMemberVerify(string email)
+        {
+            if (!(creator == email))
+            {
+                if (!(users.Contains(email)))
+                    throw new Exception("user is not a board member");
+
+
+            }
+
+        }
+        public void TaskAssigneeVerify(string email, Task task)
+        {
+            if (!(email == task.GetAssignee()))
+                throw new Exception($"user with the email {email} is not assign for the task");
+        }
+        public void AddtoBoardUsers(string email)
+        {
+            if (users.Contains(email))
+                throw new Exception("user is already a member in the board");
+            users.Add(email);
+        }
+        public Task GetTask(int id, int columnOrdinal)
+        {
+            if (columnOrdinal <= 2 || columnOrdinal >= 0)
+                return board[columnOrdinal].GetTask(id);
+            else
+                throw new Exception("Column doesnt exist");
+        }
     }
+
 }
