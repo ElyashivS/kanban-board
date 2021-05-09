@@ -60,17 +60,20 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} set [{attributeName}]=@param where email = {email}" //TODO implement Column
+                    CommandText = $"UPDATE {_tableName} set {attributeName}=@param where email = @emailParam" //TODO implement Column
                 };
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter("param", attributeValue));
+                    command.Parameters.Add(new SQLiteParameter(@"param", attributeValue));
+                    command.Parameters.Add(new SQLiteParameter(@"emailParam", email));
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
-                catch
+                catch (Exception e)
                 {
                     log.Warn("Failed to run query");
+                    Console.WriteLine(e.Message); // Prints that helps to debug
+                    Console.WriteLine(command.CommandText);
                 }
                 finally
                 {
