@@ -23,8 +23,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _creator = creator;
         }
 
-        public int ID { get => _id; set { _id = value; _controller.Update(IDColumnName, value); } }
-        public string Name { get => _name; set { _name = value; _controller.Update(BoardNameColumnName, value); } }
-        public string Creator { get => _creator; set { _creator = value; _controller.Update(CreatorColumnName, value); } }
+        //public int ID { get => _id; set { _id = value; _controller.Update(IDColumnName, value); } }
+        //public string Name { get => _name; set { _name = value; _controller.Update(BoardNameColumnName, value); } }
+        //public string Creator { get => _creator; set { _creator = value; _controller.Update(CreatorColumnName, value); } }
     }
 }

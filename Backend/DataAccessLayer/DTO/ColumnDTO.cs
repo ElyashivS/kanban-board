@@ -19,7 +19,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _name = name;
             _columnLimiter = columnLimiter;
         }
-        public string Name { get => _name; set { _name = value; _controller.Update(NameColumnName, value); } }
-        public string ColumnLimiter { get => _columnLimiter; set { _columnLimiter = value; _controller.Update(NameColumnName, value); } }
+        //public string Name { get => _name; set { _name = value; _controller.Update(NameColumnName, value); } }
+        //public string ColumnLimiter { get => _columnLimiter; set { _columnLimiter = value; _controller.Update(NameColumnName, value); } }
     }
 }

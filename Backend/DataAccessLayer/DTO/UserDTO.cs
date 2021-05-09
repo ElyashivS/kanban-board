@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
 {
-    class UserDTO : DTO
+    internal class UserDTO : DTO
     {
         private string _email;
         private string _password;
@@ -20,8 +20,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _password = password;
         }
 
-        public string User { get => _email; set { _email = value; _controller.Update(UserNameColumnName, value); } }
-        public string Pass { get => _password; set { _password = value; _controller.Update(PasswordColumnName, value); } }
+        public string User { get => _email; set { _email = value; _controller.Update(_email, UserNameColumnName, value); } }
+        public string Pass { get => _password; set { _password = value; _controller.Update(_email, PasswordColumnName, value); } }
 
 
 
