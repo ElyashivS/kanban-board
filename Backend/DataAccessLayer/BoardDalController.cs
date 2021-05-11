@@ -62,6 +62,31 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             return result;
         }
+        public bool Delete(BoardDTO board)
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} where id={board.ID}"
+                };
+                try
+                {
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
 
     }
 }

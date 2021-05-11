@@ -12,20 +12,22 @@ namespace IntroSE.Kanban.Backend
     {
         static void Main(string[] args)
         {
-            BoardDalController BoardController = new BoardDalController();
+            TaskDalController TaskController = new TaskDalController();
+            ColumnDalController columnDalController = new ColumnDalController();
+            BoardDalController BoardDalController = new BoardDalController();
+           // bool ans2 = BoardDalController.Insert(new BoardDTO(1, "boardy", "chris"));
+           // bool ans1 = columnDalController.Insert(new ColumnDTO(1, "back log", 4));
+            TaskDTO a = new TaskDTO(1, "chris", DateTime.Now, DateTime.Now, "wow", "wowow", "back log");
+          // bool ans=TaskController.Insert(a);
+           bool  ans = TaskController.Delete(a);
 
-            BoardController.Insert(new BoardDTO(1,"backlog","fucker"));
-            BoardController.Insert(new BoardDTO(2, "backlog", "ucker"));
-            BoardController.Insert(new BoardDTO(3, "backlog", "fcker"));
-            BoardController.Insert(new BoardDTO(4, "backlog", "fuker"));
-            BoardController.Insert(new BoardDTO(5, "backlog", "fucer"));
 
 
-            List<DTO> a = BoardController.Select();
-            foreach (DTO i in a)
-            {
-                Console.WriteLine(((BoardDTO)i).ID);
-            }
+           // Console.WriteLine(ans1);
+           // Console.WriteLine(ans2);
+            Console.WriteLine(ans);
+
+
         }
     }
 }

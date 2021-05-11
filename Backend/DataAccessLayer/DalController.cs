@@ -118,5 +118,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+
     }
 }

@@ -27,8 +27,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} ({TaskDTO.IdColumnName} ,{TaskDTO.EmailAssigneeColumnName},{TaskDTO.CreationTimeColumnName},{TaskDTO.DueDateColumnName},{TaskDTO.TitleColumnName},{TaskDTO.DescriptionColumnName}) " +
-                        $"VALUES (@IdVal,@AssigneeVal,@CreationTimeVal,@DueDateVal,@TitleVal,@DescriptionVal);";
+                    command.CommandText = $"INSERT INTO {_tableName} ({TaskDTO.IdColumnName} ,{TaskDTO.EmailAssigneeColumnName},{TaskDTO.CreationTimeColumnName},{TaskDTO.DueDateColumnName},{TaskDTO.TitleColumnName},{TaskDTO.DescriptionColumnName}, {TaskDTO.ColumnNameColumnName}) " +
+                        $"VALUES (@IdVal,@AssigneeVal,@CreationTimeVal,@DueDateVal,@TitleVal,@DescriptionVal,@ColumnNameVal);";
 
                     SQLiteParameter idParam = new SQLiteParameter(@"IdVal", task.ID);
                     SQLiteParameter assigneeParam = new SQLiteParameter(@"AssigneeVal", task.Assignee);
@@ -36,6 +36,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     SQLiteParameter duedateParam = new SQLiteParameter(@"DueDateVal", task.DueDate);
                     SQLiteParameter titleParam = new SQLiteParameter(@"TitleVal", task.Title);
                     SQLiteParameter descriptionParam = new SQLiteParameter(@"DescriptionVal", task.Description);
+                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", task.ColumnName);
 
 
 
@@ -45,12 +46,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     command.Parameters.Add(duedateParam);
                     command.Parameters.Add(titleParam);
                     command.Parameters.Add(descriptionParam);
+                    command.Parameters.Add(columnnameParam);
 
                     command.Prepare();
                     res = command.ExecuteNonQuery();
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     log.Error("could not insert the Task");
 
                 }
@@ -65,9 +68,34 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
             protected override TaskDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            TaskDTO result = new TaskDTO((int)(long)reader.GetValue(0),reader.GetString(1), reader.GetDateTime(2), reader.GetDateTime(3), reader.GetString(4),reader.GetString(5));
+            TaskDTO result = new TaskDTO((int)(long)reader.GetValue(0),reader.GetString(1), reader.GetDateTime(2), reader.GetDateTime(3), reader.GetString(4),reader.GetString(5),reader.GetString(6));
 
             return result;
+        }
+        public bool Delete(TaskDTO task)
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} where id={task.ID}"
+                };
+                try
+                {
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
         }
     }
  }
