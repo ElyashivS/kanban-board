@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
 {
-    class TaskDTO : DTO
+    internal class TaskDTO : DTO
     {
         private int _id;
         private string _emailAssignee;
@@ -15,7 +15,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         private string _title;
         private string _description;
 
-        public const string IdColumnName = "ID";
+        public const string IdColumnName = "Id";
         public const string EmailAssigneeColumnName = "Assignee";
         public const string CreationTimeColumnName = "CreationTime";
         public const string DueDateColumnName = "DueDate";
@@ -31,12 +31,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _title = title;
             _description = description;
         }
-        //public int ID { get => _id; set { _id = value; _controller.Update(IdColumnName, value); } }
-        //public string Assignee { get => _emailAssignee; set { _emailAssignee = value; _controller.Update(EmailAssigneeColumnName, value); } }
-        //public DateTime CreationTime { get => _creationTime; set { _creationTime = value; _controller.Update(CreationTimeColumnName, value); } }
-        //public DateTime DueDate { get => _dueDate; set { _dueDate = value; _controller.Update(TitleColumnName, value); } }
-        //public string Title { get => _title; set { _title = value; _controller.Update(CreationTimeColumnName, value); } }
-        //public string Description { get => _description; set { _description = value; _controller.Update(DescriptionColumnName, value); } }
+        public int ID { get => _id; set { _id = value; } }
+        public string Assignee { get => _emailAssignee; set { _emailAssignee = value; } }
+        public DateTime CreationTime { get => _creationTime; set { _creationTime = value; } }
+        public DateTime DueDate { get => _dueDate; set { _dueDate = value; } }
+        public string Title { get => _title; set { _title = value; } }
+        public string Description { get => _description; set { _description = value; } }
 
     }
 };

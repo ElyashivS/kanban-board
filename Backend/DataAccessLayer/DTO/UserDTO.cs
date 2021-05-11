@@ -11,8 +11,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         private string _email;
         private string _password;
 
-        public const string UserNameColumnName = "User";
-        public const string PasswordColumnName = "Pass";
+        public const string usernameColumnName = "Email";
+        public const string passwordColumnName = "Password";
 
         public UserDTO(string email, string password) : base(new UserDalController())
         {
@@ -20,8 +20,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _password = password;
         }
 
-        public string User { get => _email; set { _email = value; _controller.Update(_email, UserNameColumnName, value); } }
-        public string Pass { get => _password; set { _password = value; _controller.Update(_email, PasswordColumnName, value); } }
+        public string Email { get => _email; set { _email = value; _controller.Update(_email, usernameColumnName, value); } }
+        public string Password { get => _password; set { _password = value; _controller.Update(_email, passwordColumnName, value); } }
 
 
 

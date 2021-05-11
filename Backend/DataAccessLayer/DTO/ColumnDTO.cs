@@ -8,18 +8,22 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
 {
     class ColumnDTO : DTO
     {
-        private string _columnLimiter;
+        private int _boardId;
         private string _name;
+        private int _columnLimiter;
 
-        public const string NameColumnName = "Name";
+        public const string BoardIdColumnName = "BoardId";
+        public const string ColumnNameColumnName = "ColumnName";
         public const string ColumnLimiterColumnName = "ColumnLimiter";
 
-        public ColumnDTO(string name, string columnLimiter) : base(new UserDalController())
+        public ColumnDTO(int boardId,string name, int columnLimiter ) : base(new UserDalController())
         {
+            _boardId = boardId;
             _name = name;
             _columnLimiter = columnLimiter;
         }
-        //public string Name { get => _name; set { _name = value; _controller.Update(NameColumnName, value); } }
-        //public string ColumnLimiter { get => _columnLimiter; set { _columnLimiter = value; _controller.Update(NameColumnName, value); } }
+        public string Name { get => _name; set { _name = value; } } 
+        public int ColumnLimiter { get => _columnLimiter; set { _columnLimiter = value; } } 
+        public int BoardId { get => _boardId; set { _boardId = value; } }
     }
 }

@@ -12,9 +12,20 @@ namespace IntroSE.Kanban.Backend
     {
         static void Main(string[] args)
         {
-            UserDalController userController = new UserDalController();
-            bool ans = userController.Update("asddas@gmail.com", "password", "98765");
-            Console.WriteLine(ans);
+            BoardDalController BoardController = new BoardDalController();
+
+            BoardController.Insert(new BoardDTO(1,"backlog","fucker"));
+            BoardController.Insert(new BoardDTO(2, "backlog", "ucker"));
+            BoardController.Insert(new BoardDTO(3, "backlog", "fcker"));
+            BoardController.Insert(new BoardDTO(4, "backlog", "fuker"));
+            BoardController.Insert(new BoardDTO(5, "backlog", "fucer"));
+
+
+            List<DTO> a = BoardController.Select();
+            foreach (DTO i in a)
+            {
+                Console.WriteLine(((BoardDTO)i).ID);
+            }
         }
     }
 }

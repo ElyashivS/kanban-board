@@ -7,6 +7,7 @@ using System.Data.SQLite;
 using System.IO;
 using log4net;
 using System.Reflection;
+using IntroSE.Kanban.Backend.DataAccessLayer.DTO;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
@@ -15,13 +16,47 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         protected readonly string _connectionString;
-        private readonly string _tableName;
+        protected readonly string _tableName;
         public DalController(string tableName)
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = tableName;
         }
+        public List<DTO.DTO> Select()
+        {
+            List<DTO.DTO> results = new List<DTO.DTO>();
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {_tableName};";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    dataReader = command.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+                        results.Add(ConvertReaderToObject(dataReader));
+
+                    }
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return results;
+        }
+        protected abstract DTO.DTO ConvertReaderToObject(SQLiteDataReader reader);
 
         public bool Update (int id, string attributeName, string attributeValue) // Update for Board and Task
         {
@@ -35,7 +70,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 };
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter("param", attributeValue));
+                    command.Parameters.Add(new SQLiteParameter("@param", attributeValue));
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
@@ -64,8 +99,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 };
                 try
                 {
-                    command.Parameters.Add(new SQLiteParameter(@"param", attributeValue));
-                    command.Parameters.Add(new SQLiteParameter(@"emailParam", email));
+                    command.Parameters.Add(new SQLiteParameter("@param", attributeValue));
+                    command.Parameters.Add(new SQLiteParameter("@emailParam", email));
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
