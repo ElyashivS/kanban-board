@@ -52,72 +52,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return results;
         }
         protected abstract DTO.DTO ConvertReaderToObject(SQLiteDataReader reader);
-
-        public bool Update (int id, string attributeName, string attributeValue) // Update for Board and Task
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"UPDATE {_tableName} set [{attributeName}]=@param where id={id}"
-                };
-                try
-                {
-                    command.Parameters.Add(new SQLiteParameter("@param", attributeValue));
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch
-                {
-                    log.Warn("Failed to run query");
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-            }
-            return res > 0;
-        }
-
-        public bool Update(string email, string attributeName, string attributeValue) // Update for User and Column
-        {
-            int res = -1;
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                SQLiteCommand command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"UPDATE {_tableName} set {attributeName}=@param where email = @emailParam" //TODO implement Column
-                };
-                try
-                {
-                    command.Parameters.Add(new SQLiteParameter("@param", attributeValue));
-                    command.Parameters.Add(new SQLiteParameter("@emailParam", email));
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                catch (Exception e)
-                {
-                    log.Warn("Failed to run query");
-                    Console.WriteLine(e.Message); // Prints that helps to debug
-                    Console.WriteLine(command.CommandText);
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-            }
-            return res > 0;
-        }
-
     }
 }

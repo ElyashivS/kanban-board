@@ -23,7 +23,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _creator = creator;
         }
 
-        public int ID { get => _id; set { _id = value;  } }
+        public int ID { get => _id; set { _id = value; } }
         public string Name { get => _name; set { _name = value; } }
         public string Creator { get => _creator; set { _creator = value; } }
     }

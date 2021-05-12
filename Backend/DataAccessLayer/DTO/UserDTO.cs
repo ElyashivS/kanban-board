@@ -20,8 +20,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _password = password;
         }
 
-        public string Email { get => _email; set { _email = value; _controller.Update(_email, usernameColumnName, value); } }
-        public string Password { get => _password; set { _password = value; _controller.Update(_email, passwordColumnName, value); } }
+        public string Email { get => _email; set { _email = value; } }
+        public string Password { get => _password; set { _password = value; } }
 
 
 

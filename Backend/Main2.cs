@@ -12,22 +12,28 @@ namespace IntroSE.Kanban.Backend
     {
         static void Main(string[] args)
         {
-            TaskDalController TaskController = new TaskDalController();
+            TaskDalController taskController = new TaskDalController();
             ColumnDalController columnDalController = new ColumnDalController();
-            BoardDalController BoardDalController = new BoardDalController();
-           // bool ans2 = BoardDalController.Insert(new BoardDTO(1, "boardy", "chris"));
-           // bool ans1 = columnDalController.Insert(new ColumnDTO(1, "back log", 4));
-            TaskDTO a = new TaskDTO(1, "chris", DateTime.Now, DateTime.Now, "wow", "wowow", "back log");
-          // bool ans=TaskController.Insert(a);
-           bool  ans = TaskController.Delete(a);
+            BoardDalController boardDalController = new BoardDalController();
+            UserDalController userDalController = new UserDalController();
 
 
-
-           // Console.WriteLine(ans1);
-           // Console.WriteLine(ans2);
-            Console.WriteLine(ans);
-
-
+            bool a1 = boardDalController.Insert(new BoardDTO(777, "lcuk", "me"));
+            bool a2 = userDalController.Insert(new UserDTO("Hirtut@gmail.com", "qwe123"));
+            Console.WriteLine(a1);
+            Console.WriteLine(a2);
+            bool b1 = boardDalController.Update(777, "Creator", "BIBABU");
+            bool b2 = userDalController.Update("Hirtut@gmail.com", "password", "asd987");
+            Console.WriteLine(b1);
+            Console.WriteLine(b2);
+            bool c1 = taskController.Insert(new TaskDTO(123, "Hirtut@gmail.com", new DateTime(2025, 1, 1), new DateTime(2026, 1, 1), "ToDo", "Now", "backlog"));
+            bool c2 = columnDalController.Insert(new ColumnDTO(777, "backlog", 70));
+            Console.WriteLine(c1);
+            Console.WriteLine(c2);
+            bool d1 = taskController.Update(123, "backlog", "Title", "NotToDo");
+            bool d2 = columnDalController.Update("backlog", "ColumnLimiter", "44");
+            Console.WriteLine(d1);
+            Console.WriteLine(d2);
         }
     }
 }
