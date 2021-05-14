@@ -44,6 +44,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     log.Error("could not insert new Column");
                     
                 }
@@ -58,35 +59,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
         protected override BoardDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            BoardDTO result = new BoardDTO((int)(long)reader.GetValue(0), reader.GetString(1), reader.GetString(2));
+            BoardDTO result = new BoardDTO(reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
 
             return result;
         }
-        public bool Delete(BoardDTO board)
-        {
-            int res = -1;
-
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                var command = new SQLiteCommand
-                {
-                    Connection = connection,
-                    CommandText = $"delete from {_tableName} where id={board.ID}"
-                };
-                try
-                {
-                    connection.Open();
-                    res = command.ExecuteNonQuery();
-                }
-                finally
-                {
-                    command.Dispose();
-                    connection.Close();
-                }
-
-            }
-            return res > 0;
-        }
+       
 
         public bool Update(int id, string attributeName, string attributeValue)
         {
@@ -119,6 +96,119 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        public bool Delete(BoardDTO board)
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} where {BoardDTO.IDColumnName}=@BoardIdVal; "
+                };
+                try
+                {
+                    connection.Open();
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", board.ID);
+                    
+
+                    command.Parameters.Add(boardidParam);
+                    
+
+                    res = command.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+        public BoardDTO SpecificSelect(int id)
+        {
+            BoardDTO result=null;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {_tableName} where {BoardDTO.IDColumnName}=@BoardIdVal ;";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal",id );
+                    command.Parameters.Add(boardidParam);
+                    dataReader = command.ExecuteReader();
+
+                   if(dataReader.Read())
+                        result=(ConvertReaderToObject(dataReader));
+                   
+                   
+                }
+                catch(Exception e)
+                {
+                    log.Debug(e.Message+"\n"+e.StackTrace);
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+            if (result == null)
+                throw new Exception("Board could not be found");
+            return result;
+        }
+        public bool InsertToAsigneeList(int BoardId, string emailAssignee)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                int res = -1;
+                try
+                {
+                    connection.Open();
+                    command.CommandText = $"INSERT INTO {"AssigneeList"} ({BoardDTO.IDColumnName} ,{BoardDTO.AssigneeColumnName}) " +
+                        $"VALUES (@IdVal,@EmailAssigneeVal);";
+
+                    SQLiteParameter boardIdParam = new SQLiteParameter(@"IdVal", BoardId);
+                    SQLiteParameter assigneeParam = new SQLiteParameter(@"EmailAssigneeVal", emailAssignee);
+                    
+
+
+                    command.Parameters.Add(boardIdParam);
+                    command.Parameters.Add(assigneeParam);
+                    
+
+
+                    command.Prepare();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    log.Error("could not insert new Column");
+
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+
+                }
+                return res > 0;
+            }
+        }
+
+
 
     }
 }

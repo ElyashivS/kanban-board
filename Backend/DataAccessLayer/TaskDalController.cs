@@ -27,26 +27,28 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} ({TaskDTO.IdColumnName} ,{TaskDTO.EmailAssigneeColumnName},{TaskDTO.CreationTimeColumnName},{TaskDTO.DueDateColumnName},{TaskDTO.TitleColumnName},{TaskDTO.DescriptionColumnName}, {TaskDTO.ColumnNameColumnName}) " +
-                        $"VALUES (@IdVal,@AssigneeVal,@CreationTimeVal,@DueDateVal,@TitleVal,@DescriptionVal,@ColumnNameVal);";
+                    command.CommandText = $"INSERT INTO {_tableName} ({TaskDTO.BoardIdColumnName},{TaskDTO.ColumnNameColumnName},{TaskDTO.IdColumnName} ,{TaskDTO.EmailAssigneeColumnName},{TaskDTO.CreationTimeColumnName},{TaskDTO.DueDateColumnName},{TaskDTO.TitleColumnName},{TaskDTO.DescriptionColumnName}) " +
+                        $"VALUES (@BoardIdVal ,@ColumnNameVal,@IdVal,@AssigneeVal,@CreationTimeVal,@DueDateVal,@TitleVal,@DescriptionVal);";
 
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", task.BoardId);
+                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", task.ColumnName);
                     SQLiteParameter idParam = new SQLiteParameter(@"IdVal", task.ID);
                     SQLiteParameter assigneeParam = new SQLiteParameter(@"AssigneeVal", task.Assignee);
                     SQLiteParameter creationtimeParam = new SQLiteParameter(@"CreationTimeVal", task.CreationTime);
                     SQLiteParameter duedateParam = new SQLiteParameter(@"DueDateVal", task.DueDate);
                     SQLiteParameter titleParam = new SQLiteParameter(@"TitleVal", task.Title);
                     SQLiteParameter descriptionParam = new SQLiteParameter(@"DescriptionVal", task.Description);
-                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", task.ColumnName);
 
 
-
+                    command.Parameters.Add(boardidParam);
+                    command.Parameters.Add(columnnameParam);
                     command.Parameters.Add(idParam);
                     command.Parameters.Add(assigneeParam);
                     command.Parameters.Add(creationtimeParam);
                     command.Parameters.Add(duedateParam);
                     command.Parameters.Add(titleParam);
                     command.Parameters.Add(descriptionParam);
-                    command.Parameters.Add(columnnameParam);
+                    
 
                     command.Prepare();
                     res = command.ExecuteNonQuery();
@@ -68,7 +70,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
             protected override TaskDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            TaskDTO result = new TaskDTO((int)(long)reader.GetValue(0),reader.GetString(1), reader.GetDateTime(2), reader.GetDateTime(3), reader.GetString(4),reader.GetString(5),reader.GetString(6));
+            TaskDTO result = new TaskDTO(reader.GetInt32(0),reader.GetString(1),reader.GetInt32(2),reader.GetString(3),reader.GetDateTime(4),reader.GetDateTime(5),reader.GetString(6),reader.GetString(7));
 
             return result;
         }
@@ -81,12 +83,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"delete from {_tableName} where id={task.ID}"
+                    CommandText = $"delete from {_tableName} where {TaskDTO.IdColumnName}=@IdVal AND {TaskDTO.BoardIdColumnName}=@BoardIdVal AND {TaskDTO.ColumnNameColumnName}=@ColumnNameVal; "
                 };
                 try
                 {
                     connection.Open();
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", task.BoardId);
+                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", task.ColumnName);
+                    SQLiteParameter idParam = new SQLiteParameter(@"IdVal", task.ID);
+                    command.Parameters.Add(boardidParam);
+                    command.Parameters.Add(columnnameParam);
+                    command.Parameters.Add(idParam);
                     res = command.ExecuteNonQuery();
+                   
                 }
                 finally
                 {
@@ -98,7 +107,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return res > 0;
         }
 
-        public bool Update(int id, int columnID, string attributeName, DateTime attributeValue)
+        public bool Update(int boardId, string columnname, int id, string attributeName, DateTime attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -106,13 +115,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE id=@idParam AND columnID=@columnParam"
+                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE id=@idParam AND ColumnName=@columnParam AND BoardId=@BoardIdParam"
                 };
                 try
                 {
+                    command.Parameters.Add(new SQLiteParameter("@BoardIdParam", boardId));
                     command.Parameters.Add(new SQLiteParameter("@attributeParam", attributeValue));
                     command.Parameters.Add(new SQLiteParameter("@idParam", id));
-                    command.Parameters.Add(new SQLiteParameter("@columnParam", columnID));
+                    command.Parameters.Add(new SQLiteParameter("@columnParam", columnname));
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
@@ -131,7 +141,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return res > 0;
         }
 
-        public bool Update(int id, string columnName, string attributeName, string attributeValue)
+        public bool Update(int boardId, string columnName, int id,  string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -139,10 +149,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE (id=@idParam AND ColumnName=@columnParam)"
+                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE (id=@idParam AND ColumnName=@columnParam AND BoardId=@BoardIdParam)"
                 };
                 try
                 {
+                    command.Parameters.Add(new SQLiteParameter("@BoardIdParam", boardId));
                     command.Parameters.Add(new SQLiteParameter("@attributeParam", attributeValue));
                     command.Parameters.Add(new SQLiteParameter("@idParam", id));
                     command.Parameters.Add(new SQLiteParameter("@columnParam", columnName));
@@ -163,6 +174,51 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        public TaskDTO SpecificSelect(int Id, string ColumnName,int taskId)
+        {
+            TaskDTO result = null;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {_tableName} where {TaskDTO.BoardIdColumnName}=@BoardIdVal AND {TaskDTO.ColumnNameColumnName}=@ColumnNameVal AND {TaskDTO.IdColumnName}=@IdVal ;";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", Id);
+                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", ColumnName);
+                    SQLiteParameter idParam = new SQLiteParameter(@"IdVal", taskId);
+                    command.Parameters.Add(boardidParam);
+                    command.Parameters.Add(columnnameParam);
+                    command.Parameters.Add(idParam);
+                    dataReader = command.ExecuteReader();
+
+                    if (dataReader.Read())
+                        result = (ConvertReaderToObject(dataReader));
+
+
+                }
+                catch (Exception e)
+                {
+                    log.Debug(e.Message + "\n" + e.StackTrace);
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+            if (result == null)
+                throw new Exception("Board could not be found");
+            return result;
+        }
+
+
 
     }
 }

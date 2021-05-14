@@ -22,6 +22,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _name = name;
             _columnLimiter = columnLimiter;
         }
+       
         public string Name { get => _name; set { _name = value; } } 
         public int ColumnLimiter { get => _columnLimiter; set { _columnLimiter = value; } } 
         public int BoardId { get => _boardId; set { _boardId = value; } }

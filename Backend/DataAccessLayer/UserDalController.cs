@@ -58,7 +58,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
         protected override UserDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            UserDTO result = new UserDTO(reader.GetString(1), reader.GetString(2));
+            UserDTO result = new UserDTO(reader.GetString(0), reader.GetString(1));
 
             return result;
         }
@@ -94,5 +94,77 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        public bool Delete(UserDTO user)
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} where {UserDTO.usernameColumnName}=@EmailVal; "
+                };
+                try
+                {
+                    connection.Open();
+                    SQLiteParameter emailParam = new SQLiteParameter(@"EmailVal", user.Email);
+
+
+                    command.Parameters.Add(emailParam);
+
+
+                    res = command.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+        public UserDTO SpecificSelect(string email)
+        {
+           UserDTO result = null;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {_tableName} where {UserDTO.usernameColumnName}=@EmailVal ;";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    SQLiteParameter emailParam = new SQLiteParameter(@"EmailVal", email);
+                    command.Parameters.Add(emailParam);
+                    dataReader = command.ExecuteReader();
+
+                    if (dataReader.Read())
+                        result = (ConvertReaderToObject(dataReader));
+
+
+                }
+                catch (Exception e)
+                {
+                    log.Debug(e.Message + "\n" + e.StackTrace);
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+            if (result == null)
+                throw new Exception("User could not be found");
+            return result;
+        }
+
     }
 }

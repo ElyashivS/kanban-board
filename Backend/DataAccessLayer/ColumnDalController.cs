@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         public ColumnDalController() : base("Column")
         {
-            
+
         }
         public bool Insert(ColumnDTO column)
         {
@@ -46,7 +46,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 catch (Exception e)
                 {
                     log.Error("could not insert new user");
-                    
+
                 }
                 finally
                 {
@@ -59,12 +59,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
         protected override ColumnDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            ColumnDTO result = new ColumnDTO((int)(long)reader.GetValue(0), reader.GetString(1),(int)(long)reader.GetValue(2));
+            ColumnDTO result = new ColumnDTO(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2));
 
             return result;
         }
 
-        public bool Update(string name, string attributeName, string attributeValue)
+        public bool Update(string name, string attributeName, int attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -94,6 +94,82 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
             }
             return res > 0;
+        }
+
+        public bool Delete(ColumnDTO column)
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} where {ColumnDTO.BoardIdColumnName}=@BoardIdVal AND {ColumnDTO.ColumnNameColumnName}=@ColumnNameVal ; "
+                };
+                try
+                {
+                    connection.Open();
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", column.BoardId);
+                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", column.Name);
+                    
+                    command.Parameters.Add(boardidParam);
+                    command.Parameters.Add(columnnameParam);
+                    
+                    res = command.ExecuteNonQuery();
+
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+        public ColumnDTO SpecificSelect(int BoardId,string ColumnName)
+        {
+            ColumnDTO result = null;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {_tableName} where {ColumnDTO.BoardIdColumnName}=@BoardIdVal AND {ColumnDTO.ColumnNameColumnName}=@ColumnNameVal;";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", BoardId);
+                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", ColumnName);
+                    command.Parameters.Add(boardidParam);
+                    command.Parameters.Add(columnnameParam);
+                    dataReader = command.ExecuteReader();
+
+                    if (dataReader.Read())
+                        result = (ConvertReaderToObject(dataReader));
+
+
+                }
+                catch (Exception e)
+                {
+
+                    log.Debug(e.Message + "\n" + e.StackTrace);
+                    throw new Exception("DataBase Error");
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+            if (result == null)
+                throw new Exception("Column could not be found");
+            return result;
         }
     }
 }

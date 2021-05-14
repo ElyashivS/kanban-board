@@ -15,6 +15,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         private string _title;
         private string _description;
         private string _columnName;
+        private int _boardId;
 
         public const string IdColumnName = "Id";
         public const string EmailAssigneeColumnName = "Assignee";
@@ -23,8 +24,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public const string TitleColumnName = "Title";
         public const string DescriptionColumnName = "Description";
         public const string ColumnNameColumnName = "ColumnName";
+        public const string BoardIdColumnName = "BoardId";
 
-        public TaskDTO (int id, string emailAssignee, DateTime creationTime, DateTime dueDate, string title, string description,string columnName) : base(new UserDalController())
+        public TaskDTO (int boardid,string columnName,int id, string emailAssignee, DateTime creationTime, DateTime dueDate, string title, string description) : base(new UserDalController())
         {
             _id = id;
             _emailAssignee = emailAssignee;
@@ -33,6 +35,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _title = title;
             _description = description;
             _columnName = columnName;
+            _boardId = boardid;
 
         }
         public int ID { get => _id; set { _id = value; } }
@@ -42,6 +45,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public string Title { get => _title; set { _title = value; } }
         public string Description { get => _description; set { _description = value; } }
         public string ColumnName { get => _columnName; set { _columnName = value; } }
+        public int BoardId { get => _boardId; set { _boardId = value; } }
 
     }
 };

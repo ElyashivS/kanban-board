@@ -11,7 +11,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public string name;
         private Dictionary<int, Task> tasks;
         private bool columnLimitVerifier = false;
-        private int columnLimiter;
+        private int columnLimiter=-1;
 
 
 
@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             if (columnLimitVerifier)
                 return this.columnLimiter;
-            else
+            else              
                 throw new Exception("The column isnt limited to a number of Tasks");
         }
         public Task AddTask(int id, DateTime dueDate, string email, string title, string description)
