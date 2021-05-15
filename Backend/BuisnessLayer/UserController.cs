@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IntroSE.Kanban.Backend.DataAccessLayer;
+using IntroSE.Kanban.Backend.DataAccessLayer.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +11,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     public class UserController
     {
         Dictionary<string, User> Users;
+        UserDalController UsersTable = new UserDalController();
 
         public UserController()
         {
@@ -22,7 +25,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 throw new ArgumentException("email is already in the system");
             
             Users.Add(email, new User(email, password));
-            
+            UserDTO toInsert = new UserDTO(email, password);
+            UsersTable.Insert(toInsert);
                 
         }
         public User Login(string email, string password)

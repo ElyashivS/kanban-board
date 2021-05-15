@@ -45,7 +45,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
-                    log.Error("could not insert new Column");
+                    log.Error("could not insert new Board");
                     
                 }
                 finally
@@ -208,8 +208,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
         }
 
+        // TODO add function to remove assginee from board
 
-
+        
     }
 }
 

@@ -38,7 +38,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             if (userEmail != c.GetCreator())
                 throw new Exception("only the creator of the board may delete it");
-
+            // add function to remove board from all the board members
             boardController[creatorEmail].Remove(boardName);
             return c;
 
@@ -116,6 +116,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.AddtoBoardUsers(userEmail);
             boardController[userEmail].Add(boardName, c);
         }
+        //brings a list of Tasks that the user is Assignee for and in -"in progress column"
         public List<Task> InProgressTasks(string email)
         {
             List<Task> c = new List<Task>();
@@ -173,6 +174,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return boardController[email].Values.ToList();
         }
+
+        // TODO change the function name later =D ^.- 
         private bool TaskVerForList(string email, Task task)
         {
             if (email == task.GetAssignee())
