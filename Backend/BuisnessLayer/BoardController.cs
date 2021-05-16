@@ -1,4 +1,6 @@
-﻿using System;
+﻿using IntroSE.Kanban.Backend.DataAccessLayer;
+using IntroSE.Kanban.Backend.DataAccessLayer.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class BoardController
     {
-        Dictionary<string, Dictionary<string, Board>> boardController;
+        private Dictionary<string, Dictionary<string, Board>> boardController;
+        private  BoardDalController BoardTable = new BoardDalController();
+        private ColumnDalController ColumnTable = new ColumnDalController();
+        private TaskDalController TaskTable = new TaskDalController();
+        
         int boardIdCounter = 1;
 
 
@@ -27,7 +33,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (!boardController[email].ContainsKey(name))
             {
                 boardController[email].Add(name, new Board(boardIdCounter, name, email));
+                BoardTable.Insert(new BoardDTO(boardIdCounter, email, name));
                 boardIdCounter = boardIdCounter + 1;
+
             }
             else
                 throw new Exception($"Board with the name {name} already exist");
@@ -40,6 +48,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 throw new Exception("only the creator of the board may delete it");
             // add function to remove board from all the board members
             boardController[creatorEmail].Remove(boardName);
+            BoardTable.Delete(BoardTable.SpecificSelect(c.id));
             return c;
 
 
@@ -50,6 +59,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             c.BoardMemberVerify(userEmail);
             Task b = c.AddTask(userEmail, dueDate, title, description);
+            TaskDTO toadd = new TaskDTO(c.id, b.id, "backlog", userEmail, b.GetCreationTime(), b.GetDueDate(), b.GetTitle(), b.GetDescription());
+            TaskTable.Insert(toadd);
             return b;
         }
         public void MoveTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
@@ -95,6 +106,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             c.BoardMemberVerify(userEmail);
             c.LimitColunm(columnOrdinal, limit);
+            string fordata = c.GetColumnName(columnOrdinal);
+            
         }
         public int GetcolumnLimit(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
@@ -115,6 +128,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             c.AddtoBoardUsers(userEmail);
             boardController[userEmail].Add(boardName, c);
+            BoardTable.InsertToAsigneeList(c.id, userEmail);
         }
         //brings a list of Tasks that the user is Assignee for and in -"in progress column"
         public List<Task> InProgressTasks(string email)

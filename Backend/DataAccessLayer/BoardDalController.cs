@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
-    class BoardDalController : DalController
+    internal class BoardDalController : DalController
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         public BoardDalController() : base("Board")

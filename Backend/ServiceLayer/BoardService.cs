@@ -74,6 +74,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception e)
             {
+                Console.WriteLine(e);
                 log.Warn("Failed to add task");
                 return Response<Task>.FromError(e.Message);
             }
@@ -154,8 +155,9 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                log.Info("Board has been added");
+               
                 boardController.AddBoard(email, name);
+                log.Info("Board has been added");
                 return new Response();
             }
             catch (Exception e)
@@ -170,10 +172,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.RemoveBoard(userEmail, creatorEmail, boardName);
+                log.Info("Board has been removed");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to Remove board");
                 return new Response(e.Message);
             }
         }
@@ -200,10 +204,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.JoinBoard(userEmail, creatorEmail, boardName);
+                log.Info($"user with the email {userEmail} has joined {creatorEmail} board, on the board name {boardName}");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn($"User with the email {userEmail} has failed to join to board {boardName}");
                 return new Response(e.Message);
             }
 
