@@ -85,10 +85,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.ChangeDueDate(userEmail, creatorEmail, boardName, columnOrdinal, taskId, dueDate);
+                log.Info("Tasks Dudate has been updated");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to update tasks Duedate");
                 return new Response(e.Message);
             }
         }
@@ -98,10 +100,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.ChangeTitle(userEmail, creatorEmail, boardName, columnOrdinal, taskId, title);
+                log.Info("Tasks Title has been updated");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to update tasks Title");
                 return new Response(e.Message);
             }
         }
@@ -111,10 +115,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.ChangeDescription(userEmail, creatorEmail, boardName, columnOrdinal, taskId, description);
+                log.Info("Tasks Description has been updated");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to update tasks Description");
                 return new Response(e.Message);
             }
         }
@@ -172,12 +178,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.RemoveBoard(userEmail, creatorEmail, boardName);
-                log.Info("Board has been removed");
+                log.Info($"Board {boardName} and all his tasks has been removed");
                 return new Response();
             }
             catch (Exception e)
             {
-                log.Warn("Failed to Remove board");
+                log.Warn($"Failed to Remove board {boardName}");
                 return new Response(e.Message);
             }
         }

@@ -174,7 +174,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
-        public TaskDTO SpecificSelect(int Id, string ColumnName,int taskId)
+        public TaskDTO SpecificSelect(int Id,int taskId)
         {
             TaskDTO result = null;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -186,7 +186,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 {
                     connection.Open();
                     SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", Id);
-                    
                     SQLiteParameter idParam = new SQLiteParameter(@"IdVal", taskId);
                     command.Parameters.Add(boardidParam);
                     

@@ -45,10 +45,23 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             Board c = FindBoard(creatorEmail, boardName);
             if (userEmail != c.GetCreator())
-                throw new Exception("only the creator of the board may delete it");
+                throw new Exception("only the creator of the board may delete the board");
             // add function to remove board from all the board members
             boardController[creatorEmail].Remove(boardName);
+
+            List<Colunm> toremove = c.GetBoardColumns();
+            foreach (Colunm i in toremove)
+            {
+                foreach (Task a in i.Tasks)
+                {
+                    TaskDTO todelete = TaskTable.SpecificSelect(c.id, a.id);
+                    TaskTable.Delete(todelete);
+                  
+                }
+
+            }
             BoardTable.Delete(BoardTable.SpecificSelect(c.id));
+           
             return c;
 
 
@@ -76,6 +89,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeDueDate(taskId, columnOrdinal, dueDate);
+            TaskTable.Update(c.id, c.GetColumnName(columnOrdinal), taskId, "DueDate", dueDate);
         }
         public void ChangeTitle(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string title)
         {
@@ -83,6 +97,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeTitle(taskId, columnOrdinal, title);
+            TaskTable.Update(c.id, c.GetColumnName(columnOrdinal), taskId, "Title", title);
         }
         public void ChangeDescription(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string description)
         {
@@ -90,6 +105,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeDescription(taskId, columnOrdinal, description);
+            TaskTable.Update(c.id, c.GetColumnName(columnOrdinal), taskId, "Description", description);
         }
         public string GetColumnName(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {

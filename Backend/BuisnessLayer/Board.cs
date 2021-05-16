@@ -164,6 +164,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             else
                 throw new Exception("Column doesnt exist");
         }
+        public List<Colunm> GetBoardColumns()
+        {
+            return board;
+        }
        
     }
    
