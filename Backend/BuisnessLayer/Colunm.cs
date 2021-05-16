@@ -110,6 +110,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 return tasks.Values.ToList();
             }
+
+        }
+        //returns if the column is limi
+        public bool GetColumnIfLimited()
+        {
+            return columnLimitVerifier;
         }
     }
 }

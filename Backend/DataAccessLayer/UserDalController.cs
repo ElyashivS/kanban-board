@@ -45,7 +45,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error("Could not insert new Column");
+                    log.Error("Failed to run query");
                    
                 }
                 finally
@@ -82,9 +82,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    log.Warn("Failed to run query");
-                    Console.WriteLine(e.Message); // Prints that helps to debug
-                    Console.WriteLine(command.CommandText);
+                    log.Error("Failed to run query");
+
                 }
                 finally
                 {
@@ -117,6 +116,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     res = command.ExecuteNonQuery();
 
                 }
+                catch (Exception e)
+                {
+                    log.Error("Failed to run query");
+                }
                 finally
                 {
                     command.Dispose();
@@ -148,7 +151,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    log.Debug(e.Message + "\n" + e.StackTrace);
+                    log.Error("Failed to run query");
                 }
                 finally
                 {

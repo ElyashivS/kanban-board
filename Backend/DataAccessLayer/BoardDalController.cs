@@ -44,9 +44,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    log.Error("could not insert new Board");
-                    
+                    log.Error("Failed to run query");
+
                 }
                 finally
                 {
@@ -84,9 +83,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    log.Warn("Failed to run query");
-                    Console.WriteLine(e.Message); // Prints that helps to debug
-                    Console.WriteLine(command.CommandText);
+                    log.Error("Failed to run query");
                 }
                 finally
                 {
@@ -118,6 +115,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
                     res = command.ExecuteNonQuery();
 
+                }
+                catch(Exception e)
+                {
+                    log.Error("Failed to run query");
                 }
                 finally
                 {
@@ -208,9 +209,50 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
         }
 
-        // TODO add function to remove assginee from board
+        public bool DeleteFromAssigneeList(int BoardId,string EmailAssignee)
+        {
+            int res = -1;
 
-        
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+              
+                var command = new SQLiteCommand
+                {
+                  
+                    Connection = connection,
+                    CommandText = $"delete from {"AssigneeList"} where ({BoardDTO.IDColumnName}=@IdVal AND {BoardDTO.AssigneeColumnName}=@EmailAssigneeVal); "
+                };
+                try
+                {
+                    
+                    connection.Open();
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"IdVal", BoardId);
+                    SQLiteParameter emailAssigneeParam = new SQLiteParameter(@"EmailAssigneeVal", EmailAssignee);
+
+
+                    command.Parameters.Add(boardidParam);
+                    command.Parameters.Add(EmailAssignee);
+
+
+                    res = command.ExecuteNonQuery();
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    log.Error("Failed to run query");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+
+
     }
 }
 

@@ -168,7 +168,19 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return board;
         }
-       
+        public bool GetColumnIfLimited(int columnOrdinal)
+        {
+            if (columnOrdinal <= 2 || columnOrdinal >= 0)
+            return board[columnOrdinal].GetColumnIfLimited(); 
+            else
+                throw new Exception("Column doesnt exist");
+
+        }
+        public List<string> GetAssigneeList()
+        {
+            return users;
+        }
+
     }
    
 }

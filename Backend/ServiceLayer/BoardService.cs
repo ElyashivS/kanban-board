@@ -27,11 +27,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                boardController.LimitColumn(userEmail, creatorEmail, boardName, columnOrdinal, limit); ;
+                boardController.LimitColumn(userEmail, creatorEmail, boardName, columnOrdinal, limit);
+                log.Info($"Colunm has been Limited with {limit} Tasks successfuly");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to LimitColunm");
                 return new Response(e.Message);
             }
         }
@@ -130,10 +132,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.MoveTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId);
+                log.Info("Task has been advenced successfuly");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn("Failed to advence task ");
                 return new Response(e.Message);
             }
         }
@@ -163,7 +167,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                
                 boardController.AddBoard(email, name);
-                log.Info("Board has been added");
+                log.Info($"Board {name} has been added");
                 return new Response();
             }
             catch (Exception e)
@@ -225,10 +229,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 boardController.AssignTask(userEmail, creatorEmail, boardName, columnOrdinal, taskId, emailAssignee);
+                log.Info($"user with the email {userEmail} has assigned Task to user with the email {emailAssignee}");
                 return new Response();
             }
             catch (Exception e)
             {
+                log.Warn($"Failed to assign task");
                 return new Response(e.Message);
             }
         }

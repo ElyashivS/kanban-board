@@ -11,10 +11,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     public class BoardController
     {
         private Dictionary<string, Dictionary<string, Board>> boardController;
-        private  BoardDalController BoardTable = new BoardDalController();
+        private BoardDalController BoardTable = new BoardDalController();
         private ColumnDalController ColumnTable = new ColumnDalController();
         private TaskDalController TaskTable = new TaskDalController();
-        
+
         int boardIdCounter = 1;
 
 
@@ -46,9 +46,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             if (userEmail != c.GetCreator())
                 throw new Exception("only the creator of the board may delete the board");
-            // add function to remove board from all the board members
+            RemoveBoardFromAssigneeList(c.GetAssigneeList(), boardName, c.id);
+            //TODO-quary of removing assignee not working
             boardController[creatorEmail].Remove(boardName);
-
+            
             List<Colunm> toremove = c.GetBoardColumns();
             foreach (Colunm i in toremove)
             {
@@ -56,12 +57,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 {
                     TaskDTO todelete = TaskTable.SpecificSelect(c.id, a.id);
                     TaskTable.Delete(todelete);
-                  
+
                 }
 
             }
             BoardTable.Delete(BoardTable.SpecificSelect(c.id));
-           
+
             return c;
 
 
@@ -82,6 +83,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.MoveTask(userEmail, taskId, columnOrdinal);
+            if (columnOrdinal == 0)
+                TaskTable.Update(c.id, taskId, "columnName", "in progress");
+            if (columnOrdinal == 1)
+                TaskTable.Update(c.id, taskId, "columnName", "done");
         }
         public void ChangeDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {
@@ -89,7 +94,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeDueDate(taskId, columnOrdinal, dueDate);
-            TaskTable.Update(c.id, c.GetColumnName(columnOrdinal), taskId, "DueDate", dueDate);
+            TaskTable.Update(c.id, taskId, "DueDate", dueDate);
         }
         public void ChangeTitle(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string title)
         {
@@ -97,7 +102,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeTitle(taskId, columnOrdinal, title);
-            TaskTable.Update(c.id, c.GetColumnName(columnOrdinal), taskId, "Title", title);
+            TaskTable.Update(c.id, taskId, "Title", title);
         }
         public void ChangeDescription(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string description)
         {
@@ -105,7 +110,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeDescription(taskId, columnOrdinal, description);
-            TaskTable.Update(c.id, c.GetColumnName(columnOrdinal), taskId, "Description", description);
+            TaskTable.Update(c.id, taskId, "Description", description);
         }
         public string GetColumnName(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
@@ -121,9 +126,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 throw new Exception("cannot limit done column");
             Board c = FindBoard(creatorEmail, boardName);
             c.BoardMemberVerify(userEmail);
+            bool iflimited = c.GetColumnIfLimited(columnOrdinal);
             c.LimitColunm(columnOrdinal, limit);
             string fordata = c.GetColumnName(columnOrdinal);
-            
+            if (!iflimited)
+            {
+                ColumnDTO toadd = new ColumnDTO(c.id, c.GetColumnName(columnOrdinal), limit);
+                ColumnTable.Insert(toadd);
+            }
+
+            //TODO update in a state where the colunm is already limited.
+
+
         }
         public int GetcolumnLimit(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
@@ -170,6 +184,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Task b = c.GetTask(taskId, columnOrdinal);
             c.TaskAssigneeVerify(userEmail, b);
             c.ChangeEmailAssignee(taskId, columnOrdinal, emailAssignee);
+            TaskTable.Update(c.id, b.id, "Assignee", emailAssignee);
 
         }
         public List<String> GetBoardNames(string userEmail)
@@ -213,5 +228,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             else
                 return false;
         }
+        private void RemoveBoardFromAssigneeList(List<string> AssigneeList,string boardName,int boardId)
+        {
+            foreach (string user in AssigneeList)
+            {
+                boardController[user].Remove(boardName);
+                BoardTable.DeleteFromAssigneeList(boardId, user);
+            }
+        }
+
     }
 }

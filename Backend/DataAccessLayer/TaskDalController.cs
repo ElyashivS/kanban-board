@@ -55,8 +55,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
-                    log.Error("could not insert the Task");
+                    
+                    log.Error("Failed to run query");
 
                 }
                 finally
@@ -97,6 +97,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     res = command.ExecuteNonQuery();
                    
                 }
+                catch
+                {
+                    log.Error("Failed to run query");
+                }
                 finally
                 {
                     command.Dispose();
@@ -107,7 +111,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return res > 0;
         }
 
-        public bool Update(int boardId, string columnname, int id, string attributeName, DateTime attributeValue)
+        public bool Update(int boardId, int id, string attributeName, DateTime attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -129,8 +133,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 catch (Exception e)
                 {
                     log.Warn("Failed to run query");
-                    Console.WriteLine(e.Message); // Prints that helps to debug
-                    Console.WriteLine(command.CommandText);
+                    
                 }
                 finally
                 {
@@ -141,7 +144,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return res > 0;
         }
 
-        public bool Update(int boardId, string columnName, int id,  string attributeName, string attributeValue)
+        public bool Update(int boardId, int id,  string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -163,8 +166,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 catch (Exception e)
                 {
                     log.Warn("Failed to run query");
-                    Console.WriteLine(e.Message); // Prints that helps to debug
-                    Console.WriteLine(command.CommandText);
+                   
                 }
                 finally
                 {
@@ -199,7 +201,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    log.Debug(e.Message + "\n" + e.StackTrace);
+                    log.Error("Failed to run query");
                 }
                 finally
                 {
