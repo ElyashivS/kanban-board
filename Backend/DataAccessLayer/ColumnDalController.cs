@@ -64,7 +64,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             return result;
         }
 
-        public bool Update(string name, string attributeName, int attributeValue)
+        public bool Update(int boardId,string columnName, string attributeName, int attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -72,17 +72,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE ColumnName = @nameParam"
+                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE ({ColumnDTO.ColumnNameColumnName} = @ColumnNameParam AND {ColumnDTO.BoardIdColumnName}=@BoardIdParam)"
                 };
                 try
                 {
+                    command.Parameters.Add(new SQLiteParameter("@BoardIdParam", boardId));
                     command.Parameters.Add(new SQLiteParameter("@attributeParam", attributeValue));
-                    command.Parameters.Add(new SQLiteParameter("@nameParam", name));
+                    command.Parameters.Add(new SQLiteParameter("@ColumnNameParam", columnName));
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
                 catch (Exception e)
                 {
+                    Console.WriteLine(e);
                     log.Error("Failed to run query");
                 }
                 finally

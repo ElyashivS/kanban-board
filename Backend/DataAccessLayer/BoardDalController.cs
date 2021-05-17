@@ -215,23 +215,20 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             using (var connection = new SQLiteConnection(_connectionString))
             {
-              
                 var command = new SQLiteCommand
                 {
-                  
                     Connection = connection,
-                    CommandText = $"delete from {"AssigneeList"} where ({BoardDTO.IDColumnName}=@IdVal AND {BoardDTO.AssigneeColumnName}=@EmailAssigneeVal); "
+                    CommandText = $"delete from {"AssigneeList"} where {BoardDTO.IDColumnName}=@BoardIdVal AND {BoardDTO.AssigneeColumnName}=@EmailAssigneeVal; "
                 };
                 try
                 {
-                    
                     connection.Open();
-                    SQLiteParameter boardidParam = new SQLiteParameter(@"IdVal", BoardId);
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", BoardId);
                     SQLiteParameter emailAssigneeParam = new SQLiteParameter(@"EmailAssigneeVal", EmailAssignee);
 
 
                     command.Parameters.Add(boardidParam);
-                    command.Parameters.Add(EmailAssignee);
+                    command.Parameters.Add(emailAssigneeParam);
 
 
                     res = command.ExecuteNonQuery();
@@ -239,7 +236,6 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
                     log.Error("Failed to run query");
                 }
                 finally

@@ -47,7 +47,19 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (userEmail != c.GetCreator())
                 throw new Exception("only the creator of the board may delete the board");
             RemoveBoardFromAssigneeList(c.GetAssigneeList(), boardName, c.id);
-            //TODO-quary of removing assignee not working
+            List<Colunm> todeleteColumns = c.GetBoardColumns();
+            for (int i = 0; i < todeleteColumns.Count; i++)
+            {
+
+                if(c.GetColumnIfLimited(i))
+                {
+
+                    {
+                        ColumnDTO deleting = new ColumnDTO(c.id, c.GetColumnName(i), c.GetColumnLimit(i));
+                        ColumnTable.Delete(deleting);
+                    }
+                }
+            }
             boardController[creatorEmail].Remove(boardName);
             
             List<Colunm> toremove = c.GetBoardColumns();
@@ -134,8 +146,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 ColumnDTO toadd = new ColumnDTO(c.id, c.GetColumnName(columnOrdinal), limit);
                 ColumnTable.Insert(toadd);
             }
+            if (iflimited)
+            {
+                ColumnTable.Update(c.id, c.GetColumnName(columnOrdinal), "ColumnLimiter", limit);
+            }
 
-            //TODO update in a state where the colunm is already limited.
+            
 
 
         }
