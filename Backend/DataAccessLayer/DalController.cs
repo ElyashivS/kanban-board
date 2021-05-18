@@ -42,6 +42,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
                     }
                 }
+                catch(Exception e)
+                {
+                    log.Warn("Failed to run query or the List is empty");
+                }
                 finally
                 {
                     if (dataReader != null)

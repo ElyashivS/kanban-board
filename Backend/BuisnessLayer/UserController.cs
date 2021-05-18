@@ -62,7 +62,42 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
             
         }
-
-       
+        public void DeleteData()
+        {
+            try
+            {
+                List<User> toDeleteList = UsersToList();
+                foreach (User a in toDeleteList)
+                {
+                    UsersTable.Delete(a.email);
+                }
+            }
+            catch
+            {
+                throw new Exception("could not delete all the users");
+            }
+        }
+        public void LoadData()
+        {
+            List<DTO> toload=UsersTable.Select();
+            foreach (UserDTO user in toload)
+            {
+                Register(user.Email, user.Password);
+            }
+        }
+        public List<User> UsersToList()
+        {
+            return Users.Values.ToList();
+        }
+        public List<string> BringAllUsersEmail()
+        {
+            List<string> toreturn = new List<string>();
+            List<User> a = UsersToList();
+            foreach (User b in a)
+            {
+                toreturn.Add(b.email);
+            }
+            return toreturn;
+        }
     }
 }

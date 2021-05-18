@@ -21,12 +21,28 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///         You should call this function when the program starts. </summary>
         public Response LoadData()
         {
-            throw new NotImplementedException();
+            Response a = userService.LoadData();
+
+            if (a.ErrorOccured)
+                return a;
+            
+            List<string> users = userService.BringAllUsersEmail();
+            boardService.LoadData(users);
+            return new Response();
+
         }
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
-            throw new NotImplementedException();
+            List<string> users = userService.BringAllUsersEmail();
+            Response a = boardService.DeleteData(users);
+           
+            if (a.ErrorOccured)
+               return a;
+
+            userService.DeleteData();
+            return new Response();
+            
         }
         ///<summary>This method registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
@@ -233,6 +249,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response AddBoard(string email, string name)
         {
+            
             Response a = userService.ValidateUserLoggin(email);
             if (a.ErrorOccured)
                 return a;

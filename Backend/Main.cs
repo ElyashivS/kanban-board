@@ -13,23 +13,36 @@ namespace ConsoleApp1
         public static void Main(string[] args)
         {
             Service a = new Service();
-           a.Register("ari@gmail.com", "Aa123123");
-            a.Login("ari@gmail.com", "Aa123123");
-           a.AddBoard("ari@gmail.com","boardy");
+
+            // a.Register("ari@gmail.com", "Aa123123");
+            // a.Register("ri@gmail.com", "Aa123123");
+            // a.Register("i@gmail.com", "Aa123123");
+            //a.LoadData();
+
+          //  a.Login("ari@gmail.com", "Aa123123");
+             //a.Login("ri@gmail.com", "Aa123123");
+            // a.AddBoard("ari@gmail.com", "boardy");
+           // a.JoinBoard("ri@gmail.com", "ari@gmail.com", "boardy");
+
+           // a.LimitColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0, 5);
+             // a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "wow", "description", new DateTime(2023, 12, 3));
+            // a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "wow", "description", new DateTime(2023, 12, 3));
+            a.LoadData();
+          a.DeleteData();           
+
             // a.Register("ri@gmail.com", "Aa123123");
             //a.Login("ri@gmail.com", "Aa123123");
             //a.Register("i@gmail.com", "Aa123123");
             // a.Login("i@gmail.com", "Aa123123");
-            a.LimitColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0, 5);
-            a.LimitColumn("ari@gmail.com", "ari@gmail.com", "boardy", 1, 5);
-            // a.JoinBoard("ri@gmail.com", "ari@gmail.com", "boardy");
-            // a.JoinBoard("i@gmail.com", "ari@gmail.com", "boardy");
             // a.LimitColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0, 5);
-            //a.LimitColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0, 0);
+            //a.LimitColumn("ari@gmail.com", "ari@gmail.com", "boardy", 1, 5);
 
-            a.RemoveBoard("ari@gmail.com", "ari@gmail.com", "boardy");
-            //  a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "wow", "description", new DateTime(2023, 12, 3));
-            //  a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "wow", "description", new DateTime(2023, 12, 3));
+            // a.JoinBoard("i@gmail.com", "ari@gmail.com", "boardy");
+
+            // a.LimitColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0, 0);
+
+            // a.RemoveBoard("ari@gmail.com", "ari@gmail.com", "boardy");
+
             // a.UpdateTaskTitle("ari@gmail.com", "ari@gmail.com","boardy",0,1,"new title");
             //  a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "wow", "description", new DateTime(2023, 12, 3));
             // a.UpdateTaskDescription("ari@gmail.com", "ari@gmail.com", "boardy", 0, 2, "wtf");

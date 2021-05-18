@@ -26,7 +26,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public const string ColumnNameColumnName = "ColumnName";
         public const string BoardIdColumnName = "BoardId";
 
-        public TaskDTO (int boardid,int id, string columnName, string emailAssignee, DateTime creationTime, DateTime dueDate, string title, string description) : base(new UserDalController())
+        public TaskDTO (int boardid,int id, string columnName, string emailAssignee, DateTime creationTime, DateTime dueDate, string title, string description) : base(new TaskDalController())
         {
             _id = id;
             _emailAssignee = emailAssignee;

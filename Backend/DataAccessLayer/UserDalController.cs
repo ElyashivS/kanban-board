@@ -93,7 +93,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
-        public bool Delete(UserDTO user)
+        public bool Delete(string Email)
         {
             int res = -1;
 
@@ -107,7 +107,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 try
                 {
                     connection.Open();
-                    SQLiteParameter emailParam = new SQLiteParameter(@"EmailVal", user.Email);
+                    SQLiteParameter emailParam = new SQLiteParameter(@"EmailVal", Email);
 
 
                     command.Parameters.Add(emailParam);

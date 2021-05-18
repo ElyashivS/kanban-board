@@ -18,6 +18,70 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         int boardIdCounter = 1;
 
 
+
+
+
+
+
+        public void LoadData(List<string> users)
+        {
+            foreach (string user in users)
+            {
+                Register(user);
+            }
+            List<DTO> boards = BoardTable.Select();
+            List<DTO> columns = BoardTable.Select();
+            List<DTO> tasks = BoardTable.Select();
+            List<DTO> assignees = BoardTable.SelectAssigneeList();
+            
+                foreach (BoardDTO b in boards)
+                {
+                    AddBoard(b.Creator, b.Name);
+
+                    foreach (ColumnDTO c in columns)
+                    {
+                        if (c.BoardId == b.ID)
+                        {
+                            LimitColumn(b.Creator, b.Creator, b.Name, GetColumnOrdinal(c.Name), c.ColumnLimiter);
+                        }
+                    }
+                    foreach (AssigneeDTO a in assignees)
+                    {
+                        if (a.ID == b.ID)
+                            JoinBoard(a.Assignee, b.Creator, b.Name);
+                    }
+                    foreach (TaskDTO t in tasks)
+                    {
+                        if (t.ID == b.ID)
+                        {
+                            AddTask(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            AssignTask(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
+                        }
+                    }
+
+                }
+            
+
+
+
+        }
+        public void DeleteData(List<string> users)
+        {
+            foreach (string user in users)
+            {
+                List < Board > boardlist= BoardsToList(user);
+                foreach (Board c in boardlist)
+                {
+                    
+                        RemoveBoard(c.GetCreator(), c.GetCreator(), c.name);
+                    
+
+                }
+            }
+        }
+
+
+
         public BoardController()
         {
             this.boardController = new Dictionary<string, Dictionary<string, Board>>();
@@ -235,7 +299,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return boardController[email].Values.ToList();
         }
-
+        
         // TODO change the function name later =D ^.- 
         private bool TaskVerForList(string email, Task task)
         {
@@ -251,6 +315,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 boardController[user].Remove(boardName);
                 BoardTable.DeleteFromAssigneeList(boardId, user);
             }
+        }
+        public int GetColumnOrdinal(string columnOrdinal)
+        {
+            if (columnOrdinal == "backlog")
+                return 0;
+            else if (columnOrdinal == "in progress")
+                return 1;
+            else
+                throw new Exception("could limit only columns 0 or 1");
         }
 
     }

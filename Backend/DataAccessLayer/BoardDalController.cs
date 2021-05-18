@@ -247,6 +247,50 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        public List<DTO.DTO> SelectAssigneeList()
+        {
+            List<DTO.DTO> results = new List<DTO.DTO>();
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand(null, connection);
+                command.CommandText = $"select * from {"AssigneeList"};";
+                SQLiteDataReader dataReader = null;
+                try
+                {
+                    connection.Open();
+                    dataReader = command.ExecuteReader();
+
+                    while (dataReader.Read())
+                    {
+                        results.Add(ConvertReaderToObjectAssignee(dataReader));
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    log.Error("Failed to run query ");
+                }
+                finally
+                {
+                    if (dataReader != null)
+                    {
+                        dataReader.Close();
+                    }
+
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+            
+            return results;
+        }
+        protected  AssigneeDTO ConvertReaderToObjectAssignee(SQLiteDataReader reader)
+        {
+            AssigneeDTO result = new AssigneeDTO(reader.GetInt32(0), reader.GetString(1));
+
+            return result;
+        }
 
 
     }

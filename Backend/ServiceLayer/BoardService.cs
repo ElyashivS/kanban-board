@@ -18,6 +18,38 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             boardController = new BoardController();
         }
 
+        public Response LoadData(List<string> users)
+        {
+            try
+            {
+                boardController.DeleteData(users);
+                log.Info("Boards data has been loaded");
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                log.Warn("Failed load boards data");
+                return new Response(e.Message);
+            }
+        }
+
+
+
+        public Response DeleteData(List<string> users)
+        {
+            try
+            {
+                boardController.DeleteData(users);
+                log.Info("all boards data has been deleted");
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                log.Warn("Failed Delete all boards data");
+                return new Response(e.Message);
+            }
+        }
+
 
         public void Register(string email)
         {

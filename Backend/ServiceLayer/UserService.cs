@@ -28,6 +28,36 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
 
 
+
+
+        public Response LoadData()
+        {
+            try
+            {
+                userController.LoadData();
+                log.Info("Users Data has been loaded");
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                log.Warn("Failed to load Data");
+                return new Response(e.Message);
+            }
+        }
+        public Response DeleteData()
+        {
+            try
+            {
+                userController.DeleteData();
+                log.Info("Users Data has been deletes successfuly");
+                return new Response();
+            }
+            catch(Exception e)
+            {
+                log.Warn("Failed to delete d");
+                return new Response(e.Message);
+            }
+        }
         public Response Register(string email, string password)
         {
             try
@@ -82,8 +112,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception e)
             {
+                log.Warn($"user {email} isnt logged in");
                 return new Response(e.Message);
             }
          }
+        public List<string> BringAllUsersEmail()
+        {
+            return userController.BringAllUsersEmail();
+        }
     }
 }
