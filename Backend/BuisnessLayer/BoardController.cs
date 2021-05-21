@@ -37,7 +37,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 foreach (BoardDTO b in boards)
                 {
                 
-                
+
 
                 boardController[b.Creator].Add(new Tuple<string,string>(b.Creator,b.Name), new Board(b.ID, b.Name, b.Creator));
                 
@@ -58,27 +58,27 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     }
                     foreach (TaskDTO t in tasks)
                     {
-                        if (t.ID == b.ID)
+                        if (t.BoardId == b.ID)
                         {
                         if (t.ColumnName.Equals("backlog"))
                         {
                             AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
-                            
+                            AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
                         if(t.ColumnName.Equals("in progress")){
                             AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
-                            
+                            AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
                         if (t.ColumnName.Equals("done"))
                         {
                             AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 1, t.ID);
-                            
+                            AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
                         }
-                    AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
+                    
                 }
 
                 }
@@ -115,7 +115,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 boardController[email].Add(a, b);
                 b.AddtoBoardUsers(email);
 
-                BoardTable.Insert(new BoardDTO(boardIdCounter, email, name));
+                BoardTable.Insert(new BoardDTO(boardIdCounter, name, email));
                 BoardTable.InsertToAsigneeList(b.id, email);
                 boardIdCounter = boardIdCounter + 1;
                 return b;
@@ -336,7 +336,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 Tuple<string, string> t = new Tuple<string, string>(creatorName, boardName);
                 boardController[user].Remove(t);
                 BoardTable.DeleteFromAssigneeList(boardId, user);
+                
             }
+            BoardTable.DeleteFromAssigneeList(boardId, creatorName);
         }
         public int GetColumnOrdinal(string columnOrdinal)
         {

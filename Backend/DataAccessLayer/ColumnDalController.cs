@@ -59,6 +59,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         }
         protected override ColumnDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
+            
             ColumnDTO result = new ColumnDTO(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2));
 
             return result;

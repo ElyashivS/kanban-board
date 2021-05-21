@@ -16,7 +16,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public const string ColumnNameColumnName = "ColumnName";
         public const string ColumnLimiterColumnName = "ColumnLimiter";
 
-        public ColumnDTO(int boardId,string name, int columnLimiter ) : base(new UserDalController())
+        public ColumnDTO(int boardId,string name, int columnLimiter ) : base(new ColumnDalController())
         {
             _boardId = boardId;
             _name = name;
