@@ -153,7 +153,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         public void AddtoBoardUsers(string email)
         {
-            if (users.Contains(email)||email==this.creator)
+            if (users.Contains(email))
                 throw new Exception("user is already a member in the board");
             users.Add(email);
         }

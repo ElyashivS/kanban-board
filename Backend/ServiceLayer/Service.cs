@@ -34,15 +34,15 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         ///<summary>Removes all persistent data.</summary>
         public Response DeleteData()
         {
-            List<string> users = userService.BringAllUsersEmail();
-            Response a = boardService.DeleteData(users);
+           
+            Response a = boardService.DeleteData();
            
             if (a.ErrorOccured)
                return a;
 
-            userService.DeleteData();
+            Response b=userService.DeleteData();
+            return b;
             return new Response();
-            
         }
         ///<summary>This method registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>

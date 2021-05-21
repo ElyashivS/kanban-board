@@ -29,7 +29,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             CheckDescription(description);
             this.description = description;
 
-        }
+        }  
+        
 
         public void ChangeDueDate(DateTime NewDueDate)
         {

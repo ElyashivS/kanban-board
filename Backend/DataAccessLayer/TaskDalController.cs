@@ -27,12 +27,13 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} ({TaskDTO.BoardIdColumnName},{TaskDTO.ColumnNameColumnName},{TaskDTO.IdColumnName} ,{TaskDTO.EmailAssigneeColumnName},{TaskDTO.CreationTimeColumnName},{TaskDTO.DueDateColumnName},{TaskDTO.TitleColumnName},{TaskDTO.DescriptionColumnName}) " +
-                        $"VALUES (@BoardIdVal ,@ColumnNameVal,@IdVal,@AssigneeVal,@CreationTimeVal,@DueDateVal,@TitleVal,@DescriptionVal);";
+                    command.CommandText = $"INSERT INTO {_tableName} ({TaskDTO.BoardIdColumnName},{TaskDTO.IdColumnName},{TaskDTO.ColumnNameColumnName} ,{TaskDTO.EmailAssigneeColumnName},{TaskDTO.CreationTimeColumnName},{TaskDTO.DueDateColumnName},{TaskDTO.TitleColumnName},{TaskDTO.DescriptionColumnName}) " +
+                        $"VALUES (@BoardIdVal ,@IdVal,@ColumnNameVal,@AssigneeVal,@CreationTimeVal,@DueDateVal,@TitleVal,@DescriptionVal);";
 
                     SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", task.BoardId);
+                    SQLiteParameter idParam = new SQLiteParameter(@"IdVal", task.ID);;
                     SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", task.ColumnName);
-                    SQLiteParameter idParam = new SQLiteParameter(@"IdVal", task.ID);
+                    
                     SQLiteParameter assigneeParam = new SQLiteParameter(@"AssigneeVal", task.Assignee);
                     SQLiteParameter creationtimeParam = new SQLiteParameter(@"CreationTimeVal", task.CreationTime);
                     SQLiteParameter duedateParam = new SQLiteParameter(@"DueDateVal", task.DueDate);
@@ -217,6 +218,37 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             if (result == null)
                 throw new Exception("Board could not be found");
             return result;
+        }
+        public bool DeleteTaskTable()
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} ; "
+                };
+                try
+                {
+                    connection.Open();
+
+                    res = command.ExecuteNonQuery();
+
+                }
+                catch (Exception e)
+                {
+                    log.Error("Failed to run query");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
         }
 
 

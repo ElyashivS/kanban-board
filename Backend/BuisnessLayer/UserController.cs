@@ -66,11 +66,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             try
             {
-                List<User> toDeleteList = UsersToList();
-                foreach (User a in toDeleteList)
-                {
-                    UsersTable.Delete(a.email);
-                }
+                UsersTable.DeleteUserTable();
             }
             catch
             {
@@ -82,7 +78,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             List<DTO> toload=UsersTable.Select();
             foreach (UserDTO user in toload)
             {
-                Register(user.Email, user.Password);
+                
+                RegisterForLoad(user.Email, user.Password);
+                
             }
         }
         public List<User> UsersToList()
@@ -99,5 +97,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             return toreturn;
         }
+        private void RegisterForLoad(string email, string password)
+        {
+            email = email.Trim().ToLower();
+            if (Users.ContainsKey(email))
+                throw new ArgumentException("email is already in the system");
+
+            Users.Add(email, new User(email, password));
+        }
     }
+    
 }

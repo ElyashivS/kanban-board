@@ -17,7 +17,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public const string CreatorColumnName = "Creator";
         public const string AssigneeColumnName = "EmailAssignee";
 
-        public BoardDTO(int id, string creator, string name ) : base(new BoardDalController())
+        public BoardDTO(int id,string name ,string creator  ) : base(new BoardDalController())
         {
             _id = id;
             _name = name;

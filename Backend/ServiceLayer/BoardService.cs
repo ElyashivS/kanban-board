@@ -22,12 +22,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                boardController.DeleteData(users);
+                boardController.LoadData(users);
                 log.Info("Boards data has been loaded");
                 return new Response();
             }
             catch (Exception e)
             {
+                
                 log.Warn("Failed load boards data");
                 return new Response(e.Message);
             }
@@ -35,11 +36,11 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
 
 
-        public Response DeleteData(List<string> users)
+        public Response DeleteData()
         {
             try
             {
-                boardController.DeleteData(users);
+                boardController.DeleteData();
                 log.Info("all boards data has been deleted");
                 return new Response();
             }

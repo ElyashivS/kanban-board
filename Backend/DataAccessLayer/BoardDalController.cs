@@ -177,10 +177,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {"AssigneeList"} ({BoardDTO.IDColumnName} ,{BoardDTO.AssigneeColumnName}) " +
-                        $"VALUES (@IdVal,@EmailAssigneeVal);";
+                    command.CommandText = $"INSERT INTO {"AssigneeList"} ({AssigneeDTO.IDColumnName} ,{AssigneeDTO.AssigneeColumnName}) " +
+                        $"VALUES (@BoardIdVal,@EmailAssigneeVal);";
 
-                    SQLiteParameter boardIdParam = new SQLiteParameter(@"IdVal", BoardId);
+                    SQLiteParameter boardIdParam = new SQLiteParameter(@"BoardIdVal", BoardId);
                     SQLiteParameter assigneeParam = new SQLiteParameter(@"EmailAssigneeVal", emailAssignee);
                     
 
@@ -218,7 +218,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 var command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"delete from {"AssigneeList"} where {BoardDTO.IDColumnName}=@BoardIdVal AND {BoardDTO.AssigneeColumnName}=@EmailAssigneeVal; "
+                    CommandText = $"delete from {"AssigneeList"} where {AssigneeDTO.IDColumnName}=@BoardIdVal AND {AssigneeDTO.AssigneeColumnName}=@EmailAssigneeVal; "
                 };
                 try
                 {
@@ -290,6 +290,68 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             AssigneeDTO result = new AssigneeDTO(reader.GetInt32(0), reader.GetString(1));
 
             return result;
+        }
+        public bool DeleteBoardTable()
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} ; "
+                };
+                try
+                {
+                    connection.Open();
+
+                    res = command.ExecuteNonQuery();
+
+                }
+                catch (Exception e)
+                {
+                    log.Error("Failed to run query");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
+        public bool DeleteAssigneeTable()
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {"AssigneeList"} ; "
+                };
+                try
+                {
+                    connection.Open();
+
+                    res = command.ExecuteNonQuery();
+
+                }
+                catch (Exception e)
+                {
+                    log.Error("Failed to run query");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
         }
 
 

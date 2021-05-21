@@ -12,7 +12,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         private string _assignee;
         
 
-        public const string IDColumnName = "Id";
+        public const string IDColumnName = "BoardId";
         public const string AssigneeColumnName = "EmailAssignee";
         
 

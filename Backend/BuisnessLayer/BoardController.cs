@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class BoardController
     {
-        private Dictionary<string, Dictionary<string, Board>> boardController;
+        private Dictionary<string, Dictionary<Tuple<string,string>, Board>> boardController;
         private BoardDalController BoardTable = new BoardDalController();
         private ColumnDalController ColumnTable = new ColumnDalController();
         private TaskDalController TaskTable = new TaskDalController();
@@ -30,34 +30,56 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 Register(user);
             }
             List<DTO> boards = BoardTable.Select();
-            List<DTO> columns = BoardTable.Select();
-            List<DTO> tasks = BoardTable.Select();
+            List<DTO> columns = ColumnTable.Select();
+            List<DTO> tasks = TaskTable.Select();
             List<DTO> assignees = BoardTable.SelectAssigneeList();
             
                 foreach (BoardDTO b in boards)
                 {
-                    AddBoard(b.Creator, b.Name);
+                
+                
 
+                boardController[b.Creator].Add(new Tuple<string,string>(b.Creator,b.Name), new Board(b.ID, b.Name, b.Creator));
+                
                     foreach (ColumnDTO c in columns)
                     {
                         if (c.BoardId == b.ID)
                         {
-                            LimitColumn(b.Creator, b.Creator, b.Name, GetColumnOrdinal(c.Name), c.ColumnLimiter);
+                           LimitColumnForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(c.Name), c.ColumnLimiter);
                         }
                     }
                     foreach (AssigneeDTO a in assignees)
                     {
-                        if (a.ID == b.ID)
-                            JoinBoard(a.Assignee, b.Creator, b.Name);
+                            if (a.ID == b.ID)
+                            {
+                                if (a.Assignee != b.Creator)
+                                JoinBoardForLoad(a.Assignee, b.Creator, b.Name);
+                            }
                     }
                     foreach (TaskDTO t in tasks)
                     {
                         if (t.ID == b.ID)
                         {
-                            AddTask(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
-                            AssignTask(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
+                        if (t.ColumnName.Equals("backlog"))
+                        {
+                            AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            
                         }
-                    }
+                        if(t.ColumnName.Equals("in progress")){
+                            AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
+                            
+                        }
+                        if (t.ColumnName.Equals("done"))
+                        {
+                            AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
+                            MoveTaskForLoad(b.Creator, b.Creator, b.Name, 1, t.ID);
+                            
+                        }
+                        }
+                    AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
+                }
 
                 }
             
@@ -65,41 +87,38 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
 
         }
-        public void DeleteData(List<string> users)
+        public void DeleteData()
         {
-            foreach (string user in users)
-            {
-                List < Board > boardlist= BoardsToList(user);
-                foreach (Board c in boardlist)
-                {
-                    
-                        RemoveBoard(c.GetCreator(), c.GetCreator(), c.name);
-                    
-
-                }
-            }
+            BoardTable.DeleteBoardTable();
+            BoardTable.DeleteAssigneeTable();
+            ColumnTable.DeleteColumnTable();
+            TaskTable.DeleteTaskTable();
         }
 
 
 
         public BoardController()
         {
-            this.boardController = new Dictionary<string, Dictionary<string, Board>>();
+            this.boardController = new Dictionary<string, Dictionary<Tuple<string,string>, Board>>();
 
         }
         public void Register(string email)
         {
-            boardController.Add(email, new Dictionary<string, Board>());
+            boardController.Add(email, new Dictionary<Tuple<string,string>,Board>());
         }
-        public void AddBoard(string email, string name)
+        public Board AddBoard(string email, string name)
         {
-
-            if (!boardController[email].ContainsKey(name))
+            Tuple<string, string> a = new Tuple<string, string>(email, name);
+            if (!boardController[email].ContainsKey(a))
             {
-                boardController[email].Add(name, new Board(boardIdCounter, name, email));
-                BoardTable.Insert(new BoardDTO(boardIdCounter, email, name));
-                boardIdCounter = boardIdCounter + 1;
+                Board b = new Board(boardIdCounter, name, email);
+                boardController[email].Add(a, b);
+                b.AddtoBoardUsers(email);
 
+                BoardTable.Insert(new BoardDTO(boardIdCounter, email, name));
+                BoardTable.InsertToAsigneeList(b.id, email);
+                boardIdCounter = boardIdCounter + 1;
+                return b;
             }
             else
                 throw new Exception($"Board with the name {name} already exist");
@@ -108,9 +127,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public Board RemoveBoard(string userEmail, string creatorEmail, string boardName)
         {
             Board c = FindBoard(creatorEmail, boardName);
-            if (userEmail != c.GetCreator())
+            if (!userEmail.Equals(c.GetCreator()))
                 throw new Exception("only the creator of the board may delete the board");
-            RemoveBoardFromAssigneeList(c.GetAssigneeList(), boardName, c.id);
+            RemoveBoardFromAssigneeList(c.GetAssigneeList(), boardName, c.id,c.GetCreator());
             List<Colunm> todeleteColumns = c.GetBoardColumns();
             for (int i = 0; i < todeleteColumns.Count; i++)
             {
@@ -124,7 +143,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     }
                 }
             }
-            boardController[creatorEmail].Remove(boardName);
+            Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
+            boardController[creatorEmail].Remove(t);
             
             List<Colunm> toremove = c.GetBoardColumns();
             foreach (Colunm i in toremove)
@@ -237,7 +257,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             Board c = FindBoard(creatorEmail, boardName);
             c.AddtoBoardUsers(userEmail);
-            boardController[userEmail].Add(boardName, c);
+            boardController[userEmail].Add(new Tuple<string, string>(creatorEmail,boardName), c);
             BoardTable.InsertToAsigneeList(c.id, userEmail);
         }
         //brings a list of Tasks that the user is Assignee for and in -"in progress column"
@@ -285,7 +305,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c;
             try
             {
-                c = boardController[email][boardName];
+                Tuple<string, string> t = new Tuple<string, string>(email, boardName);
+                c = boardController[email][t];
                 return c;
             }
             catch (KeyNotFoundException)
@@ -308,11 +329,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             else
                 return false;
         }
-        private void RemoveBoardFromAssigneeList(List<string> AssigneeList,string boardName,int boardId)
+        private void RemoveBoardFromAssigneeList(List<string> AssigneeList,string boardName,int boardId,string creatorName)
         {
             foreach (string user in AssigneeList)
             {
-                boardController[user].Remove(boardName);
+                Tuple<string, string> t = new Tuple<string, string>(creatorName, boardName);
+                boardController[user].Remove(t);
                 BoardTable.DeleteFromAssigneeList(boardId, user);
             }
         }
@@ -325,6 +347,44 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             else
                 throw new Exception("could limit only columns 0 or 1");
         }
+        private void LimitColumnForLoad (string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
+        {
+            if (columnOrdinal == 2)
+                throw new Exception("cannot limit done column");
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);  
+            c.LimitColunm(columnOrdinal, limit);
+            
+        }
+        private void JoinBoardForLoad(string userEmail, string creatorEmail, string boardName)
+        {
+            Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
+            Board c = FindBoard(creatorEmail, boardName);
+            c.AddtoBoardUsers(userEmail);
+            boardController[userEmail].Add(t, c);
+        }
+        private void AddTaskForLoad(string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
+        {
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            Task b = c.AddTask(userEmail, dueDate, title, description);
+        }
+        private void MoveTaskForLoad(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
+        {
 
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
+            c.MoveTask(userEmail, taskId, columnOrdinal);
+        }
+        private void AssignTaskForLoad(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
+        {
+            Board c = FindBoard(creatorEmail, boardName);
+            c.BoardMemberVerify(userEmail);
+            c.BoardMemberVerify(emailAssignee);
+            Task b = c.GetTask(taskId, columnOrdinal);
+            c.TaskAssigneeVerify(userEmail, b);
+            c.ChangeEmailAssignee(taskId, columnOrdinal, emailAssignee);
+        }
     }
 }

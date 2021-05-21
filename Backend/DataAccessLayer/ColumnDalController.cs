@@ -175,5 +175,36 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 throw new Exception("Column could not be found");
             return result;
         }
+        public bool DeleteColumnTable()
+        {
+            int res = -1;
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                var command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"delete from {_tableName} ; "
+                };
+                try
+                {
+                    connection.Open();
+
+                    res = command.ExecuteNonQuery();
+
+                }
+                catch (Exception e)
+                {
+                    log.Error("Failed to run query");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+
+            }
+            return res > 0;
+        }
     }
 }
