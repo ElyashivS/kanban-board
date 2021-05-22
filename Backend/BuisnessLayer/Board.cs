@@ -35,7 +35,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="duedate">The due date if the new task.</param>
         /// <param name="title">Title of the new task.</param>
         /// <param name="descripton">Description of the new task.</param>
-        /// <returns></returns>
+        /// <returns>The new task</returns>
         public Task AddTask(string email, DateTime duedate, string title, string descripton)
         {
 
@@ -92,8 +92,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
             else
                 throw new Exception("you can change Duedate only from backlog column or inprogress column");
-
-
         }
         /// <summary>
         /// Change the title of a task

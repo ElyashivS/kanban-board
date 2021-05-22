@@ -14,15 +14,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private BoardDalController BoardTable = new BoardDalController();
         private ColumnDalController ColumnTable = new ColumnDalController();
         private TaskDalController TaskTable = new TaskDalController();
-
         int boardIdCounter = 1;
-
-
-
-
-
-
-
+        /// <summary>
+        /// Load data from the persistance.
+        /// </summary>
+        /// <param name="users">List of all users</param>
         public void LoadData(List<string> users)
         {
             foreach (string user in users)
@@ -33,33 +29,29 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             List<DTO> columns = ColumnTable.Select();
             List<DTO> tasks = TaskTable.Select();
             List<DTO> assignees = BoardTable.SelectAssigneeList();
-            
-                foreach (BoardDTO b in boards)
-                {
-                
-
-
+            foreach (BoardDTO b in boards)
+            {
                 boardController[b.Creator].Add(new Tuple<string,string>(b.Creator,b.Name), new Board(b.ID, b.Name, b.Creator));
                 
-                    foreach (ColumnDTO c in columns)
+                foreach (ColumnDTO c in columns)
+                {
+                    if (c.BoardId == b.ID)
                     {
-                        if (c.BoardId == b.ID)
-                        {
-                           LimitColumnForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(c.Name), c.ColumnLimiter);
-                        }
+                        LimitColumnForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(c.Name), c.ColumnLimiter);
                     }
-                    foreach (AssigneeDTO a in assignees)
+                }
+                foreach (AssigneeDTO a in assignees)
+                {
+                    if (a.ID == b.ID)
                     {
-                            if (a.ID == b.ID)
-                            {
                                 if (a.Assignee != b.Creator)
                                 JoinBoardForLoad(a.Assignee, b.Creator, b.Name);
-                            }
                     }
-                    foreach (TaskDTO t in tasks)
+                }
+                foreach (TaskDTO t in tasks)
+                {
+                    if (t.BoardId == b.ID)
                     {
-                        if (t.BoardId == b.ID)
-                        {
                         if (t.ColumnName.Equals("backlog"))
                         {
                             AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
@@ -77,16 +69,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 1, t.ID);
                             AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
-                        }
-                    
+                    }
                 }
-
-                }
-            
-
-
-
+            }
         }
+        /// <summary>
+        /// Removes all persistent data.
+        /// </summary>
         public void DeleteData()
         {
             BoardTable.DeleteBoardTable();
@@ -94,18 +83,25 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             ColumnTable.DeleteColumnTable();
             TaskTable.DeleteTaskTable();
         }
-
-
-
+        // Constructor
         public BoardController()
         {
             this.boardController = new Dictionary<string, Dictionary<Tuple<string,string>, Board>>();
-
         }
+        /// <summary>
+        /// This method registers a new user to the system.
+        /// </summary>
+        /// <param name="email">The email</param>
         public void Register(string email)
         {
             boardController.Add(email, new Dictionary<Tuple<string,string>,Board>());
         }
+        /// <summary>
+        /// Adds a board to the specific user.
+        /// </summary>
+        /// <param name="email">Email of the user. Must be logged in</param>
+        /// <param name="name">The name of the new board</param>
+        /// <returns>The new Board</returns>
         public Board AddBoard(string email, string name)
         {
             Tuple<string, string> a = new Tuple<string, string>(email, name);
@@ -122,8 +118,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             else
                 throw new Exception($"Board with the name {name} already exist");
-
         }
+        /// <summary>
+        /// Removes a board to the specific user.
+        /// </summary>
+        /// <param name="userEmail">Email of the user. Must be logged in</param>
+        /// <param name="creatorEmail">Email of the creator</param>
+        /// <param name="boardName">The name of the board</param>
+        /// <returns>The board to remove</returns>
         public Board RemoveBoard(string userEmail, string creatorEmail, string boardName)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -133,10 +135,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             List<Colunm> todeleteColumns = c.GetBoardColumns();
             for (int i = 0; i < todeleteColumns.Count; i++)
             {
-
                 if(c.GetColumnIfLimited(i))
                 {
-
                     {
                         ColumnDTO deleting = new ColumnDTO(c.id, c.GetColumnName(i), c.GetColumnLimit(i));
                         ColumnTable.Delete(deleting);
@@ -153,17 +153,22 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 {
                     TaskDTO todelete = TaskTable.SpecificSelect(c.id, a.id);
                     TaskTable.Delete(todelete);
-
                 }
-
             }
             BoardTable.Delete(BoardTable.SpecificSelect(c.id));
 
             return c;
-
-
         }
-
+        /// <summary>
+        /// Add a new task
+        /// </summary>
+        /// <param name="userEmail">Email of the user. The user must be logged in.</param>
+        /// <param name="creatorEmail">Email of creator.</param>
+        /// <param name="boardName">The name of the board</param>
+        /// <param name="title">Title of the new task</param>
+        /// <param name="description">Description of the new task</param>
+        /// <param name="dueDate">The due date if the new task</param>
+        /// <returns>The new task.</returns>
         public Task AddTask(string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -173,6 +178,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             TaskTable.Insert(toadd);
             return b;
         }
+        /// <summary>
+        /// Move a task to the next column ordinal.
+        /// </summary>
+        /// <param name="userEmail">The user's email</param>
+        /// <param name="creatorEmail">The creator's email</param>
+        /// <param name="boardName">The board name</param>
+        /// <param name="columnOrdinal">The current column ordinal</param>
+        /// <param name="taskId">The task's ID</param>
         public void MoveTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -184,6 +197,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (columnOrdinal == 1)
                 TaskTable.Update(c.id, taskId, "columnName", "done");
         }
+        /// <summary>
+        /// Change the due date of a task
+        /// </summary>
+        /// <param name="userEmail">The user's email</param>
+        /// <param name="creatorEmail">The creator's email</param>
+        /// <param name="boardName">The board name</param>
+        /// <param name="columnOrdinal">The current column ordinal</param>
+        /// <param name="taskId">The task ID</param>
+        /// <param name="dueDate">The new due date</param>
         public void ChangeDueDate(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, DateTime dueDate)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -192,6 +214,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.ChangeDueDate(taskId, columnOrdinal, dueDate);
             TaskTable.Update(c.id, taskId, "DueDate", dueDate);
         }
+        /// <summary>
+        /// Change the title of a task
+        /// </summary>
+        /// <param name="userEmail">The user's email</param>
+        /// <param name="creatorEmail">The creator's email</param>
+        /// <param name="boardName">The board name</param>
+        /// <param name="columnOrdinal">The current column ordinal</param>
+        /// <param name="taskId">The task ID</param>
+        /// <param name="title">The new title</param>
         public void ChangeTitle(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string title)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -200,6 +231,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.ChangeTitle(taskId, columnOrdinal, title);
             TaskTable.Update(c.id, taskId, "Title", title);
         }
+        /// <summary>
+        /// Change description of a task
+        /// </summary>
+        /// <param name="userEmail">The user's email</param>
+        /// <param name="creatorEmail">The creator's email</param>
+        /// <param name="boardName">The board ID</param>
+        /// <param name="columnOrdinal">The current column ordinal</param>
+        /// <param name="taskId">The task ID</param>
+        /// <param name="description">The new description</param>
         public void ChangeDescription(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string description)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -208,14 +248,21 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.ChangeDescription(taskId, columnOrdinal, description);
             TaskTable.Update(c.id, taskId, "Description", description);
         }
+        // Getter
         public string GetColumnName(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
             Board c = FindBoard(creatorEmail, boardName);
             c.BoardMemberVerify(userEmail);
             return c.GetColumnName(columnOrdinal);
-
         }
-
+        /// <summary>
+        /// Limit the number of tasks in a specific column
+        /// </summary>
+        /// <param name="userEmail">The user's email</param>
+        /// <param name="creatorEmail">The creator's email</param>
+        /// <param name="boardName">The voard name</param>
+        /// <param name="columnOrdinal">The current column ordinal</param>
+        /// <param name="limit">The new limit</param>
         public void LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
             if (columnOrdinal == 2)
@@ -234,11 +281,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 ColumnTable.Update(c.id, c.GetColumnName(columnOrdinal), "ColumnLimiter", limit);
             }
-
-            
-
-
         }
+        // Getters
         public int GetcolumnLimit(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -251,8 +295,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             List<Task> b = c.GetColumn(columnOrdinal);
             return b;
-
         }
+        /// <summary>
+        /// Insert a user to a board as assignee
+        /// </summary>
+        /// <param name="userEmail">The user's email</param>
+        /// <param name="creatorEmail">The creator's email</param>
+        /// <param name="boardName">The board name</param>
         public void JoinBoard(string userEmail, string creatorEmail, string boardName)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -260,7 +309,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             boardController[userEmail].Add(new Tuple<string, string>(creatorEmail,boardName), c);
             BoardTable.InsertToAsigneeList(c.id, userEmail);
         }
-        //brings a list of Tasks that the user is Assignee for and in -"in progress column"
+        /// <summary>
+        /// Brings a list of Tasks that the user is Assignee for and in -"in progress column"
+        /// </summary>
+        /// <param name="email">The email of the user</param>
+        /// <returns></returns>
         public List<Task> InProgressTasks(string email)
         {
             List<Task> c = new List<Task>();
@@ -276,6 +329,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             return c;
         }
+        /// <summary>
+        /// Assign task to a new user
+        /// </summary>
+        /// <param name="userEmail">vThe user's email</param>
+        /// <param name="creatorEmail">The creator's email</param>
+        /// <param name="boardName">The board name</param>
+        /// <param name="columnOrdinal">The current column ordinal</param>
+        /// <param name="taskId">The task ID</param>
+        /// <param name="emailAssignee">The email of the user to assignee</param>
         public void AssignTask(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
         {
             Board c = FindBoard(creatorEmail, boardName);
@@ -285,8 +347,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.TaskAssigneeVerify(userEmail, b);
             c.ChangeEmailAssignee(taskId, columnOrdinal, emailAssignee);
             TaskTable.Update(c.id, b.id, "Assignee", emailAssignee);
-
         }
+        // Getter
         public List<String> GetBoardNames(string userEmail)
         {
             List<String> a = new List<String>();
@@ -298,8 +360,17 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             return a;
         }
-
-
+        // Getter
+        public int GetColumnOrdinal(string columnOrdinal)
+        {
+            if (columnOrdinal == "backlog")
+                return 0;
+            else if (columnOrdinal == "in progress")
+                return 1;
+            else
+                throw new Exception("could limit only columns 0 or 1");
+        }
+        // Private functions
         private Board FindBoard(string email, string boardName)
         {
             Board c;
@@ -313,9 +384,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             {
                 throw new ArgumentException("Board does not exist");
             }
-
         }
-
         private List<Board> BoardsToList(string email)
         {
             return boardController[email].Values.ToList();
@@ -339,15 +408,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 
             }
             BoardTable.DeleteFromAssigneeList(boardId, creatorName);
-        }
-        public int GetColumnOrdinal(string columnOrdinal)
-        {
-            if (columnOrdinal == "backlog")
-                return 0;
-            else if (columnOrdinal == "in progress")
-                return 1;
-            else
-                throw new Exception("could limit only columns 0 or 1");
         }
         private void LimitColumnForLoad (string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
@@ -373,7 +433,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         private void MoveTaskForLoad(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
         {
-
             Board c = FindBoard(creatorEmail, boardName);
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
