@@ -151,12 +151,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName} where {BoardDTO.IDColumnName}=@BoardIdVal ;";
+                command.CommandText = $"select * from {_tableName} where {BoardDTO.IDColumnName}=@IdVal ;";
                 SQLiteDataReader dataReader = null;
                 try
                 {
                     connection.Open();
-                    SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal",id );
+                    SQLiteParameter boardidParam = new SQLiteParameter(@"IdVal",id );
                     command.Parameters.Add(boardidParam);
                     dataReader = command.ExecuteReader();
 
@@ -180,8 +180,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     connection.Close();
                 }
             }
-            if (result == null)
-                throw new Exception("Board could not be found");
+            
             return result;
         }
         /// <summary>
