@@ -17,6 +17,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private const int TitleLength = 50;
         private const int DescriptionLength = 300;
 
+        // Constructor
         public Task(int id, DateTime dueDate, string assignee, string title, string description)
         {
             this.id = id;
@@ -29,9 +30,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             CheckDescription(description);
             this.description = description;
 
-        }  
-        
-
+        }
+        // Setters
         public void ChangeDueDate(DateTime NewDueDate)
         {
             CheckDuedate(NewDueDate);
@@ -51,11 +51,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             this.emailAssignee = newemail;
         }
-
-
-
-
-
+        // Getters
         public DateTime GetDueDate()
         {
             return this.duedate;
@@ -80,35 +76,38 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return this.emailAssignee;
         }
-
-        //
+        /// <summary>
+        /// Checks if the date is valid
+        /// </summary>
+        /// <param name="dueDate">The new date</param>
         private void CheckDuedate(DateTime dueDate)
         {
             if (dueDate < creationTime)
                 throw new Exception("cannot input a Duedate that has passed");
-
         }
-
+        /// <summary>
+        /// Checks if the description is valid
+        /// </summary>
+        /// <param name="description">The description</param>
         private void CheckDescription(string description)
         {
-
-
             if (description.Length > DescriptionLength)
             {
                 throw new Exception("is over 300 characters");
             }
         }
+        /// <summary>
+        /// Check if the title is valid
+        /// </summary>
+        /// <param name="title">The title</param>
         private void CheckTitle(string title)
         {
-
             if (title == null)
                 throw new NullReferenceException();
             if (title.Length > TitleLength || title.Length < 1)
             {
                 throw new Exception("Title is empty or over 50 characters");
             }
-
         }
     }
-
 }

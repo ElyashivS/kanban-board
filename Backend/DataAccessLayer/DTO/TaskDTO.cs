@@ -26,6 +26,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public const string ColumnNameColumnName = "ColumnName";
         public const string BoardIdColumnName = "BoardId";
 
+        // Constructor
         public TaskDTO (int boardid,int id, string columnName, string emailAssignee, DateTime creationTime, DateTime dueDate, string title, string description) : base(new TaskDalController())
         {
             _id = id;
@@ -38,6 +39,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _boardId = boardid;
 
         }
+
+        // Getters and setters
         public int ID { get => _id; set { _id = value; } }
         public string Assignee { get => _emailAssignee; set { _emailAssignee = value; } }
         public DateTime CreationTime { get => _creationTime; set { _creationTime = value; } }
@@ -46,6 +49,5 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public string Description { get => _description; set { _description = value; } }
         public string ColumnName { get => _columnName; set { _columnName = value; } }
         public int BoardId { get => _boardId; set { _boardId = value; } }
-
     }
 };

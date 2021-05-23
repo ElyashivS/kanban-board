@@ -14,6 +14,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private string password;
         private bool isLoggedIn;
 
+        // Constructor
         public User(string email, string password)
         { 
             if (!IsValidEmail(email))
@@ -23,27 +24,35 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             PasswordVerifier(password);
             this.password = password;
 
-
             isLoggedIn = false;
         }
-
+        /// <summary>
+        /// Login to the user
+        /// </summary>
+        /// <param name="email">The user's email</param>
+        /// <param name="password">The user's password</param>
         public void Login(string email, string password)
         {
             if (this.email == email && this.password == password)
             {
                 isLoggedIn = true;
-
             }
             else
                 throw new Exception("email or password does not match");
         }
-
+        /// <summary>
+        /// Logout to the user
+        /// </summary>
         public void Logout()
         {
             isLoggedIn = false;
         }
-
-        //copied from https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
+        /// <summary>
+        /// Checks if the email is valid
+        /// </summary>
+        /// <param name="email">The email</param>
+        /// <returns></returns>
+        // Copied from https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
         private static bool IsValidEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
@@ -89,18 +98,20 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 return false;
             }
         }
-        
-
+        /// <summary>
+        /// Check if the user is log in
+        /// </summary>
+        /// <returns></returns>
         public bool ValidateUserLoggin()
         {
             return isLoggedIn;
-
         }
-
+        /// <summary>
+        /// Check if the password is verify
+        /// </summary>
+        /// <param name="password">The password</param>
         private void PasswordVerifier(string password)
         {
-           
-            
                 if (password == null)
                     throw new NullReferenceException();
                 if (password.Length > 20 ||password.Length < 4)
@@ -118,18 +129,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                         isDigit = true;
                     if (c==' ')
                         throw new Exception("space is not valid in password");
-
-
-
                 }
                 if (!isUpper || !isLower || !isDigit)
                     throw new Exception(" must include at least one uppercase letter, one small character and a number.");
 
                 this.password = password;
-
-            
         }
-        
-        
     }
 }

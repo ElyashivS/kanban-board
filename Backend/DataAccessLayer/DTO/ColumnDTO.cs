@@ -16,6 +16,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public const string ColumnNameColumnName = "ColumnName";
         public const string ColumnLimiterColumnName = "ColumnLimiter";
 
+        // Constructor
         public ColumnDTO(int boardId,string name, int columnLimiter ) : base(new ColumnDalController())
         {
             _boardId = boardId;
@@ -23,6 +24,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
             _columnLimiter = columnLimiter;
         }
        
+        // Getters and setters
         public string Name { get => _name; set { _name = value; } } 
         public int ColumnLimiter { get => _columnLimiter; set { _columnLimiter = value; } } 
         public int BoardId { get => _boardId; set { _boardId = value; } }

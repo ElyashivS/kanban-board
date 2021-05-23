@@ -14,12 +14,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
         public const string usernameColumnName = "Email";
         public const string passwordColumnName = "Password";
 
+        // Constructor
         public UserDTO(string email, string password) : base(new UserDalController())
         {
             _email = email;
             _password = password;
         }
 
+        // Getters and setters
         public string Email { get => _email; set { _email = value; } }
         public string Password { get => _password; set { _password = value; } }
 

@@ -9,6 +9,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer.DTO
     internal abstract class DTO
     {
         protected DalController _controller;
+        
+        // Constructor
         protected DTO(DalController controller)
         {
             _controller = controller;
