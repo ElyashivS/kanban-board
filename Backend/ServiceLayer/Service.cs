@@ -42,7 +42,6 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
 
             Response b=userService.DeleteData();
             return b;
-            return new Response();
         }
         ///<summary>This method registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>

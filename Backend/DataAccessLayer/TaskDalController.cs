@@ -11,13 +11,18 @@ using System.Threading.Tasks;
 namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
      internal class TaskDalController : DalController
-    {
+     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         public TaskDalController() : base("Task")
         {
 
         }
+        /// <summary>
+        /// Insert new task to the database
+        /// </summary>
+        /// <param name="task">The task to insert</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Insert(TaskDTO task)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -69,12 +74,17 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 return res > 0;
             }
         }
-            protected override TaskDTO ConvertReaderToObject(SQLiteDataReader reader)
+        protected override TaskDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
-            TaskDTO result = new TaskDTO(reader.GetInt32(0),reader.GetInt32(1),reader.GetString(2),reader.GetString(3),reader.GetDateTime(4),reader.GetDateTime(5),reader.GetString(6),reader.GetString(7));
+        TaskDTO result = new TaskDTO(reader.GetInt32(0),reader.GetInt32(1),reader.GetString(2),reader.GetString(3),reader.GetDateTime(4),reader.GetDateTime(5),reader.GetString(6),reader.GetString(7));
 
-            return result;
+        return result;
         }
+        /// <summary>
+        /// Delete task from the database
+        /// </summary>
+        /// <param name="task">The task to delete</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Delete(TaskDTO task)
         {
             int res = -1;
@@ -111,7 +121,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
-
+        /// <summary>
+        /// Update task in the database
+        /// </summary>
+        /// <param name="boardId">The board ID</param>
+        /// <param name="id">The ID of the task</param>
+        /// <param name="attributeName">The attribute to update</param>
+        /// <param name="attributeValue">The new value</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Update(int boardId, int id, string attributeName, DateTime attributeValue)
         {
             int res = -1;
@@ -144,7 +161,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
-
+        /// <summary>
+        /// Update task in the database
+        /// </summary>
+        /// <param name="boardId">The board ID</param>
+        /// <param name="id">The task ID</param>
+        /// <param name="attributeName">The attribute to update</param>
+        /// <param name="attributeValue">The new value</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Update(int boardId, int id,  string attributeName, string attributeValue)
         {
             int res = -1;
@@ -177,6 +201,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Select specific task from the database
+        /// </summary>
+        /// <param name="Id">The board ID to update</param>
+        /// <param name="taskId">The task ID to update</param>
+        /// <returns>The updated task</returns>
         public TaskDTO SpecificSelect(int Id,int taskId)
         {
             TaskDTO result = null;
@@ -219,6 +249,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 throw new Exception("Board could not be found");
             return result;
         }
+        /// <summary>
+        /// Delete all tasks from database
+        /// </summary>
+        /// <returns>True if seucced, false if failed</returns>
         public bool DeleteTaskTable()
         {
             int res = -1;
@@ -246,13 +280,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return res > 0;
         }
-
-
-
     }
 }
 

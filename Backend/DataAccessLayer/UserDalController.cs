@@ -14,13 +14,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     internal class UserDalController : DalController
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType); // Logs
         
-
+        // Constructor
         public UserDalController() : base("User")
         {
             
         }
+        /// <summary>
+        /// Insert user to database
+        /// </summary>
+        /// <param name="user">The new user</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Insert(UserDTO user)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -62,8 +67,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             return result;
         }
-
-        public bool Update(string email, string attributeName, string attributeValue) // Update for User and Column
+        /// <summary>
+        /// Update user in the database
+        /// </summary>
+        /// <param name="email">The email of the user to update</param>
+        /// <param name="attributeName">The attribute to update</param>
+        /// <param name="attributeValue">The new value</param>
+        /// <returns>True if seucced, false if failed</returns>
+        public bool Update(string email, string attributeName, string attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -93,6 +104,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Delete user from the database
+        /// </summary>
+        /// <param name="Email">The email of the user to delete</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Delete(string Email)
         {
             int res = -1;
@@ -129,6 +145,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Select specific user from the database
+        /// </summary>
+        /// <param name="email">The email of the user</param>
+        /// <returns>The user that selected</returns>
         public UserDTO SpecificSelect(string email)
         {
            UserDTO result = null;
@@ -168,6 +189,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 throw new Exception("User could not be found");
             return result;
         }
+        /// <summary>
+        /// Delete all users from the database
+        /// </summary>
+        /// <returns>True if seucced, false if failed</returns>
         public bool DeleteUserTable()
         {
             int res = -1;
@@ -195,10 +220,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return res > 0;
         }
-
     }
 }

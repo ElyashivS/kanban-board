@@ -12,13 +12,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     internal class ColumnDalController : DalController
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType); // Logs
 
-
+        // Constructor
         public ColumnDalController() : base("Column")
         {
 
         }
+        /// <summary>
+        /// Insert new column to database
+        /// </summary>
+        /// <param name="column">The new column</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Insert(ColumnDTO column)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -64,7 +69,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             return result;
         }
-
+        /// <summary>
+        /// Update column in the database
+        /// </summary>
+        /// <param name="boardId">The board ID to update</param>
+        /// <param name="columnName">The column name to update</param>
+        /// <param name="attributeName">The attribute to update</param>
+        /// <param name="attributeValue">The new value</param>
+        /// <returns></returns>
         public bool Update(int boardId,string columnName, string attributeName, int attributeValue)
         {
             int res = -1;
@@ -96,7 +108,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
-
+        /// <summary>
+        /// Delete column fron the database
+        /// </summary>
+        /// <param name="column">The column to update</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Delete(ColumnDTO column)
         {
             int res = -1;
@@ -133,6 +149,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Select column from the database
+        /// </summary>
+        /// <param name="BoardId">The board ID</param>
+        /// <param name="ColumnName">The column to select</param>
+        /// <returns>The column that selected</returns>
         public ColumnDTO SpecificSelect(int BoardId,string ColumnName)
         {
             ColumnDTO result = null;
@@ -176,6 +198,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 throw new Exception("Column could not be found");
             return result;
         }
+        /// <summary>
+        /// Delete column from the database
+        /// </summary>
+        /// <returns>True if seucced, false if failed</returns>
         public bool DeleteColumnTable()
         {
             int res = -1;

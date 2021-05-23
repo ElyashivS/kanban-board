@@ -12,11 +12,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 {
     internal class BoardDalController : DalController
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType); // Logs
+
+        // Constructor
         public BoardDalController() : base("Board")
         {
 
         }
+        /// <summary>
+        /// Insert Board to database
+        /// </summary>
+        /// <param name="board">The board to insert</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Insert(BoardDTO board)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -33,11 +40,9 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     SQLiteParameter boardNameParam = new SQLiteParameter(@"BoardNameVal", board.Name);
                     SQLiteParameter creatorParam = new SQLiteParameter(@"CreatorVal", board.Creator);
 
-
                     command.Parameters.Add(boardIdParam);
                     command.Parameters.Add(boardNameParam);
                     command.Parameters.Add(creatorParam);
-
 
                     command.Prepare();
                     res = command.ExecuteNonQuery();
@@ -45,13 +50,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 catch (Exception e)
                 {
                     log.Error("Failed to run query");
-
                 }
                 finally
                 {
                     command.Dispose();
                     connection.Close();
-
                 }
                 return res > 0;
             }
@@ -62,8 +65,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             return result;
         }
-       
 
+        /// <summary>
+        /// Upddate board in the database
+        /// </summary>
+        /// <param name="id">The ID of the board</param>
+        /// <param name="attributeName">The attribute to update</param>
+        /// <param name="attributeValue">The new value</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Update(int id, string attributeName, string attributeValue)
         {
             int res = -1;
@@ -93,6 +102,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Delete board from the database
+        /// </summary>
+        /// <param name="board">The board to delete</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool Delete(BoardDTO board)
         {
             int res = -1;
@@ -108,13 +122,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 {
                     connection.Open();
                     SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", board.ID);
-                    
 
                     command.Parameters.Add(boardidParam);
-                    
 
                     res = command.ExecuteNonQuery();
-
                 }
                 catch(Exception e)
                 {
@@ -129,6 +140,11 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Select board from database by ID
+        /// </summary>
+        /// <param name="id">The ID</param>
+        /// <returns>The board</returns>
         public BoardDTO SpecificSelect(int id)
         {
             BoardDTO result=null;
@@ -168,6 +184,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 throw new Exception("Board could not be found");
             return result;
         }
+        /// <summary>
+        /// Insert user to assignee list
+        /// </summary>
+        /// <param name="BoardId">The board that the user inserted to</param>
+        /// <param name="emailAssignee">The email of the user</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool InsertToAsigneeList(int BoardId, string emailAssignee)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -208,7 +230,12 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 return res > 0;
             }
         }
-
+        /// <summary>
+        /// Delete user from assignee list
+        /// </summary>
+        /// <param name="BoardId">The board that the user deleted from</param>
+        /// <param name="EmailAssignee">The email of the user</param>
+        /// <returns>True if seucced, false if failed</returns>
         public bool DeleteFromAssigneeList(int BoardId,string EmailAssignee)
         {
             int res = -1;
@@ -247,6 +274,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Select all the user that assignee to at list one board
+        /// </summary>
+        /// <returns>List of the users</returns>
         public List<DTO.DTO> SelectAssigneeList()
         {
             List<DTO.DTO> results = new List<DTO.DTO>();
@@ -291,6 +322,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
             return result;
         }
+        /// <summary>
+        /// Delete all boards
+        /// </summary>
+        /// <returns>True if seucced, false if failed</returns>
         public bool DeleteBoardTable()
         {
             int res = -1;
@@ -322,6 +357,10 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        /// <summary>
+        /// Delete all assignee list
+        /// </summary>
+        /// <returns>True if seucced, false if failed</returns>
         public bool DeleteAssigneeTable()
         {
             int res = -1;
@@ -349,12 +388,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     command.Dispose();
                     connection.Close();
                 }
-
             }
             return res > 0;
         }
-
-
     }
 }
-

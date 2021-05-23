@@ -17,12 +17,18 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
 
         protected readonly string _connectionString;
         protected readonly string _tableName;
+        
+        // Constructor
         public DalController(string tableName)
         {
             string path = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "database.db"));
             this._connectionString = $"Data Source={path}; Version=3;";
             this._tableName = tableName;
         }
+        /// <summary>
+        /// Select all records from specific table
+        /// </summary>
+        /// <returns>List of all the records</returns>
         public List<DTO.DTO> Select()
         {
             List<DTO.DTO> results = new List<DTO.DTO>();
