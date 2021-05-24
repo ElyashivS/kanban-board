@@ -185,8 +185,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     connection.Close();
                 }
             }
-            if (result == null)
-                throw new Exception("User could not be found");
+            
             return result;
         }
         /// <summary>

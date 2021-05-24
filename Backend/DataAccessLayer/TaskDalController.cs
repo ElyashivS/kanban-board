@@ -245,8 +245,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     connection.Close();
                 }
             }
-            if (result == null)
-                throw new Exception("Board could not be found");
+           
             return result;
         }
         /// <summary>

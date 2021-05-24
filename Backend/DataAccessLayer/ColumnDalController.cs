@@ -194,8 +194,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                     connection.Close();
                 }
             }
-            if (result == null)
-                throw new Exception("Column could not be found");
+            
             return result;
         }
         /// <summary>

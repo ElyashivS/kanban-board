@@ -43,6 +43,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             idcounter = idcounter + 1;
             return c;
         }
+        public Task AddTaskForData(int taskId,string email, DateTime duedate, string title, string descripton)
+        {
+            Task c = board[0].AddTaskForData(idcounter, duedate, email, title, descripton);
+            if (taskId > idcounter)
+                idcounter = taskId;
+            return c;
+        }
         /// <summary>
         /// Remove the task.
         /// </summary>
@@ -134,6 +141,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             else
                 throw new Exception("columnOrdinal should be between 0 and 2");
         }
+        public void ChangeEmailAssigneeForData(int id, int columnOrdinal, string newEmail)
+        {
+            board[columnOrdinal].ChangeEmailAssigneeForData(id, newEmail);
+        }
         // Getter
         public string GetColumnName(int columnOrdinal)
         {
@@ -154,6 +165,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 throw new Exception("column number can be 0,1 or 2");
 
             board[columnOrdinal].LimitTasks(limit);
+        }
+        public void LimitColumnForData(int columnOrdinal, int limit)
+        {
+            board[columnOrdinal].LimitTasksForData(limit);
         }
         // Getters
         public int GetColumnLimit(int columnOrdinal)
@@ -209,6 +224,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             if (users.Contains(email))
                 throw new Exception("user is already a member in the board");
+            users.Add(email);
+        }
+        public void AddtoBoardUsersForData(string email)
+        {
             users.Add(email);
         }
         // Getters

@@ -31,8 +31,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             List<DTO> assignees = BoardTable.SelectAssigneeList();
             foreach (BoardDTO b in boards)
             {
-                boardController[b.Creator].Add(new Tuple<string,string>(b.Creator,b.Name), new Board(b.ID, b.Name, b.Creator));
-                
+                Board k = new Board(b.ID, b.Name, b.Creator);
+                boardController[b.Creator].Add(new Tuple<string,string>(b.Creator,b.Name),k );
+                if (b.ID >= boardIdCounter)
+                    boardIdCounter = b.ID;
                 foreach (ColumnDTO c in columns)
                 {
                     if (c.BoardId == b.ID)
@@ -54,17 +56,17 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     {
                         if (t.ColumnName.Equals("backlog"))
                         {
-                            AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            AddTaskForLoad(t.ID,b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
                         if(t.ColumnName.Equals("in progress")){
-                            AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            AddTaskForLoad(t.ID,b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
                             AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
                         if (t.ColumnName.Equals("done"))
                         {
-                            AddTaskForLoad(b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            AddTaskForLoad(t.ID,b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 1, t.ID);
                             AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
@@ -411,40 +413,37 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         }
         private void LimitColumnForLoad (string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
-            if (columnOrdinal == 2)
-                throw new Exception("cannot limit done column");
-            Board c = FindBoard(creatorEmail, boardName);
-            c.BoardMemberVerify(userEmail);  
-            c.LimitColunm(columnOrdinal, limit);
+
+            Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
+            Board c = boardController[userEmail][t];
+
+            c.LimitColumnForData(columnOrdinal, limit);
             
         }
         private void JoinBoardForLoad(string userEmail, string creatorEmail, string boardName)
         {
             Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
-            Board c = FindBoard(creatorEmail, boardName);
+            Board c = boardController[userEmail][t];
             c.AddtoBoardUsers(userEmail);
             boardController[userEmail].Add(t, c);
         }
-        private void AddTaskForLoad(string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
+        private void AddTaskForLoad(int taskId,string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
         {
-            Board c = FindBoard(creatorEmail, boardName);
-            c.BoardMemberVerify(userEmail);
-            Task b = c.AddTask(userEmail, dueDate, title, description);
+            Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
+            Board c = boardController[userEmail][t];
+            Task b = c.AddTaskForData(taskId,userEmail, dueDate, title, description);
         }
         private void MoveTaskForLoad(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
         {
-            Board c = FindBoard(creatorEmail, boardName);
-            c.BoardMemberVerify(userEmail);
-            c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
+            Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
+            Board c = boardController[userEmail][t];
             c.MoveTask(userEmail, taskId, columnOrdinal);
         }
         private void AssignTaskForLoad(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId, string emailAssignee)
         {
-            Board c = FindBoard(creatorEmail, boardName);
-            c.BoardMemberVerify(userEmail);
-            c.BoardMemberVerify(emailAssignee);
-            Task b = c.GetTask(taskId, columnOrdinal);
-            c.TaskAssigneeVerify(userEmail, b);
+            Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
+            Board c = boardController[userEmail][t];
+            Task b = c.GetTask(taskId, columnOrdinal); 
             c.ChangeEmailAssignee(taskId, columnOrdinal, emailAssignee);
         }
     }

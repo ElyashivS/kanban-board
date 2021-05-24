@@ -26,6 +26,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
             isLoggedIn = false;
         }
+        public User(string email,string password,bool fordata)
+        {
+            this.email = email;
+            this.password = password;
+        }
         /// <summary>
         /// Login to the user
         /// </summary>

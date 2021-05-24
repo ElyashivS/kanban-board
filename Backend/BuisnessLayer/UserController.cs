@@ -133,11 +133,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="password">The passwords</param>
         private void RegisterForLoad(string email, string password)
         {
-            email = email.Trim().ToLower();
-            if (Users.ContainsKey(email))
-                throw new ArgumentException("email is already in the system");
 
-            Users.Add(email, new User(email, password));
+            Users.Add(email, new User(email, password,false));
         }
     }
 }

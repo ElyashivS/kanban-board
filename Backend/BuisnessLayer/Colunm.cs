@@ -35,6 +35,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             columnLimitVerifier = true;
             columnLimiter = maxtasks;
         }
+        public void LimitTasksForData(int maxtasks)
+        {
+            columnLimitVerifier = true;
+            columnLimiter = maxtasks;
+        }
         // Getter
         public int GetColumnLimit()
         {
@@ -62,6 +67,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             else
                 throw new Exception("Column has reached to its maximum tasks");
+        }
+        public Task AddTaskForData(int id, DateTime dueDate, string email, string title, string description)
+        {
+            Task c = new Task(id, dueDate, email, title, description);
+            tasks.Add(id, c);
+            return c;
         }
         /// <summary>
         /// Remove the task.
@@ -130,6 +141,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             if (!tasks.ContainsKey(taskId))
                 throw new Exception("task was not found");
+            tasks[taskId].ChangeEmailAssignee(newEmail);
+        }
+        public void ChangeEmailAssigneeForData(int taskId, string newEmail)
+        {
             tasks[taskId].ChangeEmailAssignee(newEmail);
         }
         // Getters
