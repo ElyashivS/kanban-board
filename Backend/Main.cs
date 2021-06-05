@@ -16,26 +16,29 @@ namespace ConsoleApp1
         public static void Main(string[] args)
         {
             Service a = new Service();
-          //  a.DeleteData();
-          //  a.Register("ari@gmail.com","Aa12");
-            //  a.Register("ri@gmail.com", "Aa12");
-           // a.Register("i@gmail.com", "Aa12");
+           a.DeleteData();
+            a.Register("ari@gmail.com","Aa12");
+  
+              a.Login("ari@gmail.com", "Aa12");
+   
+              a.AddBoard("ari@gmail.com", "boardy");
+             a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "titl", "description", new DateTime(2025, 1, 1));
+            a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "ti", "description", new DateTime(2025, 1, 1));
+            a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "tit", "description", new DateTime(2025, 1, 1));
+            a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy",0,1);
+            a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 1, 1);
+            a.RemoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2);
+            a.RemoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0);
+            // a.JoinBoard("ri@gmail.com", "ari@gmail.com", "boardy");
+            // a.JoinBoard("i@gmail.com", "ari@gmail.com", "boardy");
 
-             // a.Login("ari@gmail.com", "Aa12");
-            // a.Login("ri@gmail.com", "Aa12");
-            //a.Login("i@gmail.com", "Aa12");
 
+            // a.AddColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, "wowi");
+            // a.RemoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2);
 
-            //  a.AddBoard("ari@gmail.com", "boardy");
+            //  a.AssignTask("i@gmail.com", "ari@gmail.com", "boardy", 1, 1, "ri@gmail.com");
 
-             // a.JoinBoard("ri@gmail.com", "ari@gmail.com", "boardy");
-           // a.JoinBoard("i@gmail.com", "ari@gmail.com", "boardy");
-
-           //  a.AddTask("i@gmail.com", "ari@gmail.com", "boardy", "title", "description", new DateTime(2025, 1, 1));
-          //  a.AdvanceTask("i@gmail.com", "ari@gmail.com", "boardy", 0, 1);
-          //  a.AssignTask("i@gmail.com", "ari@gmail.com", "boardy", 1, 1, "ri@gmail.com");
-            
-          // a.AdvanceTask("ri@gmail.com", "ari@gmail.com", "boardy", 1, 1);
+            // a.AdvanceTask("ri@gmail.com", "ari@gmail.com", "boardy", 1, 1);
 
             // a.AddTask("ri@gmail.com", "ari@gmail.com", "boardy", "itle", "description", new DateTime(2025, 1, 1));
             // a.AdvanceTask("ri@gmail.com", "ari@gmail.com", "boardy", 0, 2);
@@ -53,19 +56,19 @@ namespace ConsoleApp1
 
 
 
-           // a.LoadData();
-          //  a.Login("ri@gmail.com", "Aa12");
-          //  a.Login("ari@gmail.com", "Aa12");
-           // a.RemoveBoard("ri@gmail.com", "ri@gmail.com", "board");
-           // a.RemoveBoard("ri@gmail.com", "ari@gmail.com", "boardy");
-           //a.RemoveBoard("ari@gmail.com", "ari@gmail.com", "boardy");
-           
+            // a.LoadData();
+            //  a.Login("ri@gmail.com", "Aa12");
+            //  a.Login("ari@gmail.com", "Aa12");
+            // a.RemoveBoard("ri@gmail.com", "ri@gmail.com", "board");
+            // a.RemoveBoard("ri@gmail.com", "ari@gmail.com", "boardy");
+            //a.RemoveBoard("ari@gmail.com", "ari@gmail.com", "boardy");
+
             //Response < IList<Task> > k= a.InProgressTasks("ri@gmail.com");
-            
-          // foreach (Task l in k.Value)
-          // {
+
+            // foreach (Task l in k.Value)
+            // {
             //    Console.WriteLine(l.Title);
-          //  }
+            //  }
 
 
 

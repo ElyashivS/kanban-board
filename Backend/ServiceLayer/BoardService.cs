@@ -238,7 +238,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         {
             try
             {
-                List<BuisnessLayer.Task> c = boardController.GetColunm(userEmail, creatorEmail, boardName, columnOrdinal);
+                List<BuisnessLayer.Task> c = boardController.GetColumn(userEmail, creatorEmail, boardName, columnOrdinal);
                 List<Task> d = new List<Task>();
                 foreach (BuisnessLayer.Task a in c)
                 {
@@ -375,5 +375,37 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return Response<IList<String>>.FromError(e.Message);
             }
         }
+        public Response AddColumn (string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
+        {
+            try
+            {
+                boardController.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal,columnName);
+                log.Info($"Column with the name {columnName} has been created");
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                log.Warn($"Failed to create Column");
+                return new Response(e.Message);
+            }
+
+        }
+        public Response RemoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
+        {
+            try
+            {
+                boardController.RemoveColumn(userEmail, creatorEmail, boardName, columnOrdinal);
+                log.Info($"Column has been removed");
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                log.Warn($"Failed to Remove Column");
+                return new Response(e.Message);
+            }
+
+        }
+
+
     }
 }

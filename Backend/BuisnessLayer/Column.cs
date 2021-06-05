@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
-    public class Colunm
+    public class Column
     {
+        public int columnId;
         public string name;
         private Dictionary<int, Task> tasks;
         private bool columnLimitVerifier = false;
         private int columnLimiter=-1;
         // Constructor
-        public Colunm(string name, Dictionary<int, Task> Tasks)
+        public Column(int ColumnId,string name, Dictionary<int, Task> Tasks)
         {
+            this.columnId = ColumnId;
             this.name = name;
             this.tasks = Tasks;
         }
@@ -67,6 +69,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             }
             else
                 throw new Exception("Column has reached to its maximum tasks");
+        }
+        public void AddTask(Task t)
+        {
+            tasks.Add(t.id, t);
+
         }
         public Task AddTaskForData(int id, DateTime dueDate, string email, string title, string description)
         {
@@ -166,6 +173,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public bool GetColumnIfLimited()
         {
             return columnLimitVerifier;
+        }
+        public int GetColumnId()
+        {
+            return this.columnId;
+        }
+        public int Size()
+        {
+            return tasks.Count;
         }
     }
 }

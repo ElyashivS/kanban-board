@@ -138,7 +138,19 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 if (!isUpper || !isLower || !isDigit)
                     throw new Exception(" must include at least one uppercase letter, one small character and a number.");
 
+                 WeakPasswordVerifier(password);
+               
+
                 this.password = password;
         }
+        public void WeakPasswordVerifier(string password)
+        {
+            if (password == "123456" || password == "123456789" || password == "qwerty" || password == "password" || password == "1111111" || password == "12345678" ||
+               password == "abc123" || password == "1234567" || password == "password1" || password == "12345" || password == "1234567890" || password == "123123" || password
+               == "000000" || password == "Iloveyou" || password == "1234" || password == "1q2w3e4r5t" || password == "Qwertyuiop" || password == "123" || password == "Monkey"
+               || password == "Dragon")
+                throw new Exception("password is too weak");
+        }
+
     }
 }

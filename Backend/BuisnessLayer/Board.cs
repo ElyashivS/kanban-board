@@ -10,8 +10,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
     {
         public int id;
         public string name;
-        private List<Colunm> board;
-        private int idcounter = 1;
+        private List<Column> board;
+        private int taskIdCounter = 1;
+        private int ColumnIdCounter;
         private List<string> users;
         private readonly string creator;
 
@@ -22,12 +23,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             this.id = id;
             this.name = name;
             this.creator = creator;
-            board = new List<Colunm>();
-            board.Add(new Colunm("backlog", new Dictionary<int, Task>()));
-            board.Add(new Colunm("in progress", new Dictionary<int, Task>()));
-            board.Add(new Colunm("done", new Dictionary<int, Task>()));
+            board = new List<Column>();
+            board.Add(new Column(1,"backlog", new Dictionary<int, Task>()));
+            board.Add(new Column(2,"in progress", new Dictionary<int, Task>()));
+            board.Add(new Column(3,"done", new Dictionary<int, Task>()));
+            ColumnIdCounter = 4;
             this.users = new List<string>();
         }
+        
         /// <summary>
         /// Add a new task.
         /// </summary>
@@ -39,15 +42,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public Task AddTask(string email, DateTime duedate, string title, string descripton)
         {
 
-            Task c = board[0].AddTask(idcounter, duedate, email, title, descripton);
-            idcounter = idcounter + 1;
+            Task c = board[0].AddTask(taskIdCounter, duedate, email, title, descripton);
+            taskIdCounter = taskIdCounter + 1;
             return c;
         }
         public Task AddTaskForData(int taskId,string email, DateTime duedate, string title, string descripton)
         {
-            Task c = board[0].AddTaskForData(idcounter, duedate, email, title, descripton);
-            if (taskId > idcounter)
-                idcounter = taskId;
+            Task c = board[0].AddTaskForData(taskIdCounter, duedate, email, title, descripton);
+            if (taskId > taskIdCounter)
+                taskIdCounter = taskId;
             return c;
         }
         /// <summary>
@@ -70,21 +73,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public void MoveTask(string email, int id, int columnOrdinal)
         {
 
-            if (columnOrdinal == 0)
-            {
-                Task toprogress = board[0].RemoveTask(id);
-                board[1].AddTask(toprogress.GetId(), toprogress.GetDueDate(), toprogress.GetAssignee(), toprogress.GetTitle(), toprogress.GetDescription());
+            Task toprogress = board[columnOrdinal].RemoveTask(id);
+            board[columnOrdinal+1].AddTask(toprogress.GetId(), toprogress.GetDueDate(), toprogress.GetAssignee(), toprogress.GetTitle(), toprogress.GetDescription());
 
-            }
-            else if (columnOrdinal == 1)
-            {
-                Task todone = board[1].RemoveTask(id);
-                board[2].AddTask(todone.GetId(), todone.GetDueDate(), todone.GetAssignee(), todone.GetTitle(), todone.GetDescription());
 
-            }
-            else
-                throw new Exception("columnOrdinal can be only 0 or 1");
-        }
+        } 
 
         /// <summary>
         /// Change the due date of a task
@@ -94,11 +87,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="newdueDate">The new due date</param>
         public void ChangeDueDate(int id, int columnOrdinal, DateTime newdueDate)
         {
-            if (columnOrdinal == 0 || columnOrdinal == 1)
-                board[columnOrdinal].ChangeDueDate(id, newdueDate);
+            CheckOrdinalValidality(columnOrdinal);
+            if (columnOrdinal == board.Count)
+                throw new Exception("cannot change a finished Task Duedate");
+            board[columnOrdinal].ChangeDueDate(id, newdueDate);
 
-            else
-                throw new Exception("you can change Duedate only from backlog column or inprogress column");
+            
         }
         /// <summary>
         /// Change the title of a task
@@ -108,10 +102,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="title">The new title</param>
         public void ChangeTitle(int id, int columnOrdinal, string title)
         {
-            if (columnOrdinal == 0 || columnOrdinal == 1 || columnOrdinal == 2)
-                board[columnOrdinal].ChangeTitle(id, title);
-            else
-                throw new Exception("column not found");
+            CheckOrdinalValidality(columnOrdinal);
+            board[columnOrdinal].ChangeTitle(id, title);
+            
         }
         /// <summary>
         /// Change description of a task
@@ -121,10 +114,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="description">The new description</param>
         public void ChangeDescription(int id, int columnOrdinal, string description)
         {
-            if (columnOrdinal == 0 || columnOrdinal == 1 || columnOrdinal == 2)
-                board[columnOrdinal].ChangeDescription(id, description);
-            else
-                throw new Exception("column not found");
+            CheckOrdinalValidality(columnOrdinal);
+            board[columnOrdinal].ChangeDescription(id, description);
+            
         }
         /// <summary>
         /// Change the mail of assignee
@@ -134,12 +126,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="newEmail">The new mail</param>
         public void ChangeEmailAssignee(int id, int columnOrdinal, string newEmail)
         {
-            if (columnOrdinal <= 2 || columnOrdinal >= 0)
-            {
-                board[columnOrdinal].ChangeEmailAssignee(id, newEmail);
-            }
-            else
-                throw new Exception("columnOrdinal should be between 0 and 2");
+            CheckOrdinalValidality(columnOrdinal);
+            board[columnOrdinal].ChangeEmailAssignee(id, newEmail);
+            
         }
         public void ChangeEmailAssigneeForData(int id, int columnOrdinal, string newEmail)
         {
@@ -148,21 +137,17 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         // Getter
         public string GetColumnName(int columnOrdinal)
         {
-            if (columnOrdinal != 0 && columnOrdinal != 1 && columnOrdinal != 2)
-            {
-                throw new Exception("column number can be 0,1 or 2");
-            }
-            return board[columnOrdinal].GetColumnName();
+            CheckOrdinalValidality(columnOrdinal);
+            return board[columnOrdinal].name;
         }
         /// <summary>
         /// Limit the number of tasks in a specific column
         /// </summary>
         /// <param name="columnOrdinal">The current column ordinal</param>
         /// <param name="limit">The new limit</param>
-        public void LimitColunm(int columnOrdinal, int limit)
+        public void LimitColumn(int columnOrdinal, int limit)
         {
-            if (columnOrdinal != 0 && columnOrdinal != 1 && columnOrdinal != 2)
-                throw new Exception("column number can be 0,1 or 2");
+            CheckOrdinalValidality(columnOrdinal);
 
             board[columnOrdinal].LimitTasks(limit);
         }
@@ -173,15 +158,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         // Getters
         public int GetColumnLimit(int columnOrdinal)
         {
-            if (columnOrdinal != 0 && columnOrdinal != 1 && columnOrdinal != 2)
-                throw new Exception("column number can be 0,1 or 2");
+            CheckOrdinalValidality(columnOrdinal);
 
             return board[columnOrdinal].GetColumnLimit();
         }
         public List<Task> GetColumn(int columnOrdinal)
         {
-            if (columnOrdinal != 0 && columnOrdinal != 1 && columnOrdinal != 2)
-                throw new Exception("column number can be 0,1 or 2");
+            CheckOrdinalValidality(columnOrdinal);
 
             return board[columnOrdinal].Tasks;
         }
@@ -233,26 +216,153 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         // Getters
         public Task GetTask(int id, int columnOrdinal)
         {
-            if (columnOrdinal <= 2 || columnOrdinal >= 0)
-                return board[columnOrdinal].GetTask(id);
-            else
-                throw new Exception("Column doesnt exist");
+            CheckOrdinalValidality(columnOrdinal);
+            return board[columnOrdinal].GetTask(id);
+            
         }
-        public List<Colunm> GetBoardColumns()
+        public List<Column> GetBoardColumns()
         {
             return board;
         }
         public bool GetColumnIfLimited(int columnOrdinal)
         {
-            if (columnOrdinal <= 2 || columnOrdinal >= 0)
+            CheckOrdinalValidality(columnOrdinal);
             return board[columnOrdinal].GetColumnIfLimited(); 
-            else
-                throw new Exception("Column doesnt exist");
+            
+                
 
         }
         public List<string> GetAssigneeList()
         {
             return users;
         }
+        //checks if the ColumnOrdinal number is valid
+        public void CheckOrdinalValidality(int columnOrdinal)
+        {
+            if (columnOrdinal > board.Count || columnOrdinal < 0)
+                throw new Exception("Column doesnt exist");
+        }
+        //returns the columnId  by giving a task in it
+        public int ColumnIdByColumnOrdinal(int ColumnOrdinal)
+            
+	{
+            return board[ColumnOrdinal].columnId;
+
+    }
+        public int ColumnOrdinalByColumnId(int ColumnId)
+        {
+            
+            
+                for (int i = 0; i < board.Count; i++)
+                {
+                    if (ColumnId == board[i].GetColumnId())
+                        return i;
+                }
+
+            return -1;
+        }
+        public Column AddColumn(int columnOrdinal,string columnName)
+        {
+            
+            Column toadd = new Column(ColumnIdCounter, columnName, new Dictionary<int, Task>());
+            ColumnIdCounter = ColumnIdCounter + 1;
+            board.Add(toadd);
+            for (int i = board.Count-1; i > 0; i=i-1)
+            {
+                if (columnOrdinal < i)
+                {
+                    Column temp = board[i];
+                    board[i] = board[i-1];
+                    board[i -1] = temp;
+                }
+                else
+                    return toadd;
+                    
+            }
+            return toadd;
+        }
+        public Column RemoveColumn(int columnOrdinal)
+        {
+            if (board.Count == 2)
+                throw new Exception("board reached his minimal state");
+            CheckOrdinalValidality(columnOrdinal);
+            if (columnOrdinal == 0)
+            {
+                if ((!board[columnOrdinal + 1].GetColumnIfLimited()) || (board[columnOrdinal + 1].GetColumnLimit().CompareTo(board[columnOrdinal + 1].Size() + board[columnOrdinal].Size()) > 0))
+                {
+                    foreach (Task t in board[columnOrdinal].Tasks)
+                    {
+                        board[columnOrdinal].RemoveTask(t.id);
+                        board[columnOrdinal + 1].AddTask(t);
+                    }
+                    Column toRemove = board[columnOrdinal];
+                    board.Remove(toRemove);
+                    return board[columnOrdinal];
+                }
+                else
+                    throw new Exception("Column could not be deleted");
+            }
+            else if (columnOrdinal < board.Count-1 || columnOrdinal > 0)
+            {
+                if ((!board[columnOrdinal - 1].GetColumnIfLimited()) || (board[columnOrdinal - 1].GetColumnLimit().CompareTo(board[columnOrdinal - 1].Size() + board[columnOrdinal].Size()) > 0))
+                {
+                    foreach (Task t in board[columnOrdinal].Tasks)
+                    {
+                        board[columnOrdinal].RemoveTask(t.id);
+                        board[columnOrdinal - 1].AddTask(t);
+
+                    }
+                    Column toRemove = board[columnOrdinal];
+                    board.Remove(toRemove);
+                    return board[columnOrdinal-1];
+                }
+                else if ((!board[columnOrdinal + 1].GetColumnIfLimited()) || (board[columnOrdinal + 1].GetColumnLimit().CompareTo(board[columnOrdinal + 1].Size() + board[columnOrdinal].Size()) > 0))
+                {
+                    foreach (Task t in board[columnOrdinal].Tasks)
+                    {
+                        board[columnOrdinal].RemoveTask(t.id);
+                        board[columnOrdinal + 1].AddTask(t);
+                    }
+                    Column toRemove = board[columnOrdinal];
+                    board.Remove(toRemove);
+                    return board[columnOrdinal];
+                }
+                else
+                    throw new Exception("Column could not be deleted");
+   
+            }
+            else 
+            {
+                if ((!board[columnOrdinal - 1].GetColumnIfLimited()) || (board[columnOrdinal - 1].GetColumnLimit().CompareTo(board[columnOrdinal - 1].Size() + board[columnOrdinal].Size()) > 0))
+                {
+                    foreach (Task t in board[columnOrdinal].Tasks)
+                    {
+                        board[columnOrdinal].RemoveTask(t.id);
+                        board[columnOrdinal - 1].AddTask(t);
+
+                    }
+                    Column toRemove = board[columnOrdinal];
+                    board.Remove(toRemove);
+                    return board[columnOrdinal-1];
+                }
+                else
+                    throw new Exception("Column Couldnt be deleted");
+
+            }
+            
+
+
+
+        }
+        public void CheckIfNotLastOrdinal(int ColumnOrdinal)
+        {
+            if (ColumnOrdinal == board.Count - 1)
+                throw new Exception("Cannot limit done Column");
+        }
+        
+        
+            
+        
+        
     }
 }

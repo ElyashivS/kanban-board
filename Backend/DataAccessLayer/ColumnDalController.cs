@@ -33,15 +33,19 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 try
                 {
                     connection.Open();
-                    command.CommandText = $"INSERT INTO {_tableName} ({ColumnDTO.BoardIdColumnName} ,{ColumnDTO.ColumnNameColumnName},{ColumnDTO.ColumnLimiterColumnName}) " +
-                        $"VALUES (@BoardIdVal,@ColumnName,@ColumnLimiter);";
+                    command.CommandText = $"INSERT INTO {_tableName} ({ColumnDTO.BoardIdColumnName} ,{ColumnDTO.ColumnIdColumnName},{ColumnDTO.ColumnOrdinalColumnName},{ColumnDTO.ColumnNameColumnName},{ColumnDTO.ColumnLimiterColumnName}) " +
+                        $"VALUES (@BoardIdVal,@ColumnIdVal,@ColumnOrdinalVal,@ColumnName,@ColumnLimiter);";
 
                     SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", column.BoardId);
+                    SQLiteParameter columnidParam = new SQLiteParameter(@"ColumnIdVal", column.ColumnId);
+                    SQLiteParameter columnordinalParam = new SQLiteParameter(@"ColumnOrdinalVal", column.ColumnOrdinal);
                     SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnName", column.Name);
                     SQLiteParameter columnlimiterParam = new SQLiteParameter(@"ColumnLimiter", column.ColumnLimiter);
 
 
                     command.Parameters.Add(boardidParam);
+                    command.Parameters.Add(columnidParam);
+                    command.Parameters.Add(columnordinalParam);
                     command.Parameters.Add(columnnameParam);
                     command.Parameters.Add(columnlimiterParam);
 
@@ -50,7 +54,8 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 }
                 catch (Exception e)
                 {
-                    log.Error("could not insert new user");
+
+                    log.Error("could not insert new Column");
 
                 }
                 finally
@@ -65,7 +70,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         protected override ColumnDTO ConvertReaderToObject(SQLiteDataReader reader)
         {
             
-            ColumnDTO result = new ColumnDTO(reader.GetInt32(0), reader.GetString(1), reader.GetInt32(2));
+            ColumnDTO result = new ColumnDTO(reader.GetInt32(0),reader.GetInt32(1),reader.GetInt32(2), reader.GetString(3), reader.GetInt32(4));
 
             return result;
         }
@@ -77,7 +82,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         /// <param name="attributeName">The attribute to update</param>
         /// <param name="attributeValue">The new value</param>
         /// <returns></returns>
-        public bool Update(int boardId,string columnName, string attributeName, int attributeValue)
+        public bool Update(int boardId,int columnId, string attributeName, int attributeValue)
         {
             int res = -1;
             using (var connection = new SQLiteConnection(_connectionString))
@@ -85,13 +90,14 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 SQLiteCommand command = new SQLiteCommand
                 {
                     Connection = connection,
-                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE ({ColumnDTO.ColumnNameColumnName} = @ColumnNameParam AND {ColumnDTO.BoardIdColumnName}=@BoardIdParam)"
+                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE {ColumnDTO.BoardIdColumnName}=@BoardIdParam AND {ColumnDTO.ColumnIdColumnName}=@ColumnIdParam"
                 };
                 try
                 {
                     command.Parameters.Add(new SQLiteParameter("@BoardIdParam", boardId));
+                    command.Parameters.Add(new SQLiteParameter("@ColumnIdParam", columnId));
                     command.Parameters.Add(new SQLiteParameter("@attributeParam", attributeValue));
-                    command.Parameters.Add(new SQLiteParameter("@ColumnNameParam", columnName));
+                    
                     connection.Open();
                     res = command.ExecuteNonQuery();
                 }
@@ -155,21 +161,21 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
         /// <param name="BoardId">The board ID</param>
         /// <param name="ColumnName">The column to select</param>
         /// <returns>The column that selected</returns>
-        public ColumnDTO SpecificSelect(int BoardId,string ColumnName)
+        public ColumnDTO SpecificSelect(int BoardId,int ColumnId)
         {
             ColumnDTO result = null;
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 SQLiteCommand command = new SQLiteCommand(null, connection);
-                command.CommandText = $"select * from {_tableName} where {ColumnDTO.BoardIdColumnName}=@BoardIdVal AND {ColumnDTO.ColumnNameColumnName}=@ColumnNameVal;";
+                command.CommandText = $"select * from {_tableName} where {ColumnDTO.BoardIdColumnName}=@BoardIdVal AND {ColumnDTO.ColumnIdColumnName}=@ColumnIdVal;";
                 SQLiteDataReader dataReader = null;
                 try
                 {
                     connection.Open();
                     SQLiteParameter boardidParam = new SQLiteParameter(@"BoardIdVal", BoardId);
-                    SQLiteParameter columnnameParam = new SQLiteParameter(@"ColumnNameVal", ColumnName);
+                    SQLiteParameter columnIdParam = new SQLiteParameter(@"ColumnIdVal", ColumnId);
                     command.Parameters.Add(boardidParam);
-                    command.Parameters.Add(columnnameParam);
+                    command.Parameters.Add(columnIdParam);
                     dataReader = command.ExecuteReader();
 
                     if (dataReader.Read())
