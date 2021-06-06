@@ -24,10 +24,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             this.name = name;
             this.creator = creator;
             board = new List<Column>();
-            board.Add(new Column(1,"backlog", new Dictionary<int, Task>()));
-            board.Add(new Column(2,"in progress", new Dictionary<int, Task>()));
-            board.Add(new Column(3,"done", new Dictionary<int, Task>()));
+            board.Add(new Column(1,"backlog"));
+            board.Add(new Column(2,"in progress"));
+            board.Add(new Column(3,"done"));
             ColumnIdCounter = 4;
+            this.users = new List<string>();
+        }
+        public Board(int id, string name, string creator, bool fordata)
+        {
+            this.id = id;
+            this.name = name;
+            this.creator = creator;
+            board = new List<Column>();
             this.users = new List<string>();
         }
         
@@ -46,9 +54,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             taskIdCounter = taskIdCounter + 1;
             return c;
         }
-        public Task AddTaskForData(int taskId,string email, DateTime duedate, string title, string descripton)
+        public Task AddTaskForData(int columnId,int taskId,string email, DateTime duedate, string title, string descripton)
         {
-            Task c = board[0].AddTaskForData(taskIdCounter, duedate, email, title, descripton);
+            int toinsertto = ColumnOrdinalByColumnId(columnId);
+            Task c = board[toinsertto].AddTaskForData(taskId, duedate, email, title, descripton);
             if (taskId > taskIdCounter)
                 taskIdCounter = taskId;
             return c;
@@ -264,7 +273,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         public Column AddColumn(int columnOrdinal,string columnName)
         {
             
-            Column toadd = new Column(ColumnIdCounter, columnName, new Dictionary<int, Task>());
+            Column toadd = new Column(ColumnIdCounter, columnName);
             ColumnIdCounter = ColumnIdCounter + 1;
             board.Add(toadd);
             for (int i = board.Count-1; i > 0; i=i-1)
@@ -392,9 +401,34 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             board[columnOrdinal + shiftSize] = toshift;
             return board[columnOrdinal + shiftSize];
         }
-        
-            
-        
+        public int Size()
+        {
+            return board.Count;
+        }
+        public void AddColumnForData(int columnId, string columnName, int columnOrdinal)
+        {
+            if (Size() == 0 || columnOrdinal > board.Count)
+                board.Add(new Column(columnId, columnName));
+            else
+            {
+                board.Add(new Column(columnId, columnName));
+                for (int i = board.Count - 1; i > 0; i = i - 1)
+                {
+                    if (columnOrdinal < i)
+                    {
+                        Column temp = board[i];
+                        board[i] = board[i - 1];
+                        board[i - 1] = temp;
+                    }
+
+
+
+                }
+            }
+            if (columnId > this.ColumnIdCounter)
+                ColumnIdCounter = columnId;
+
+        }
         
     }
 }

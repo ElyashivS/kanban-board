@@ -14,12 +14,13 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         private bool columnLimitVerifier = false;
         private int columnLimiter=-1;
         // Constructor
-        public Column(int ColumnId,string name, Dictionary<int, Task> Tasks)
+        public Column(int ColumnId,string name )
         {
             this.columnId = ColumnId;
             this.name = name;
-            this.tasks = Tasks;
+            this.tasks = new Dictionary<int, Task>();
         }
+
         /// <summary>
         /// Limit the number of tasks in a specific column
         /// </summary>

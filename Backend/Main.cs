@@ -16,20 +16,31 @@ namespace ConsoleApp1
         public static void Main(string[] args)
         {
             Service a = new Service();
-           a.DeleteData();
-            a.Register("ari@gmail.com","Aa12");
+          // a.DeleteData();
+            //a.Register("ari@gmail.com","Aa12");
   
-              a.Login("ari@gmail.com", "Aa12");
+              //a.Login("ari@gmail.com", "Aa12");
    
-              a.AddBoard("ari@gmail.com", "boardy");
-             a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "titl", "description", new DateTime(2025, 1, 1));
-           
-            a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 0, 1);
-            a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 1, 1);
-            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0, 2);
-            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, -1);
-            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 1, -1);
-            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 1, -1);
+             // a.AddBoard("ari@gmail.com", "boardy");
+            // a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "titl", "description", new DateTime(2025, 1, 1));
+           // a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "tit", "description", new DateTime(2025, 1, 1));
+          //  a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "ti", "description", new DateTime(2025, 1, 1));
+           // a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "t", "description", new DateTime(2025, 1, 1));
+           // a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "title", "description", new DateTime(2025, 1, 1));
+          //  a.AddColumn("ari@gmail.com", "ari@gmail.com", "boardy", 3, "wowi");
+          //  a.AddColumn("ari@gmail.com", "ari@gmail.com", "boardy", 4, "wow");
+
+           // a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 0, 1);
+           // a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 1, 1);
+          //  a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 0, 2);
+          // a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 0, 3);
+          //  a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 1, 3);
+          //  a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 2, 3);
+           // a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 0, 5);
+           // a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 1, 5);
+            //a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 2, 5);
+            //a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 3, 5);
+
 
 
             // a.RenameColumn("ari@gmail.com", "ari@gmail.com", "boardy", 3, "wowo");
@@ -38,8 +49,8 @@ namespace ConsoleApp1
             // a.JoinBoard("i@gmail.com", "ari@gmail.com", "boardy");
 
 
-             a.AddColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, "wowi");
-            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, -2);
+
+            // a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, -2);
             // a.RemoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2);
 
             //  a.AssignTask("i@gmail.com", "ari@gmail.com", "boardy", 1, 1, "ri@gmail.com");
@@ -62,19 +73,19 @@ namespace ConsoleApp1
 
 
 
-            // a.LoadData();
-            //  a.Login("ri@gmail.com", "Aa12");
-            //  a.Login("ari@gmail.com", "Aa12");
+             a.LoadData();
+              a.Login("ari@gmail.com", "Aa12");
+             // a.Login("ari@gmail.com", "Aa12");
             // a.RemoveBoard("ri@gmail.com", "ri@gmail.com", "board");
             // a.RemoveBoard("ri@gmail.com", "ari@gmail.com", "boardy");
             //a.RemoveBoard("ari@gmail.com", "ari@gmail.com", "boardy");
 
-            //Response < IList<Task> > k= a.InProgressTasks("ri@gmail.com");
+            Response < IList<Task> > k= a.InProgressTasks("ari@gmail.com");
 
-            // foreach (Task l in k.Value)
-            // {
-            //    Console.WriteLine(l.Title);
-            //  }
+             foreach (Task l in k.Value)
+             {
+                Console.WriteLine(l.Title);
+              }
 
 
 
