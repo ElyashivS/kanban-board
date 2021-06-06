@@ -114,6 +114,38 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
             }
             return res > 0;
         }
+        public bool Update(int boardId, int columnId, string attributeName, string attributeValue)
+        {
+            int res = -1;
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                SQLiteCommand command = new SQLiteCommand
+                {
+                    Connection = connection,
+                    CommandText = $"UPDATE {_tableName} SET {attributeName}=@attributeParam WHERE {ColumnDTO.BoardIdColumnName}=@BoardIdParam AND {ColumnDTO.ColumnIdColumnName}=@ColumnIdParam"
+                };
+                try
+                {
+                    command.Parameters.Add(new SQLiteParameter("@BoardIdParam", boardId));
+                    command.Parameters.Add(new SQLiteParameter("@ColumnIdParam", columnId));
+                    command.Parameters.Add(new SQLiteParameter("@attributeParam", attributeValue));
+
+                    connection.Open();
+                    res = command.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    log.Error("Failed to run query");
+                }
+                finally
+                {
+                    command.Dispose();
+                    connection.Close();
+                }
+            }
+            return res > 0;
+        }
         /// <summary>
         /// Delete column fron the database
         /// </summary>

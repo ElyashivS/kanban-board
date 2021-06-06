@@ -23,17 +23,23 @@ namespace ConsoleApp1
    
               a.AddBoard("ari@gmail.com", "boardy");
              a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "titl", "description", new DateTime(2025, 1, 1));
-            a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "ti", "description", new DateTime(2025, 1, 1));
-            a.AddTask("ari@gmail.com", "ari@gmail.com", "boardy", "tit", "description", new DateTime(2025, 1, 1));
-            a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy",0,1);
+           
+            a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 0, 1);
             a.AdvanceTask("ari@gmail.com", "ari@gmail.com", "boardy", 1, 1);
-            a.RemoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2);
-            a.RemoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0);
+            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 0, 2);
+            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, -1);
+            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 1, -1);
+            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 1, -1);
+
+
+            // a.RenameColumn("ari@gmail.com", "ari@gmail.com", "boardy", 3, "wowo");
+
             // a.JoinBoard("ri@gmail.com", "ari@gmail.com", "boardy");
             // a.JoinBoard("i@gmail.com", "ari@gmail.com", "boardy");
 
 
-            // a.AddColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, "wowi");
+             a.AddColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, "wowi");
+            a.MoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2, -2);
             // a.RemoveColumn("ari@gmail.com", "ari@gmail.com", "boardy", 2);
 
             //  a.AssignTask("i@gmail.com", "ari@gmail.com", "boardy", 1, 1, "ri@gmail.com");

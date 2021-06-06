@@ -182,5 +182,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return tasks.Count;
         }
+        public bool isEmpty()
+        {
+            return tasks.Count == 0;
+        }
     }
 }

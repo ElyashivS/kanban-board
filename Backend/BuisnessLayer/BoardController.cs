@@ -10,7 +10,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class BoardController
     {
-        private Dictionary<string, Dictionary<Tuple<string,string>, Board>> boardController;
+        private Dictionary<string, Dictionary<Tuple<string, string>, Board>> boardController;
         private BoardDalController BoardTable = new BoardDalController();
         private ColumnDalController ColumnTable = new ColumnDalController();
         private TaskDalController TaskTable = new TaskDalController();
@@ -37,7 +37,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             foreach (BoardDTO b in boards)
             {
                 Board k = new Board(b.ID, b.Name, b.Creator);
-                boardController[b.Creator].Add(new Tuple<string,string>(b.Creator,b.Name),k );
+                boardController[b.Creator].Add(new Tuple<string, string>(b.Creator, b.Name), k);
                 if (b.ID >= boardIdCounter)
                     boardIdCounter = b.ID;
                 foreach (ColumnDTO c in columns)
@@ -51,8 +51,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 {
                     if (a.ID == b.ID)
                     {
-                                if (a.Assignee != b.Creator)
-                                JoinBoardForLoad(a.Assignee, b.Creator, b.Name);
+                        if (a.Assignee != b.Creator)
+                            JoinBoardForLoad(a.Assignee, b.Creator, b.Name);
                     }
                 }
                 foreach (TaskDTO t in tasks)
@@ -61,17 +61,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     {
                         if (t.ColumnName.Equals("backlog"))
                         {
-                            AddTaskForLoad(t.ID,b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            AddTaskForLoad(t.ID, b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
-                        if(t.ColumnName.Equals("in progress")){
-                            AddTaskForLoad(t.ID,b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                        if (t.ColumnName.Equals("in progress"))
+                        {
+                            AddTaskForLoad(t.ID, b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
                             AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
                         }
                         if (t.ColumnName.Equals("done"))
                         {
-                            AddTaskForLoad(t.ID,b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
+                            AddTaskForLoad(t.ID, b.Creator, b.Creator, b.Name, t.Title, t.Description, t.DueDate);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 0, t.ID);
                             MoveTaskForLoad(b.Creator, b.Creator, b.Name, 1, t.ID);
                             AssignTaskForLoad(b.Creator, b.Creator, b.Name, GetColumnOrdinal(t.ColumnName), t.ID, t.Assignee);
@@ -90,14 +91,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             ColumnTable.DeleteColumnTable();
             TaskTable.DeleteTaskTable();
         }
-        
+
         /// <summary>
         /// This method registers a new user to the system.
         /// </summary>
         /// <param name="email">The email</param>
         public void Register(string email)
         {
-            boardController.Add(email, new Dictionary<Tuple<string,string>,Board>());
+            boardController.Add(email, new Dictionary<Tuple<string, string>, Board>());
         }
         /// <summary>
         /// Adds a board to the specific user.
@@ -117,7 +118,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 BoardTable.Insert(new BoardDTO(boardIdCounter, name, email));
                 BoardTable.InsertToAsigneeList(b.id, email);
                 boardIdCounter = boardIdCounter + 1;
-                ColumnDTO backlog = new ColumnDTO(b.id, 1, 0, "backlog",-1);
+                ColumnDTO backlog = new ColumnDTO(b.id, 1, 0, "backlog", -1);
                 ColumnDTO inprogress = new ColumnDTO(b.id, 2, 1, "in progress", -1);
                 ColumnDTO done = new ColumnDTO(b.id, 3, 2, "done", -1);
                 ColumnTable.Insert(backlog);
@@ -140,27 +141,27 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             if (!userEmail.Equals(c.GetCreator()))
                 throw new Exception("only the creator of the board may delete the board");
-            RemoveBoardFromAssigneeList(c.GetAssigneeList(), boardName, c.id,c.GetCreator());
+            RemoveBoardFromAssigneeList(c.GetAssigneeList(), boardName, c.id, c.GetCreator());
             List<Column> todeleteColumns = c.GetBoardColumns();
             for (int i = 0; i < todeleteColumns.Count; i++)
             {
-                if(c.GetColumnIfLimited(i))
+                if (c.GetColumnIfLimited(i))
                 {
                     {
-                        ColumnDTO deleting = new ColumnDTO(c.id,todeleteColumns[i].GetColumnId(),c.ColumnOrdinalByColumnId(todeleteColumns[i].GetColumnId()),todeleteColumns[i].name, c.GetColumnLimit(i));
+                        ColumnDTO deleting = new ColumnDTO(c.id, todeleteColumns[i].GetColumnId(), c.ColumnOrdinalByColumnId(todeleteColumns[i].GetColumnId()), todeleteColumns[i].name, c.GetColumnLimit(i));
                         ColumnTable.Delete(deleting);
                     }
                 }
             }
             Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
             boardController[creatorEmail].Remove(t);
-            
+
             List<Column> toremove = c.GetBoardColumns();
             foreach (Column i in toremove)
             {
                 foreach (Task a in i.Tasks)
                 {
-                    TaskDTO todelete = TaskTable.SpecificSelect(c.id,i.GetColumnId(), a.id);
+                    TaskDTO todelete = TaskTable.SpecificSelect(c.id, i.GetColumnId(), a.id);
                     TaskTable.Delete(todelete);
                 }
             }
@@ -183,7 +184,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             c.BoardMemberVerify(userEmail);
             Task b = c.AddTask(userEmail, dueDate, title, description);
-            TaskDTO toadd = new TaskDTO(c.id, c.ColumnIdByColumnOrdinal(0), b.id, c.GetColumnName(0), userEmail, b.GetCreationTime(), b.GetDueDate(), b.GetTitle(), b.GetDescription()) ;
+            TaskDTO toadd = new TaskDTO(c.id, c.ColumnIdByColumnOrdinal(0), b.id, c.GetColumnName(0), userEmail, b.GetCreationTime(), b.GetDueDate(), b.GetTitle(), b.GetDescription());
             TaskTable.Insert(toadd);
             return b;
         }
@@ -206,10 +207,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             TaskTable.Update(c.id, taskId, "ColumnId", c.ColumnIdByColumnOrdinal(columnOrdinal + 1));
 
 
-           // if (columnOrdinal == 0)
-              //  TaskTable.Update(c.id, taskId, "columnName", "in progress");
-           // if (columnOrdinal == 1)
-               // TaskTable.Update(c.id, taskId, "columnName", "done");
+            // if (columnOrdinal == 0)
+            //  TaskTable.Update(c.id, taskId, "columnName", "in progress");
+            // if (columnOrdinal == 1)
+            // TaskTable.Update(c.id, taskId, "columnName", "done");
         }
         /// <summary>
         /// Change the due date of a task
@@ -226,7 +227,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.BoardMemberVerify(userEmail);
             c.TaskAssigneeVerify(userEmail, c.GetTask(taskId, columnOrdinal));
             c.ChangeDueDate(taskId, columnOrdinal, dueDate);
-            TaskTable.Update(c.id,c.ColumnIdByColumnOrdinal(columnOrdinal), taskId, "DueDate", dueDate);
+            TaskTable.Update(c.id, c.ColumnIdByColumnOrdinal(columnOrdinal), taskId, "DueDate", dueDate);
         }
         /// <summary>
         /// Change the title of a task
@@ -279,15 +280,15 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         /// <param name="limit">The new limit</param>
         public void LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
-            
+
             Board c = FindBoard(creatorEmail, boardName);
             c.CheckIfNotLastOrdinal(columnOrdinal);
             c.BoardMemberVerify(userEmail);
             bool iflimited = c.GetColumnIfLimited(columnOrdinal);
             c.LimitColumn(columnOrdinal, limit);
             string fordata = c.GetColumnName(columnOrdinal);
-                ColumnTable.Update(c.id,c.ColumnIdByColumnOrdinal(columnOrdinal),  "ColumnLimiter", limit);
-            
+            ColumnTable.Update(c.id, c.ColumnIdByColumnOrdinal(columnOrdinal), "ColumnLimiter", limit);
+
         }
         // Getters
         public int GetcolumnLimit(string userEmail, string creatorEmail, string boardName, int columnOrdinal)
@@ -313,7 +314,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             Board c = FindBoard(creatorEmail, boardName);
             c.AddtoBoardUsers(userEmail);
-            boardController[userEmail].Add(new Tuple<string, string>(creatorEmail,boardName), c);
+            boardController[userEmail].Add(new Tuple<string, string>(creatorEmail, boardName), c);
             BoardTable.InsertToAsigneeList(c.id, userEmail);
         }
         /// <summary>
@@ -396,7 +397,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             return boardController[email].Values.ToList();
         }
-        
+
         // TODO change the function name later =D ^.- 
         private bool TaskVerForList(string email, Task task)
         {
@@ -405,25 +406,25 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             else
                 return false;
         }
-        private void RemoveBoardFromAssigneeList(List<string> AssigneeList,string boardName,int boardId,string creatorName)
+        private void RemoveBoardFromAssigneeList(List<string> AssigneeList, string boardName, int boardId, string creatorName)
         {
             foreach (string user in AssigneeList)
             {
                 Tuple<string, string> t = new Tuple<string, string>(creatorName, boardName);
                 boardController[user].Remove(t);
                 BoardTable.DeleteFromAssigneeList(boardId, user);
-                
+
             }
             BoardTable.DeleteFromAssigneeList(boardId, creatorName);
         }
-        private void LimitColumnForLoad (string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
+        private void LimitColumnForLoad(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
 
             Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
             Board c = boardController[userEmail][t];
 
             c.LimitColumnForData(columnOrdinal, limit);
-            
+
         }
         private void JoinBoardForLoad(string userEmail, string creatorEmail, string boardName)
         {
@@ -432,11 +433,11 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.AddtoBoardUsers(userEmail);
             boardController[userEmail].Add(t, c);
         }
-        private void AddTaskForLoad(int taskId,string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
+        private void AddTaskForLoad(int taskId, string userEmail, string creatorEmail, string boardName, string title, string description, DateTime dueDate)
         {
             Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
             Board c = boardController[userEmail][t];
-            Task b = c.AddTaskForData(taskId,userEmail, dueDate, title, description);
+            Task b = c.AddTaskForData(taskId, userEmail, dueDate, title, description);
         }
         private void MoveTaskForLoad(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int taskId)
         {
@@ -448,7 +449,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         {
             Tuple<string, string> t = new Tuple<string, string>(creatorEmail, boardName);
             Board c = boardController[userEmail][t];
-            Task b = c.GetTask(taskId, columnOrdinal); 
+            Task b = c.GetTask(taskId, columnOrdinal);
             c.ChangeEmailAssignee(taskId, columnOrdinal, emailAssignee);
         }
         public void AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
@@ -456,7 +457,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             Board c = FindBoard(creatorEmail, boardName);
             c.BoardMemberVerify(userEmail);
             c.CheckOrdinalValidality(columnOrdinal);
-            Column toinsert=c.AddColumn(columnOrdinal, columnName);
+            Column toinsert = c.AddColumn(columnOrdinal, columnName);
             ColumnDTO toadd = new ColumnDTO(c.id, toinsert.columnId, columnOrdinal, columnName, -1);
             ColumnTable.Insert(toadd);
             List<Column> ListOfColumns = c.GetBoardColumns();
@@ -469,10 +470,10 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             c.CheckOrdinalValidality(columnOrdinal);
             c.BoardMemberVerify(userEmail);
             ColumnDTO toremove = ColumnTable.SpecificSelect(c.id, c.ColumnIdByColumnOrdinal(columnOrdinal));
-            Column newhouse=c.RemoveColumn(columnOrdinal);
+            Column newhouse = c.RemoveColumn(columnOrdinal);
             ColumnTable.Delete(toremove);
             List<Column> ListOfColumns = c.GetBoardColumns();
-            for (int i = columnOrdinal ; i < ListOfColumns.Count; i++)
+            for (int i = columnOrdinal; i < ListOfColumns.Count; i++)
                 ColumnTable.Update(c.id, c.ColumnIdByColumnOrdinal(i), "ColumnOrdinal", i);
             foreach (TaskDTO t in TaskTable.Select())
             {
@@ -482,8 +483,43 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     TaskTable.Update(c.id, t.ID, "ColumnName", newhouse.name);
                 }
             }
-
-
+        }
+        public void RenameColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string newColumnName)
+        {
+            Board c = FindBoard(creatorEmail, boardName);
+            c.CheckOrdinalValidality(columnOrdinal);
+            c.BoardMemberVerify(userEmail);
+            Column renamed = c.RenameColumn(columnOrdinal, newColumnName);
+            ColumnTable.Update(c.id, c.ColumnIdByColumnOrdinal(columnOrdinal), "ColumnName", newColumnName);
+            foreach (TaskDTO t in TaskTable.Select())
+            {
+                if (t.BoardId == c.id && t.ColumnId == renamed.columnId)
+                {
+                    TaskTable.Update(c.id, t.ID, "ColumnName", newColumnName);
+                }
+            }
+        }
+        public void MoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int shiftSize)
+        {
+            Board c = FindBoard(creatorEmail, boardName);
+            c.CheckOrdinalValidality(columnOrdinal+shiftSize);
+            c.BoardMemberVerify(userEmail);
+            Column shifted=c.MoveColumn(columnOrdinal, shiftSize);
+            List<Column> ListOfColumns = c.GetBoardColumns();
+            if (shiftSize > 0)
+            {
+                for(int i = columnOrdinal + shiftSize; i >= columnOrdinal; i--)
+                {
+                    ColumnTable.Update(c.id, ListOfColumns[i].columnId, "ColumnOrdinal", c.ColumnOrdinalByColumnId(ListOfColumns[i].columnId));
+                }
+            }
+            if (shiftSize < 0)
+            {
+                for (int i = columnOrdinal + shiftSize; i <= columnOrdinal; i++)
+                {
+                    ColumnTable.Update(c.id, ListOfColumns[i].columnId, "ColumnOrdinal", c.ColumnOrdinalByColumnId(ListOfColumns[i].columnId));
+                }
+            }
 
 
         }

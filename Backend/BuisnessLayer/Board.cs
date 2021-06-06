@@ -286,6 +286,12 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
             if (board.Count == 2)
                 throw new Exception("board reached his minimal state");
             CheckOrdinalValidality(columnOrdinal);
+            if (board[columnOrdinal].isEmpty())
+            {
+                Column toRemove = board[columnOrdinal];
+                board.Remove(toRemove);
+                return board[columnOrdinal];
+            }
             if (columnOrdinal == 0)
             {
                 if ((!board[columnOrdinal + 1].GetColumnIfLimited()) || (board[columnOrdinal + 1].GetColumnLimit().CompareTo(board[columnOrdinal + 1].Size() + board[columnOrdinal].Size()) > 0))
@@ -354,12 +360,38 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
 
         }
+        public Column RenameColumn(int columnOrdinal,string newColumnName)
+        {
+            board[columnOrdinal].name = newColumnName;
+            return board[columnOrdinal];
+        }
         public void CheckIfNotLastOrdinal(int ColumnOrdinal)
         {
             if (ColumnOrdinal == board.Count - 1)
                 throw new Exception("Cannot limit done Column");
         }
-        
+        public Column MoveColumn(int columnOrdinal,int shiftSize)
+        {
+            if (!board[columnOrdinal].isEmpty())
+                throw new Exception("only empty columns can be moved");
+            Column toshift = board[columnOrdinal];
+            if (shiftSize > 0)
+            {
+                for (int i = columnOrdinal; i < columnOrdinal + shiftSize; i++)
+                {
+                    board[i] = board[i + 1];
+                }
+            }
+            else if (shiftSize < 0)
+            {
+                for (int i = columnOrdinal; i > columnOrdinal+shiftSize ; i=i-1)
+                {
+                    board[i] = board[i -1];
+                }
+            }
+            board[columnOrdinal + shiftSize] = toshift;
+            return board[columnOrdinal + shiftSize];
+        }
         
             
         

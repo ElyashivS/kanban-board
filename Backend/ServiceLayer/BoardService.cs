@@ -405,6 +405,34 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
 
         }
+        public Response RenameColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal,string newColumnName)
+        {
+            try
+            {
+                boardController.RenameColumn(userEmail, creatorEmail, boardName, columnOrdinal,newColumnName);
+                log.Info($"Column number {columnOrdinal} has been renamed");
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                log.Warn($"Failed to Rename Column");
+                return new Response(e.Message);
+            }
+        }
+        public Response MoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int shiftSize)
+        {
+            try
+            {
+                boardController.MoveColumn(userEmail, creatorEmail, boardName, columnOrdinal, shiftSize);
+                log.Info($"Column number {columnOrdinal} has been transfered to be Column number {columnOrdinal+shiftSize}" );
+                return new Response();
+            }
+            catch (Exception e)
+            {
+                log.Warn($"Failed to Move Column");
+                return new Response(e.Message);
+            }
+        }
 
 
     }

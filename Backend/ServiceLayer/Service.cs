@@ -376,7 +376,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response RenameColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string newColumnName)
         {
-            throw new NotImplementedException();
+            Response a = userService.ValidateUserLoggin(userEmail);
+            if (a.ErrorOccured)
+                return a;
+            return boardService.RenameColumn(userEmail, creatorEmail, boardName, columnOrdinal,newColumnName);
         }
 
         /// <summary>
@@ -390,7 +393,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
         public Response MoveColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int shiftSize)
         {
-            throw new NotImplementedException();
+            Response a = userService.ValidateUserLoggin(userEmail);
+            if (a.ErrorOccured)
+                return a;
+            return boardService.MoveColumn(userEmail, creatorEmail, boardName, columnOrdinal, shiftSize);
         }
     }
 }
