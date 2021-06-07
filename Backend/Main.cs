@@ -85,24 +85,7 @@ namespace ConsoleApp1
              foreach (Task l in k.Value)
              {
                 Console.WriteLine(l.Title);
-              }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+             }
         }
     }
 }
