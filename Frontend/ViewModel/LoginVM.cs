@@ -1,4 +1,5 @@
-﻿using IntroSE.Kanban.Backend.ServiceLayer;
+﻿using Frontend.Model;
+using IntroSE.Kanban.Backend.ServiceLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,16 @@ namespace Frontend.ViewModel
     internal class LoginVM : Notifiable
     {
         Service service = new Service();
+        public BackendController backendController { get; private set; }
 
-        private string username;
-        public string Username
+        private string email;
+        public string Email
         {
-            get => username;
+            get => email;
             set
             {
-                username = value;
-                RaisePropertyChanged("Username");
+                email = value;
+                RaisePropertyChanged("Email");
             }
         }
 
@@ -45,26 +47,62 @@ namespace Frontend.ViewModel
         }
 
 
-        internal void Login()
+        internal UserModel Login()
         {
-            Response response = service.Login(Username, Password);
-            if (response.ErrorOccured == true)
-                Error = response.ErrorMessage;
-            else
+            //Error = "";
+            //Response response = service.Login(Email, Password);
+            //if (response.ErrorOccured == true)
+            //{
+            //    Error = response.ErrorMessage;
+            //    return null;
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        return backendController.Login(Email, Password);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Error = e.Message;
+            //        return null;
+            //    }
+            //} 
+            Error = "";
+            try
             {
-                Error = "Login succeeded";
+                return backendController.Login(Email, Password);
+            }
+            catch (Exception e)
+            {
+                Error = e.Message;
+                return null;
             }
         }
 
         internal void Register()
         {
-            Response response = service.Register(Username, Password);
-            if (response.ErrorOccured == true)
-                Error = response.ErrorMessage;
-            else
+            //Response response = service.Register(Email, Password);
+            //if (response.ErrorOccured == true)
+            //    Error = response.ErrorMessage;
+            //else
+            //{
+            //    Error = "Register succeeded";
+            //}
+            Error = "";
+            try
             {
-                Error = "Register succeeded";
+                backendController.Register(Email, Password);
+                Error = "Registered successfully";
             }
+            catch (Exception e)
+            {
+                Error = e.Message;
+            }
+        }
+        public LoginVM()
+        {
+            this.backendController = new BackendController();
         }
     }
 }
