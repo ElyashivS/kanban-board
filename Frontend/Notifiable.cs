@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Frontend
 {
-    internal abstract class Notifiable : INotifyPropertyChanged
+    public abstract class Notifiable : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         protected void RaisePropertyChanged(string property)

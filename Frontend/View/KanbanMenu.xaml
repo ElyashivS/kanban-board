@@ -1,0 +1,34 @@
+﻿<Window x:Class="Frontend.View.KanbanMenu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend.View"
+        mc:Ignorable="d"
+        Title="KanbanMenu" Height="450" Width="800">
+    <Grid>
+        <Label Content="Kanban Menu" HorizontalAlignment="Left" Margin="366,100,0,0" VerticalAlignment="Top"/>
+        <Label Content="My Boards:" HorizontalAlignment="Left" Margin="145,145,0,0" VerticalAlignment="Top"/>
+        <Label Content="Other's Boards:" HorizontalAlignment="Left" Margin="574,145,0,0" VerticalAlignment="Top"/>
+        <ListView Margin="67,197,509,40">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListView Margin="507,197,69,40">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="Add Board" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="AddBoardButton"/>
+        <Button Content="Join Board" HorizontalAlignment="Left" Margin="179,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="JoinBoardButton"/>
+        <Button Content="Delete Board" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="DeleteBoardButton"/>
+        <Button Content="Change Password" HorizontalAlignment="Left" Margin="527,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="ChangePasswordButton"/>
+        <Button Content="Logout" HorizontalAlignment="Left" Margin="690,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="LogoutButton"/>
+
+    </Grid>
+</Window>

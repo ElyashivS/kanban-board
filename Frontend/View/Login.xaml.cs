@@ -1,4 +1,5 @@
-﻿using Frontend.ViewModel;
+﻿using Frontend.Model;
+using Frontend.ViewModel;
 using IntroSE.Kanban.Backend.ServiceLayer;
 using System;
 using System.Collections.Generic;
@@ -22,19 +23,26 @@ namespace Frontend.View
     public partial class Login : Window
     {
 
-        LoginVM loginvm = new LoginVM();
+        private LoginVM loginvm;
         public Login()
         {
             InitializeComponent();
-            this.DataContext = loginvm;
+            this.DataContext = new LoginVM();
+            this.loginvm = (LoginVM)DataContext;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void LoginButton(object sender, RoutedEventArgs e)
         {
-            loginvm.Login();
+            UserModel userModel = loginvm.Login();
+            if (userModel != null)
+            {
+                KanbanMenu kanbanMenu = new KanbanMenu(userModel);
+                kanbanMenu.Show();
+                this.Close();
+            }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void RegisterButton(object sender, RoutedEventArgs e)
         {
             loginvm.Register();
         }
