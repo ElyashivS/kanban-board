@@ -33,7 +33,7 @@ namespace Frontend.View
 
         private void AddBoardButton(object sender, RoutedEventArgs e)
         {
-            AddBoard addBoard = new AddBoard(userModel);
+            AddBoard addBoard = new(userModel);
             kanbanMenuvm.AddBoard(addBoard.addBoardvm);
             addBoard.Show();
         }
@@ -48,14 +48,12 @@ namespace Frontend.View
 
         }
 
-        private void ChangePasswordButton(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void LogoutButton(object sender, RoutedEventArgs e)
         {
-
+            kanbanMenuvm.Logout();
+            Login login = new();
+            login.Show();
+            this.Close();
         }
 
         private void TaskInProgressButton(object sender, RoutedEventArgs e)

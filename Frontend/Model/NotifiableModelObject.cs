@@ -8,10 +8,10 @@ namespace Frontend.Model
 {
     public abstract class NotifiableModelObject : Notifiable
     {
-        public BackendController Controller { get; private set; }
+        public BackendController backendController { get; private set; }
         protected NotifiableModelObject(BackendController controller)
         {
-            this.Controller = controller;
+            this.backendController = controller;
         }
     }
 }

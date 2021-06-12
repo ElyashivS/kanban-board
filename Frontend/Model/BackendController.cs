@@ -30,6 +30,15 @@ namespace Frontend.Model
             return new UserModel(this, email, password);
         }
 
+        internal void Logout(string email)
+        {
+            Response logoutResponse = service.Logout(email);
+            if (logoutResponse.ErrorOccured)
+            {
+                throw new Exception(logoutResponse.ErrorMessage);
+            }
+        }
+
         internal void Register(string email, string password)
         {
             Response registerResponse = service.Register(email, password);

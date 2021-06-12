@@ -12,7 +12,7 @@ namespace Frontend.ViewModel
         private BackendController backendController;
         private UserModel userModel;
         private string boardName;
-        internal Action<BoardModel> AddBoardAction;
+        // internal Action<BoardModel> AddBoardAction;
 
         public string BoardName
         {
@@ -45,7 +45,7 @@ namespace Frontend.ViewModel
         }
         public AddBoardVM(UserModel userModel)
         {
-            backendController = userModel.Controller;
+            backendController = userModel.backendController;
             this.userModel = userModel;
         }
         public bool AddBoard()
@@ -61,7 +61,7 @@ namespace Frontend.ViewModel
                 else
                 {
                     backendController.AddBoard(userModel.Email, BoardName);
-                    AddBoardAction.Invoke(backendController.GetBoard(userModel.Email, BoardName));
+                    // this.AddBoardAction.Invoke(backendController.GetBoard(userModel.Email, BoardName));
                     return true;
                 }
             }

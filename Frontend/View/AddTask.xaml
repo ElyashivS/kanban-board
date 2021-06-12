@@ -1,0 +1,21 @@
+﻿<Window x:Class="Frontend.View.AddTask"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend.View"
+        mc:Ignorable="d"
+        Title="AddTask" Height="450" Width="800">
+    <Grid>
+        <Label Content="Add Task" HorizontalAlignment="Center" Margin="0,78,0,0" VerticalAlignment="Top" FontSize="26"/>
+        <Label Content="Task Title" HorizontalAlignment="Left" Margin="259,139,0,0" VerticalAlignment="Top"/>
+        <Label Content="Task Description" HorizontalAlignment="Left" Margin="240,199,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="259,262,0,0" VerticalAlignment="Top"/>
+        <DatePicker HorizontalAlignment="Left" Margin="481,334,0,0" VerticalAlignment="Top" SelectedDate="{Binding DueDate, Mode=TwoWay}"/>
+        <TextBox HorizontalAlignment="Left" Margin="472,143,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="472,0,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Center" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="472,271,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Select Due Date" HorizontalAlignment="Left" Margin="241,328,0,0" VerticalAlignment="Top"/>
+
+    </Grid>
+</Window>

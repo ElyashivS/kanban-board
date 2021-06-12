@@ -13,13 +13,18 @@ namespace Frontend.ViewModel
         private BackendController backendController;
         public KanbanMenuVM(UserModel userModel)
         {
-            backendController = userModel.Controller;
+            backendController = userModel.backendController;
             this.userModel = userModel;
         }
 
         internal void AddBoard(AddBoardVM viewModel)
         {
             //TODO
+        }
+
+        internal void Logout()
+        {
+            backendController.Logout(userModel.Email);
         }
     }
 }

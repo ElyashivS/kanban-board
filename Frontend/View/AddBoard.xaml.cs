@@ -30,5 +30,13 @@ namespace Frontend.View
             addBoardvm = new AddBoardVM(userModel);
             DataContext = addBoardvm;
         }
+
+        private void AddBoardButton(object sender, RoutedEventArgs e)
+        {
+            if (addBoardvm.AddBoard() == true)
+            {
+                this.Close();
+            }
+        }
     }
 }

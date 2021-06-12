@@ -1,0 +1,19 @@
+﻿<Window x:Class="Frontend.View.AddColumn"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend.View"
+        mc:Ignorable="d"
+        Title="AddColumn" Height="450" Width="800">
+    <Grid>
+        <Label Content="Add Column" HorizontalAlignment="Center" Margin="0,64,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label Content="Column Name" HorizontalAlignment="Left" Margin="263,139,0,0" VerticalAlignment="Top"/>
+        <Label Content="Column ID" HorizontalAlignment="Left" Margin="273,199,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="276,256,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Margin="435,143,0,0" Text="{Binding ColumnName, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="435,203,0,0" Text="{Binding ColumnID, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="435,260,0,0" Text="{Binding Password, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
+    </Grid>
+</Window>

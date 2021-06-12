@@ -49,25 +49,6 @@ namespace Frontend.ViewModel
 
         internal UserModel Login()
         {
-            //Error = "";
-            //Response response = service.Login(Email, Password);
-            //if (response.ErrorOccured == true)
-            //{
-            //    Error = response.ErrorMessage;
-            //    return null;
-            //}
-            //else
-            //{
-            //    try
-            //    {
-            //        return backendController.Login(Email, Password);
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Error = e.Message;
-            //        return null;
-            //    }
-            //} 
             Error = "";
             try
             {
@@ -82,13 +63,6 @@ namespace Frontend.ViewModel
 
         internal void Register()
         {
-            //Response response = service.Register(Email, Password);
-            //if (response.ErrorOccured == true)
-            //    Error = response.ErrorMessage;
-            //else
-            //{
-            //    Error = "Register succeeded";
-            //}
             Error = "";
             try
             {

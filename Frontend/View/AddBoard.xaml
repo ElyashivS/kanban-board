@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         Title="AddBoard" Height="450" Width="800">
     <Grid>
-        
+        <Label Content="Add Board" HorizontalAlignment="Center" Margin="0,82,0,0" VerticalAlignment="Top" FontSize="26"/>
+        <TextBox HorizontalAlignment="Center" Margin="0,183,0,0" Text="{Binding BoardName, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Center" Margin="0,244,0,0" Text="{Binding Password, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Board Name" HorizontalAlignment="Left" Margin="190,179,0,0" VerticalAlignment="Top"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="198,240,0,0" VerticalAlignment="Top"/>
+        <Button Content="Add" HorizontalAlignment="Center" Margin="0,311,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="AddBoardButton"/>
+        <Label Content="{Binding Error, Mode=OneWay}" HorizontalAlignment="Center" Margin="0,283,0,0" VerticalAlignment="Top"/>
+
     </Grid>
 </Window>
