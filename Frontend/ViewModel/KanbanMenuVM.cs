@@ -16,5 +16,10 @@ namespace Frontend.ViewModel
             backendController = userModel.Controller;
             this.userModel = userModel;
         }
+
+        internal void AddBoard(AddBoardVM viewModel)
+        {
+            //TODO
+        }
     }
 }

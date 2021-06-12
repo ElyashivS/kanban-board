@@ -1,4 +1,5 @@
 ﻿using IntroSE.Kanban.Backend.ServiceLayer;
+using IntroSE.Kanban.Backend.ServiceLayer.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,24 @@ namespace Frontend.Model
             if (registerResponse.ErrorOccured)
             {
                 throw new Exception(registerResponse.ErrorMessage);
+            }
+        }
+        public void AddBoard(string email, string boardName)
+        {
+            Response response = service.AddBoard(email, boardName);
+            if (response.ErrorOccured)
+                throw new Exception(response.ErrorMessage);
+        }
+        public BoardModel GetBoard(string email, string boardName)
+        {
+            Response<Board> response = service.GetBoard(email, boardName);
+            if (response.ErrorOccured)
+                throw new Exception(response.ErrorMessage);
+            else
+            {
+                Board board = response.Value;
+                BoardModel boardModel = new BoardModel();
+                return boardModel;
             }
         }
     }

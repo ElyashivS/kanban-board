@@ -26,13 +26,16 @@ namespace Frontend.View
         public KanbanMenu(UserModel userModel)
         {
             InitializeComponent();
+            this.userModel = userModel;
             this.kanbanMenuvm = new KanbanMenuVM(userModel);
             this.DataContext = kanbanMenuvm;
         }
 
         private void AddBoardButton(object sender, RoutedEventArgs e)
         {
-
+            AddBoard addBoard = new AddBoard(userModel);
+            kanbanMenuvm.AddBoard(addBoard.addBoardvm);
+            addBoard.Show();
         }
 
         private void JoinBoardButton(object sender, RoutedEventArgs e)
@@ -51,6 +54,11 @@ namespace Frontend.View
         }
 
         private void LogoutButton(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TaskInProgressButton(object sender, RoutedEventArgs e)
         {
 
         }
