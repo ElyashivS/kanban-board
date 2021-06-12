@@ -362,7 +362,7 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
         // Getter
       
         // Private functions
-        private Board FindBoard(string email, string boardName)
+        public Board FindBoard(string email, string boardName)
         {
             Board c;
             try
@@ -509,8 +509,6 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     ColumnTable.Update(c.id, ListOfColumns[i].columnId, "ColumnOrdinal", c.ColumnOrdinalByColumnId(ListOfColumns[i].columnId));
                 }
             }
-
-
         }
     }
 }

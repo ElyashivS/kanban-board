@@ -375,6 +375,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return Response<IList<String>>.FromError(e.Message);
             }
         }
+        internal Response<Objects.Board> GetBoard(string email, string boardName)
+        {
+            try
+            {
+                Board board = boardController.FindBoard(email, boardName);
+                Objects.Board b = new Objects.Board(board.id, board.GetCreator(), boardName);
+                return Response<Objects.Board>.FromValue(b);
+            }
+            catch (Exception e)
+            {
+                return Response<Objects.Board>.FromError(e.Message);
+            }
+        }
         public Response AddColumn (string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
         {
             try

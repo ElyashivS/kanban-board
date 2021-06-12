@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer.Objects
 {
-    class Board
+    public class Board
     {
         public readonly int BoardId;
         public readonly string Creator;

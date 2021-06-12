@@ -89,6 +89,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="limit">The new limit value. A value of -1 indicates no limit.</param>
         /// <returns>A response object. The response should contain a error message in case of an error</returns>
 
+        public Response<Objects.Board> GetBoard(string email, string boardName)
+        {
+            return boardService.GetBoard(email, boardName);
+        }
         public Response LimitColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, int limit)
         {
 
