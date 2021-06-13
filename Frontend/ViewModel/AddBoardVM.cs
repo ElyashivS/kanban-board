@@ -12,25 +12,14 @@ namespace Frontend.ViewModel
         private BackendController backendController;
         private UserModel userModel;
         private string boardName;
-        // internal Action<BoardModel> AddBoardAction;
 
         public string BoardName
         {
             get => boardName;
             set
             {
-                this.boardName = value;
+                boardName = value;
                 RaisePropertyChanged("BoardName");
-            }
-        }
-        private string password;
-        public string Password
-        {
-            get => password;
-            set
-            {
-                this.password = value;
-                RaisePropertyChanged("Password");
             }
         }
         private string error;
@@ -39,7 +28,7 @@ namespace Frontend.ViewModel
             get => error;
             set
             {
-                this.error = value;
+                error = value;
                 RaisePropertyChanged("Error");
             }
         }
@@ -53,17 +42,8 @@ namespace Frontend.ViewModel
             Error = "";
             try
             {
-                if (!userModel.Password.Equals(Password))
-                {
-                    Error = "Wrong password";
-                    return false;
-                }
-                else
-                {
-                    backendController.AddBoard(userModel.Email, BoardName);
-                    // this.AddBoardAction.Invoke(backendController.GetBoard(userModel.Email, BoardName));
-                    return true;
-                }
+                backendController.AddBoard(userModel.Email, BoardName);
+                return true;
             }
             catch (Exception e)
             {
