@@ -28,7 +28,7 @@ namespace Frontend.Model
                 RaisePropertyChanged("Password");
             }
         }
-        public UserModel(BackendController controller, string email, string password) : base(controller)
+        public UserModel(BackendController backendController, string email, string password) : base(backendController)
         {
             this.Email = email;
             this.Password = password;

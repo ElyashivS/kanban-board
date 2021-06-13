@@ -61,9 +61,15 @@ namespace Frontend.Model
             else
             {
                 Board board = response.Value;
-                BoardModel boardModel = new BoardModel();
+                BoardModel boardModel = new BoardModel(this, board.BoardId, board.BoardName, board.Creator, email);
                 return boardModel;
             }
+        }
+        public void AddColumn(string userEmail, string creatorEmail, string boardName, int columnOrdinal, string columnName)
+        {
+            Response response = service.AddColumn(userEmail, creatorEmail, boardName, columnOrdinal, columnName);
+            if (response.ErrorOccured)
+                throw new Exception(response.ErrorMessage);
         }
     }
 }
