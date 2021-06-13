@@ -7,13 +7,12 @@
         mc:Ignorable="d"
         Title="AddColumn" Height="450" Width="800">
     <Grid>
-        <Label Content="Add Column" HorizontalAlignment="Center" Margin="0,64,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label Content="Column Name" HorizontalAlignment="Left" Margin="263,139,0,0" VerticalAlignment="Top"/>
-        <Label Content="Column ID" HorizontalAlignment="Left" Margin="273,199,0,0" VerticalAlignment="Top"/>
-        <Label Content="Password" HorizontalAlignment="Left" Margin="276,256,0,0" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Margin="435,143,0,0" Text="{Binding ColumnName, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="435,203,0,0" Text="{Binding ColumnID, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="435,260,0,0" Text="{Binding Password, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Add Column" HorizontalAlignment="Center" Margin="0,77,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label Content="Column Name" HorizontalAlignment="Left" Margin="258,173,0,0" VerticalAlignment="Top"/>
+        <Label Content="Column ID" HorizontalAlignment="Left" Margin="268,233,0,0" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Margin="430,177,0,0" Text="{Binding ColumnName, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="430,237,0,0" Text="{Binding ColumnID, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Add" HorizontalAlignment="Center" Margin="0,326,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="AddColumnButton"/>
 
     </Grid>
 </Window>

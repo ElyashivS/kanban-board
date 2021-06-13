@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Frontend.Model;
+using Frontend.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,24 @@ namespace Frontend.View
     /// </summary>
     public partial class AddColumn : Window
     {
-        public AddColumn()
+        private UserModel userModel;
+        private BoardModel boardModel;
+        internal AddColumnVM addColumnvm;
+        public AddColumn(UserModel userModel, BoardModel boardModel)
         {
             InitializeComponent();
+            this.userModel = userModel;
+            this.boardModel = boardModel;
+            addColumnvm = new(userModel, boardModel);
+            DataContext = addColumnvm;
+        }
+
+        private void AddColumnButton(object sender, RoutedEventArgs e)
+        {
+            if (addColumnvm.AddColumn() == true)
+            {
+                this.Close();
+            }
         }
     }
 }
