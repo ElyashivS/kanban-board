@@ -71,5 +71,25 @@ namespace Frontend.Model
             if (response.ErrorOccured)
                 throw new Exception(response.ErrorMessage);
         }
+        internal List<BoardModel> GetAllBoards(UserModel user)
+        {
+            List<Board> sBoards = (List<Board>)service.GetBoardNames(user.Email).Value;
+            if (sBoards == null)
+                return new List<BoardModel>();
+            List<BoardModel> boards = new List<BoardModel>();
+            foreach (Board board in sBoards)
+            {
+                boards.Add(new BoardModel(this, board.BoardId, board.BoardName, board.Creator, user.Email));
+            }
+            return boards;
+        }
+        internal void RemoveBoard(string email, string creatorEmail, string boardName)
+        {
+            Response response = service.RemoveBoard(email, creatorEmail, boardName);
+            if (response.ErrorOccured)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+        }
     }
 }
