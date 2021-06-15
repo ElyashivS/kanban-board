@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Frontend.ViewModel
 {
-    class KanbanMenuVM
+    class KanbanMenuVM : Notifiable
     {
         private UserModel userModel;
         private BackendController backendController;

@@ -14,7 +14,7 @@ namespace Frontend.ViewModel
         private BoardModel boardModel;
         public AddColumnVM(UserModel userModel, BoardModel boardModel)
         {
-            backendController = userModel.backendController;
+            this.backendController = userModel.backendController;
             this.userModel = userModel;
             this.boardModel = boardModel;
         }
