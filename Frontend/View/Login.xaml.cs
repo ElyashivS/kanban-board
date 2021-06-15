@@ -46,5 +46,10 @@ namespace Frontend.View
         {
             loginvm.Register();
         }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

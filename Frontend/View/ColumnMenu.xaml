@@ -1,0 +1,24 @@
+﻿<Window x:Class="Frontend.View.ColumnMenu"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend.View"
+        mc:Ignorable="d"
+        Title="ColumnManu" Height="450" Width="800">
+    <Grid>
+        <Label Content="Column Menu" HorizontalAlignment="Center" Margin="0,93,0,0" VerticalAlignment="Top" FontSize="26"/>
+        <Button Content="Add Column" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="AddColumnButton"/>
+        <Button Content="Move Column" HorizontalAlignment="Left" Margin="179,10,0,0" VerticalAlignment="Top" Height="40" Width="100"/>
+        <Button Content="Delete Column" HorizontalAlignment="Left" Margin="358,10,0,0" VerticalAlignment="Top" Height="40" Width="100"/>
+        <Button Content="Set Limit" HorizontalAlignment="Left" Margin="690,10,0,0" VerticalAlignment="Top" Height="40" Width="100"/>
+        <Button Content="Rename Column" HorizontalAlignment="Left" Margin="532,10,0,0" VerticalAlignment="Top" Height="40" Width="100"/>
+        <ListView Margin="192,166,192,10">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Window>

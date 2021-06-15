@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="KanbanMenu" Height="450" Width="800">
     <Grid>
-        <Label Content="Kanban Menu" HorizontalAlignment="Left" Margin="366,100,0,0" VerticalAlignment="Top"/>
+        <Label Content="Kanban Menu" HorizontalAlignment="Center" Margin="0,93,0,0" VerticalAlignment="Top" FontSize="26"/>
         <Label Content="My Boards:" HorizontalAlignment="Left" Margin="145,145,0,0" VerticalAlignment="Top"/>
         <Label Content="Other's Boards:" HorizontalAlignment="Left" Margin="574,145,0,0" VerticalAlignment="Top"/>
         <ListView Margin="67,197,509,40">
