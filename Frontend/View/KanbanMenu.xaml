@@ -10,25 +10,33 @@
         <Label Content="Kanban Menu" HorizontalAlignment="Center" Margin="0,93,0,0" VerticalAlignment="Top" FontSize="26"/>
         <Label Content="My Boards:" HorizontalAlignment="Left" Margin="145,145,0,0" VerticalAlignment="Top"/>
         <Label Content="Other's Boards:" HorizontalAlignment="Left" Margin="574,145,0,0" VerticalAlignment="Top"/>
-        <ListView Margin="67,197,509,40">
-            <ListView.View>
-                <GridView >
-
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <ListView Margin="507,197,69,40">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
-                </GridView>
-            </ListView.View>
-        </ListView>
         <Button Content="Add Board" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="AddBoardButton"/>
-        <Button Content="Join Board" HorizontalAlignment="Left" Margin="179,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="JoinBoardButton"/>
-        <Button Content="Delete Board" HorizontalAlignment="Left" Margin="358,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="DeleteBoardButton"/>
+        <Button Content="Join Board" HorizontalAlignment="Left" Margin="229,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="JoinBoardButton"/>
+        <Button Content="Delete Board" HorizontalAlignment="Left" Margin="459,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="DeleteBoardButton" IsEnabled="{Binding Path=Forward,Mode=OneWay}"/>
         <Button Content="Logout" HorizontalAlignment="Left" Margin="690,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="LogoutButton"/>
-        <Button Content="Taks In Progress" HorizontalAlignment="Left" Margin="532,10,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="TaskInProgressButton"/>
+        <ListBox ItemsSource="{Binding Path=kanbanModel.Boards}" SelectedItem="{Binding Path=SelectedBoard, Mode=TwoWay}" Margin="67,197,509,40">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="#FF003CFF" BorderThickness="1">
+                        <StackPanel Orientation="Vertical" >
+                            <TextBox Text="{Binding Path=BoardName, Mode=TwoWay}" BorderBrush="{x:Null}" MouseDoubleClick="BoardDoubleClick"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <ListBox ItemsSource="{Binding Path=kanbanModel.Boards2}" SelectedItem="{Binding Path=SelectedBoard, Mode=TwoWay}" Margin="507,197,69,40">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="#FF003CFF" BorderThickness="1">
+                        <StackPanel Orientation="Vertical" >
+                            <TextBox Text="{Binding Path=BoardName, Mode=TwoWay}" BorderBrush="{x:Null}"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
 
     </Grid>
 </Window>

@@ -24,25 +24,32 @@ namespace Frontend.View
         private UserModel userModel;
         private BoardModel boardModel;
         private ColumnMenuVM columnMenuvm;
+
+        private void AddColumnButton(object sender, RoutedEventArgs e)
+        {
+            AddColumn addColumn = new(userModel, boardModel);
+            columnMenuvm.AddColumn(addColumn.addColumnvm);
+            addColumn.Show();
+        }
+
+        private void MoveColumnButton(object sender, RoutedEventArgs e)
+        {
+            MoveColumn moveColumn = new(userModel, boardModel, columnMenuvm.SelectedColumn);
+            columnMenuvm.MoveColumn(moveColumn.moveColumnvm);
+            moveColumn.Show();
+        }
+
+        private void DeleteButton(object sender, RoutedEventArgs e)
+        {
+            columnMenuvm.RemoveColumn();
+        }
         public ColumnMenu(UserModel userModel, BoardModel boardModel)
         {
             InitializeComponent();
             this.userModel = userModel;
             this.boardModel = boardModel;
-            this.columnMenuvm = new(userModel, boardModel);
+            this.columnMenuvm = new ColumnMenuVM(userModel, boardModel);
             this.DataContext = columnMenuvm;
-        }
-
-        public ColumnMenu()
-        {
-
-        }
-
-        private void AddColumnButton(object sender, RoutedEventArgs e)
-        {
-            AddColumn addColumn = new(userModel, boardModel);
-            // TODO columnMenuvm.AddColumn(addColumn.addColumnvm);
-            addColumn.Show();
         }
     }
 }

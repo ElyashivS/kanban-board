@@ -22,43 +22,48 @@ namespace Frontend.View
     public partial class KanbanMenu : Window
     {
         private UserModel userModel;
-        private KanbanMenuVM kanbanMenuvm;
+        private BoardVM boardvm;
         public KanbanMenu(UserModel userModel)
         {
             InitializeComponent();
+            this.boardvm = new BoardVM(userModel);
+            this.DataContext = boardvm;
             this.userModel = userModel;
-            this.kanbanMenuvm = new KanbanMenuVM(userModel);
-            this.DataContext = kanbanMenuvm;
         }
 
         private void AddBoardButton(object sender, RoutedEventArgs e)
         {
             AddBoard addBoard = new(userModel);
-            kanbanMenuvm.AddBoard(addBoard.addBoardvm);
+            boardvm.AddBoard(addBoard.addBoardvm);
             addBoard.Show();
+            
         }
 
         private void JoinBoardButton(object sender, RoutedEventArgs e)
         {
-
+            boardvm.JoinBoard();
         }
 
         private void DeleteBoardButton(object sender, RoutedEventArgs e)
         {
-
+            boardvm.RemoveBoard();
         }
 
         private void LogoutButton(object sender, RoutedEventArgs e)
         {
-            kanbanMenuvm.Logout();
+            boardvm.Logout();
             Login login = new();
             login.Show();
             this.Close();
         }
 
-        private void TaskInProgressButton(object sender, RoutedEventArgs e)
+        private void BoardDoubleClick(object sender, MouseButtonEventArgs e)
         {
-
+            if (boardvm.SelectedBoard != null)
+            {
+                ColumnMenu columnMenu = new(userModel, boardvm.SelectedBoard);
+                columnMenu.Show();
+            }
         }
     }
 }
