@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SBoard = IntroSE.Kanban.Backend.ServiceLayer.Objects.Board;
+
 
 namespace Frontend.Model
 {
@@ -39,6 +41,8 @@ namespace Frontend.Model
             }
         }
         private string userEmail;
+        private SBoard board;
+
         public string UserEmail
         {
             get => userEmail;
@@ -56,5 +60,24 @@ namespace Frontend.Model
             this.Creator = creator;
             this.UserEmail = userEmail;
         }
+
+        //public BoardModel(BackendController backendController, SBoard board1, string boardName, BoardModel board) : base(backendController)
+        //{
+        //    this.Id = board.id;
+        //    this.BoardName = board.BoardName;
+        //    this.Creator = board.Creator;
+        //    this.UserEmail = board.userEmail;
+        //}
+
+        public BoardModel(BackendController controller, SBoard board) : base(controller)
+        {
+            this.board = board;
+        }
+
+
+        //public BoardModel(BackendController backendController, SBoard sBoard)
+        //{
+        //    Id = sBoard.BoardId;
+        //}
     }
 }

@@ -33,5 +33,9 @@ namespace Frontend.Model
             this.Email = email;
             this.Password = password;
         }
+        public KanbanModel GetKanban()
+        {
+            return new KanbanModel(backendController, this);
+        }
     }
 }
