@@ -1,9 +1,11 @@
 ﻿using Frontend.Model;
+using IntroSE.Kanban.Backend.ServiceLayer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SBoard = IntroSE.Kanban.Backend.ServiceLayer.Objects.Board;
 
 namespace Frontend.ViewModel
 {
@@ -18,7 +20,7 @@ namespace Frontend.ViewModel
             get => boardName;
             set
             {
-                boardName = value;
+                boardName = value != null ? value : boardName;
                 RaisePropertyChanged("BoardName");
             }
         }
@@ -43,6 +45,7 @@ namespace Frontend.ViewModel
             try
             {
                 backendController.AddBoard(userModel.Email, BoardName);
+                this.AddBoardAction.Invoke(backendController.GetBoard(userModel.Email, BoardName));
                 return true;
             }
             catch (Exception e)
@@ -51,5 +54,6 @@ namespace Frontend.ViewModel
                 return false;
             }
         }
+        public Action<BoardModel> AddBoardAction;
     }
 }

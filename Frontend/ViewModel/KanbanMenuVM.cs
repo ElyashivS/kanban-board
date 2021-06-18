@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Frontend.ViewModel
 {
@@ -11,20 +12,42 @@ namespace Frontend.ViewModel
     {
         private UserModel userModel;
         private BackendController backendController;
+        private KanbanModel kanbanModel;
+        private BoardModel _selectedBoard;
         public KanbanMenuVM(UserModel userModel)
         {
             backendController = userModel.backendController;
             this.userModel = userModel;
+            SelectedBoard = new BoardModel(backendController, -1, "", "", "");
+            this.kanban = new KanbanModel(backendController, userModel, SelectedBoard);
         }
-
-        internal void AddBoard(AddBoardVM viewModel)
+        public KanbanModel kanban
         {
-            //TODO
+            get => kanbanModel;
+            set
+            {
+                kanbanModel = value;
+                RaisePropertyChanged("kanban");
+            }
         }
-
-        internal void Logout()
+        public BoardModel SelectedBoard
         {
-            backendController.Logout(userModel.Email);
+            get => _selectedBoard;
+            set
+            {
+                _selectedBoard = value != null ? value : _selectedBoard;
+                RaisePropertyChanged("SelectedBoard");
+            }
+        }
+        private bool forward = false;
+        public bool Forward
+        {
+            get => forward;
+            private set
+            {
+                forward = value;
+                RaisePropertyChanged("Forward");
+            }
         }
     }
 }
