@@ -111,6 +111,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             try
             {
                 userController.Logout(email);
+                log.Info("The user with the mail " + email + " logged out");
                 return new Response();
             }
             catch (Exception e)

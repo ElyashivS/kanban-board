@@ -249,7 +249,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception e)
             {
-                log.Warn("Failed to advence task ");
+                log.Warn("Failed to advance task ");
                 return new Response(e.Message);
             }
         }
