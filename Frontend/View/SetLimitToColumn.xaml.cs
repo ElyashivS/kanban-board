@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Frontend.Model;
+using Frontend.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,14 +21,33 @@ namespace Frontend.View
     /// </summary>
     public partial class SetLimitToColumn : Window
     {
+        public SetLimitToColumnVM setLimitToColumnvm;
+        private BoardModel boardModel;
+        private UserModel userModel;
+        private ColumnModel columnModel;
         public SetLimitToColumn()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
+        
 
+        public SetLimitToColumn(UserModel userModel, BoardModel boardModel, ColumnModel columnModel)
+        {
+            InitializeComponent();
+            this.userModel = userModel;
+            this.boardModel = boardModel;
+            this.columnModel = columnModel;
+            this.setLimitToColumnvm = new SetLimitToColumnVM(userModel, boardModel, columnModel);
+            this.DataContext = setLimitToColumnvm;
+        }
+
+        private void SetButton(object sender, RoutedEventArgs e)
+        {
+            if (setLimitToColumnvm.SetLimitColumn())
+            {
+                this.Close();
+            }
         }
     }
 }

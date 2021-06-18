@@ -9,7 +9,7 @@
     <Grid>
         <Label Content="Set Limit" HorizontalAlignment="Center" Margin="0,118,0,0" VerticalAlignment="Top" FontSize="26"/>
         <Label Content="Set Limit" HorizontalAlignment="Left" Margin="249,0,0,0" VerticalAlignment="Center"/>
-        <Button Content="Set" HorizontalAlignment="Center" Margin="0,270,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="Button_Click"/>
+        <Button Content="Set" HorizontalAlignment="Center" Margin="0,270,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="SetButton"/>
         <TextBox HorizontalAlignment="Center" Text="{Binding SetLimit, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Center" Width="120"/>
 
 
