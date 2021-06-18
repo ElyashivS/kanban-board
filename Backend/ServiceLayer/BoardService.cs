@@ -33,11 +33,12 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             }
             catch (Exception e)
             {
-                
+
                 log.Warn("Failed load boards data");
                 return new Response(e.Message);
             }
         }
+
         /// <summary>
         /// Delete all boards from the database
         /// </summary>
@@ -138,6 +139,25 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
                 return Response<Task>.FromError(e.Message);
             }
         }
+
+        internal Response<Objects.Board> getBoard(int i)
+        {
+
+            //Board board = boardController.FindBoard(email, boardName);
+            //Objects.Board b = new Objects.Board(board.id, board.GetCreator(), boardName);
+            //return Response<Objects.Board>.FromValue(b);
+            try
+            {
+                Board board = boardController.getBoard(i);
+                Objects.Board b = new Objects.Board(board.id, board.GetCreator(), board.name);
+                return Response<Objects.Board>.FromValue(b);
+            }
+            catch (Exception e)
+            {
+                return Response<Objects.Board>.FromError(e.Message);
+            }
+        }
+
         /// <summary>
         /// Update the due date of a task
         /// </summary>
@@ -258,18 +278,19 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
         /// <param name="email">Email of the user. Must be logged in</param>
         /// <param name="name">The name of the new board</param>
         /// <returns>A response object</returns>
-        public Response AddBoard(string email, string name)
+        public Response<Board> AddBoard(string email, string name)
         {
             try
             {
-                boardController.AddBoard(email, name);
+                IntroSE.Kanban.Backend.BuisnessLayer.Board bboard =  boardController.AddBoard(email, name);
+                Board sboard = new Board(bboard.id, bboard.name, bboard.GetCreator());
                 log.Info($"Board {name} has been added");
-                return new Response();
+                return Response<Board>.FromValue(sboard);
             }
             catch (Exception e)
             {
                 log.Warn("Failed to add board");
-                return new Response(e.Message);
+                return Response<Board>.FromError(e.Message);
             }
         }
         /// <summary>
@@ -444,6 +465,23 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             {
                 log.Warn($"Failed to Move Column");
                 return new Response(e.Message);
+            }
+        }
+        public Response<IList<ServiceLayer.Objects.Board>> GetAllBoards(string userEmail)
+        {
+            try
+            {
+                List<BuisnessLayer.Board> c = boardController.BoardsToList(userEmail);
+                List<ServiceLayer.Objects.Board> d = new List<ServiceLayer.Objects.Board>();
+                foreach (BuisnessLayer.Board a in c)
+                {
+                    d.Add(new ServiceLayer.Objects.Board(a.id, a.GetCreator(),a.name));
+                }
+                return Response<IList<ServiceLayer.Objects.Board>>.FromValue(d);
+            }
+            catch (Exception e)
+            {
+                return Response<IList<ServiceLayer.Objects.Board>>.FromError(e.Message);
             }
         }
 

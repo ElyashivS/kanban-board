@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace IntroSE.Kanban.Backend.BuisnessLayer
 {
     public class BoardController
@@ -65,10 +66,9 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                         }
                     }
                 }
-                
-                
             }
         }
+
         /// <summary>
         /// Removes all persistent data.
         /// </summary>
@@ -157,6 +157,18 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
 
             return c;
         }
+
+        internal Board getBoard(int i)
+        {
+            List<Board> boards = AllBoardsToList();
+            foreach (Board board in boards)
+            {
+                if (board.id == i)
+                    return board;
+            }
+            return null;
+        }
+
         /// <summary>
         /// Add a new task
         /// </summary>
@@ -376,9 +388,14 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                 throw new ArgumentException("Board does not exist");
             }
         }
-        private List<Board> BoardsToList(string email)
+        public List<Board> BoardsToList(string email)
         {
             return boardController[email].Values.ToList();
+        }
+        public List<Board> AllBoardsToList()
+        {
+            List<Board> list = new List<Board>((IEnumerable<Board>)boardController.ToList());
+            return list;
         }
 
         // TODO change the function name later =D ^.- 

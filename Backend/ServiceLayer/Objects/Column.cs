@@ -6,14 +6,16 @@ using System.Threading.Tasks;
 
 namespace IntroSE.Kanban.Backend.ServiceLayer.Objects
 {
-    class Column
+    public class Column
     {
-        public readonly string ColumnId;
+        public readonly int ColumnId;
         public readonly string ColumnName;
         public readonly int ColumnOrdinal;
         public readonly int ColumnLimit;
-        
-        internal Column(string ColumnId,string ColumnName,int ColumnOrdianl,int ColumnLimit)
+        private List<Column> columnList;
+        public List<Column> ColumnList { get => columnList; }
+
+        internal Column(int ColumnId,string ColumnName,int ColumnOrdianl,int ColumnLimit)
         {
             this.ColumnId = ColumnId;
             this.ColumnName = ColumnName;

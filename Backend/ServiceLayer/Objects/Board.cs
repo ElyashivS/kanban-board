@@ -11,7 +11,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer.Objects
         public readonly int BoardId;
         public readonly string Creator;
         public readonly string BoardName;
-        public IReadOnlyCollection<int> listBoards;
+        
 
         internal Board(int BoardId,string Creator,string BoardName)
         {

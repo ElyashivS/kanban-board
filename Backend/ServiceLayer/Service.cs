@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using IntroSE.Kanban.Backend.BuisnessLayer;
 
-
 namespace IntroSE.Kanban.Backend.ServiceLayer
 {
     public class Service
@@ -43,6 +42,7 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             Response b=userService.DeleteData();
             return b;
         }
+
         ///<summary>This method registers a new user to the system.</summary>
         ///<param name="email">the user e-mail address, used as the username for logging the system.</param>
         ///<param name="password">the user password.</param>
@@ -119,7 +119,10 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             return boardService.GetColumnLimit(userEmail, creatorEmail, boardName, columnOrdinal);
         }
 
-
+        public Response<Objects.Board> getBoard(int i)
+        {
+            return boardService.getBoard(i);
+        }
 
         /// <summary>
         /// Get the name of a specific column
@@ -401,6 +404,13 @@ namespace IntroSE.Kanban.Backend.ServiceLayer
             if (a.ErrorOccured)
                 return a;
             return boardService.MoveColumn(userEmail, creatorEmail, boardName, columnOrdinal, shiftSize);
+        }
+        public Response <IList<ServiceLayer.Objects.Board>> GetAllBoards(string userEmail)
+        {
+            Response a = userService.ValidateUserLoggin(userEmail);
+            if (a.ErrorOccured)
+                return Response<IList<ServiceLayer.Objects.Board>>.FromError(a.ErrorMessage);
+            return boardService.GetAllBoards(userEmail);
         }
     }
 }
