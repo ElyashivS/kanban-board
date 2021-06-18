@@ -30,6 +30,7 @@ namespace Frontend.ViewModel
             set
             {
                 selectedBoard = value;
+                RaisePropertyChanged("SelectedBoard");
                 Forward = value != null;
             }
 

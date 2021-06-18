@@ -17,8 +17,8 @@ namespace Frontend.Model
         {
             this.userModel = userModel;
             this.boardModel = boardModel;
-            // Columns = new ObservableCollection<ColumnModel>(backendController.GetAllColumn(userModel, boardModel));
-            Columns.CollectionChanged += HandleChange;
+            //Columns = new ObservableCollection<ColumnModel>(backendController.GetAllColumn(userModel, boardModel));
+           // Columns.CollectionChanged += HandleChange;
         }
         private void HandleChange(object sender, NotifyCollectionChangedEventArgs e)
         {
