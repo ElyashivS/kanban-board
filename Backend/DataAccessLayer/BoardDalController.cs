@@ -130,6 +130,7 @@ namespace IntroSE.Kanban.Backend.DataAccessLayer
                 catch(Exception e)
                 {
                     log.Error("Failed to run query");
+                    Console.WriteLine(e);
                 }
                 finally
                 {

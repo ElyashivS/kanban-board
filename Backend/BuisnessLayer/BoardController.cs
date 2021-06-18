@@ -153,7 +153,8 @@ namespace IntroSE.Kanban.Backend.BuisnessLayer
                     TaskTable.Delete(todelete);
                 }
             }
-            BoardTable.Delete(BoardTable.SpecificSelect(c.id));
+            if (BoardTable.SpecificSelect(c.id) != null)
+                BoardTable.Delete(BoardTable.SpecificSelect(c.id));
 
             return c;
         }

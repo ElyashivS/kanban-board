@@ -51,8 +51,11 @@ namespace Frontend.Model
 
         internal void JoinBoard(BoardModel selectedBoard2)
         {
-            Boards2.Remove(selectedBoard2);
-            Boards.Add(selectedBoard2);
+            if (selectedBoard2 != null)
+            {
+                Boards2.Remove(selectedBoard2);
+                Boards.Add(selectedBoard2);
+            }
         }
     }
 }
