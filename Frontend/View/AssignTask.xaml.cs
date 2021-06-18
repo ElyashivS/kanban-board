@@ -17,27 +17,29 @@ using System.Windows.Shapes;
 namespace Frontend.View
 {
     /// <summary>
-    /// Interaction logic for AddColumn.xaml
+    /// Interaction logic for AssignTask.xaml
     /// </summary>
-    public partial class AddColumn : Window
+    public partial class AssignTask : Window
     {
         private UserModel userModel;
         private BoardModel boardModel;
-        internal AddColumnVM addColumnvm;
-        public AddColumn(UserModel userModel, BoardModel boardModel)
+        private ColumnModel columnModel;
+        private TaskModel taskModel;
+        internal AssignTaskVM assignTaskvm;
+        public AssignTask(UserModel userModel, BoardModel boardModel, ColumnModel columnModel, TaskModel taskModel)
         {
             InitializeComponent();
             this.userModel = userModel;
             this.boardModel = boardModel;
-            addColumnvm = new(userModel, boardModel);
-            DataContext = addColumnvm;
+            assignTaskvm = new(userModel, boardModel, columnModel, taskModel);
+            DataContext = assignTaskvm;
         }
 
-        private void AddColumnButton(object sender, RoutedEventArgs e)
+        private void AssignButton(object sender, RoutedEventArgs e)
         {
-            if (addColumnvm.AddColumn() == true)
+            if (assignTaskvm.AddAssign() == true)
             {
-                Close();
+                this.Close();
             }
         }
     }

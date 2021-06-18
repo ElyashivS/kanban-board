@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Frontend.Model;
+using Frontend.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,25 @@ namespace Frontend.View
     /// </summary>
     public partial class AddTask : Window
     {
-        public AddTask()
+        private UserModel userModel;
+        private BoardModel boardModel;
+        internal AddTaskVM addTaskvm;
+
+        public AddTask(UserModel userModel, BoardModel boardModel)
         {
             InitializeComponent();
+            this.userModel = userModel;
+            this.boardModel = boardModel;
+            addTaskvm = new(userModel, boardModel);
+            DataContext = addTaskvm;
+        }
+
+        private void AddTaskButton(object sender, RoutedEventArgs e)
+        {
+            if (addTaskvm.AddTask() == true)
+            {
+                this.Close();
+            }
         }
     }
 }

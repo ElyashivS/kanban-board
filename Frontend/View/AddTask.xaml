@@ -9,13 +9,12 @@
     <Grid>
         <Label Content="Add Task" HorizontalAlignment="Center" Margin="0,78,0,0" VerticalAlignment="Top" FontSize="26"/>
         <Label Content="Task Title" HorizontalAlignment="Left" Margin="259,139,0,0" VerticalAlignment="Top"/>
-        <Label Content="Task Description" HorizontalAlignment="Left" Margin="240,199,0,0" VerticalAlignment="Top"/>
-        <Label Content="Password" HorizontalAlignment="Left" Margin="259,262,0,0" VerticalAlignment="Top"/>
-        <DatePicker HorizontalAlignment="Left" Margin="481,334,0,0" VerticalAlignment="Top" SelectedDate="{Binding DueDate, Mode=TwoWay}"/>
-        <TextBox HorizontalAlignment="Left" Margin="472,143,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="472,0,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Center" Width="120"/>
-        <TextBox HorizontalAlignment="Left" Margin="472,271,0,0" Text="TextBox" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label Content="Select Due Date" HorizontalAlignment="Left" Margin="241,328,0,0" VerticalAlignment="Top"/>
+        <Label Content="Task Description" HorizontalAlignment="Left" Margin="240,208,0,0" VerticalAlignment="Top"/>
+        <DatePicker HorizontalAlignment="Left" Margin="472,288,0,0" VerticalAlignment="Top" SelectedDate="{Binding DueDate, Mode=TwoWay}" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="472,143,0,0" Text="{Binding TaskName, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <TextBox HorizontalAlignment="Left" Margin="472,212,0,0" Text="{Binding Description, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Label Content="Select Due Date" HorizontalAlignment="Left" Margin="241,282,0,0" VerticalAlignment="Top"/>
+        <Button Content="Add" HorizontalAlignment="Left" Margin="356,384,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="AddTaskButton"/>
 
     </Grid>
 </Window>

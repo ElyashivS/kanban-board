@@ -1,0 +1,15 @@
+﻿<Window x:Class="Frontend.View.AssignTask"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Frontend.View"
+        mc:Ignorable="d"
+        Title="AssignTask" Height="450" Width="800">
+    <Grid>
+        <Label Content="Add Assign To Task" HorizontalAlignment="Center" Margin="0,95,0,0" VerticalAlignment="Top" FontSize="26"/>
+        <TextBox HorizontalAlignment="Left" Margin="436,0,0,0" Text="{Binding AssignTask, Mode=TwoWay}" TextWrapping="Wrap" VerticalAlignment="Center" Width="120"/>
+        <Label Content="Assignee Email" HorizontalAlignment="Left" Margin="258,0,0,0" VerticalAlignment="Center"/>
+        <Button Content="Add" HorizontalAlignment="Center" Margin="0,311,0,0" VerticalAlignment="Top" Height="40" Width="100" Click="AssignButton"/>
+    </Grid>
+</Window>
